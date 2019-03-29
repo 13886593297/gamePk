@@ -1,0 +1,79 @@
+* {
+  margin: 0;
+  padding: 0;
+  background: 0 0 / 100% no-repeat;
+}
+
+body {
+  font-size: 14px;
+  height: 100vh;
+  background-image: url(../img/bg.jpg)
+}
+
+a {
+  color: #000;
+  text-decoration: none
+}
+
+a:hover {
+  text-decoration: underline
+}
+
+li {
+  list-style: none
+}
+
+img {
+  border: 0;
+  vertical-align: middle
+}
+
+p {
+  word-wrap: break-word
+}
+
+button,
+input {
+  outline: none;
+  border: none;
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 2vw;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background: #d5e8f9
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #2761b5;
+}
+
+.animated {
+  animation-fill-mode: both;
+  animation-duration: 1s;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0
+  }
+  100% {
+    opacity: 1
+  }
+}
+
+@keyframes fadeInLeft {
+  0% {
+    opacity: 0;
+    transform: translate3d(-100%, 0, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
