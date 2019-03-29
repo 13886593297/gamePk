@@ -1,0 +1,44 @@
+.pk_bg {
+  background-image: url(../images/subject.png);
+  position: absolute;
+  top: 5vw;
+  width: 100%;
+  height: 136vw;
+}
+
+#time {
+  position: absolute;
+  left: 39vw;
+  top: 18vw;
+  width: 22vw;
+  height: 22vw;
+  line-height: 22vw;
+  text-align: center;
+  color: #fff;
+  font-size: 11vw;
+  font-weight: bold;
+  font-family: Arial;
+}
+
+#num {
+  position: absolute;
+  font-size: 5vw;
+  color: #275fb2;
+  top: 40vw;
+  left: 18vw;
+}
+
+.container {
+  position: absolute;
+  overflow: auto;
+  height: 78vw;
+  width: 63vw;
+  top: 46vw;
+  left: 18vw;
+  padding-right: 2vw;
+  font-weight: bold;
+}
+
+.answer span {
+  width: 51vw;
+}

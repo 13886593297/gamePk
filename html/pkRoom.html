@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>PKroom</title>
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<link rel="stylesheet" href="../css/base.css">
+	<link rel="stylesheet" href="../css/pkRoom.css">
+	<script src="../js/vconsole.min.js"></script>
+	<script src="../js/jweixin-1.0.0.js"></script>
+	<script src="../js/bg_music.js"></script>
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/base.js"></script>
+	<script src="../js/index.js"></script>
+</head>
+
+<body>
+	<audio src="../music/button.mp3" id="buttonPay"></audio>
+	<!-- <a class="back" href="javascript: history.go(-1)">返回</a> -->
+	<div id="me_div">
+		<span id="meName"></span>
+		<img id="meHead" src="" alt="">
+	</div>
+	<div class="main">
+		<div id="num"></div>
+		<div id="count_div" class="scrollbar"></div>
+		<img class="arrow" src="../images/arrow.png" alt="">
+	</div>
+	<div class="back_home" onclick="location.href = baseUrl.base"><img src="../images/backhome.png" alt=""></div>
+</body>
+
+<script>
+	getUserInfo()
+	function addView() {
+		for (var i = 0; i < rankList.user.length; i++) {
+			var rank = `<img src="../images/pkRoom_0${i+1}.png"><span>${i+1}</span>`;
+			if (i >= 3) {
+			  rank = `<img src="../images/pkRoom_04.png"><span class="num">${i+1}</span>`;
+			}
+			var htmlView =
+				`<div class="head_bg">
+					<img class="head" src="${rankList.user[i].user_img}" alt="">
+					<span class="name">${rankList.user[i].user_name}</span>
+					<div class="detail">
+						<div>第${i+1}名</div>
+						<div>用时:${rankList.user[i].time}</div>
+						<div>正确率:${rankList.user[i].rate}%</div>
+					</div>
+					<div class="rank_icon">
+						${rank}
+					</div>
+				</div>`;
+
+			$('#count_div').append(htmlView);
+			
+			if (pk_name == rankList.user[i].user_name) {
+				$('.head_bg').eq(i).addClass('active')
+			}
+		}
+		
+		$('#scrollbar>div').height($('#count_div>div').outerHeight() * $('#count_div>div').length);
+
+		if ($('#count_div>div').outerHeight() * $('#count_div>div').length <= $('#count_div').height()) {
+			$('.arrow').hide();
+		}
+	}
+
+	$('.arrow').click(function() {
+		$('#count_div').scrollTop($('#count_div').scrollTop() + 75)
+	})
+
+	var rankList;
+	var pk_name;
+	getMeInfo()
+
+	function getMeInfo() {
+		$.ajax({
+			url: baseUrl.base + baseUrl.answerList,
+			type: 'post',
+			// url: '../../pkRoom.json',
+			data: {
+				pkId: getQueryString('pkId'),
+			},
+			success: function (res) {
+				if (res.code == 0) {
+					pk_name = res.body.master.user_name;
+					$('#meName').html(pk_name)
+					$('#meHead').attr('src', res.body.master.user_img)
+					$('#num').html('已参与人数：' + res.body.user.length)
+					rankList = res.body;
+					addView();
+				}
+			}
+		})
+	}
+</script>
+
+</html>

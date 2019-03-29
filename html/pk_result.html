@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>PK</title>
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<link rel="stylesheet" href="../css/base.css">
+	<link rel="stylesheet" href="../css/pk_result.css">
+	<script src="../js/vconsole.min.js"></script>
+	<script src="../js/jweixin-1.0.0.js"></script>
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/base.js"></script>
+	<script src="../js/index.js"></script>
+	<script src="../js/shape.js"></script>
+</head>
+
+<body>
+	<div id="count_div">
+		<div class="pk_info">
+			<div class="me_head_bg" style="float: left;">
+				<div id="me_head" class="head"></div>
+				<p id="me_name"></p>
+			</div>
+			<div class="opponent_head_bg" style="float: right;">
+				<div id="opponent_head" class="head"></div>
+				<p id="opponent_name"></p>
+			</div>
+			<div class="text">
+				<div id="one_num"></div>
+				<div id="one_time"></div>
+			</div>
+			<div class="text" style="right: 0">
+				<div id="two_num"></div>
+				<div id="two_time"></div>
+			</div>
+		</div>
+		<div id="result_div">
+			<img id="result_img" src="" alt="">
+			<div class="fenshu_div">获得达人积分<span id="fenshu"></span></div>
+			<div class="btn_div">
+				<button class="backHome img" onclick="window.location.href = baseUrl.base"></button>
+			</div>
+			<img id="success_div" src="../images/anCrown.png" alt="">
+		</div>
+	</div>
+	<div id="dialog" onclick="modal_hide()"></div>
+</body>
+
+<script>
+	getUserInfo()
+	$('#dialog').show();
+
+	if (window.history.length == 1) {
+		$('#dialog').hide();
+	}
+
+	var meName = getQueryString('meName'),
+		taName = getQueryString('taName'),
+		meHead = getQueryString('meHead'),
+		taHead = getQueryString('taHead'),
+		meSubjectNum = getQueryString('meSubjectNum'),
+		meTime = getQueryString('meTime'),
+		taSubjectNum = getQueryString('taSubjectNum'),
+		taTime = getQueryString('taTime'),
+		fraction = getQueryString('fraction'),
+		flag = getQueryString('flag');
+
+	$('#me_name').html(meName);
+	$('#opponent_name').html(taName);
+	$('#me_head').css('background-image', 'url(' + meHead + ')');
+	$('#opponent_head').css('background-image', 'url(' + taHead + ')');
+	$('#one_num').html('当前答题: ' + meSubjectNum);
+	$('#two_num').html('当前答题: ' + taSubjectNum);
+	$('#one_time').html('累计用时: ' + meTime);
+	$('#two_time').html('累计用时: ' + taTime);
+	if (flag == 0) {
+		$('#success_div').show();
+		$('#success_img').attr('src', meHead)
+		$('#result_img').attr('src', '../images/success.png')
+	} else if (flag == 1) {
+		$('#success_div').hide();
+		$('#result_img').attr('src', '../images/fail.png')
+	} else {
+		$('#success_div').hide();
+		$('#result_img').attr('src', '../images/wuxiao.png')
+	}
+	$('#fenshu').html(fraction)
+
+	var shapeUrl = window.location.href;
+	setShape()
+</script>
+
+</html>

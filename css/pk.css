@@ -1,0 +1,134 @@
+#load_div>div:nth-child(-n+2) {
+  position: absolute;
+  width: 60vw;
+  height: 28vw;
+}
+
+#load_div>div:nth-child(1) {
+  top: 15vw;
+  background-image: url(../images/pk_01.png);
+}
+
+#load_div>div:nth-child(2) {
+  top: 80vw;
+  right: 0;
+  background-image: url(../images/pk_02.png);
+}
+
+#load_div>img {
+  position: absolute;
+  top: 40vw;
+  width: 100vw;
+}
+
+#load_div .head_div {
+  position: absolute;
+  width: 26vw;
+  height: 26vw;
+  top: 1vw;
+  background-image: url(../images/avatar_bg.png);
+}
+
+#load_div .head_div img {
+  width: 20vw;
+  height: 20vw;
+  position: absolute;
+  top: 2.3vw;
+  left: 2.8vw;
+}
+
+#load_div>div:first-child .head_div {
+  right: 0;
+}
+
+#load_div>div:nth-child(2) .head_div {
+  left: 0;
+}
+
+#load_div .name {
+  line-height: 26vw;
+  font-size: 5vw;
+  width: 33vw;
+  color: #2761b5;
+}
+
+#meName {
+  text-align: right;
+}
+
+#ta_name {
+  margin-left: 27vw;
+  text-align: left;
+}
+
+#load_div>div:nth-child(3) {
+  position: absolute;
+  width: 100vw;
+  top: 115vw;
+  text-align: center;
+}
+
+#load_div>div:nth-child(3) #foot {
+  margin-bottom: 4vw;
+  font-weight: 600;
+  color: #2761b5;
+}
+
+#load_div>div:nth-child(3) button {
+  width: 56vw;
+  height: 15vw;
+}
+
+#load_div>div:nth-child(3) button:nth-of-type(1) {
+  background-image: url(../images/back_pk.png);
+}
+
+#load_div>div:nth-child(3) button:nth-of-type(2) {
+  background-image: url(../images/backhome.png);
+}
+
+#count_div {
+  display: none;
+  height: 100vh;
+}
+
+#subject_count {
+  background-image: url(../images/pk_bg.png);
+  position: absolute;
+  text-align: center;
+  width: 100vw;
+  top: 40vw;
+  height: 111vw;
+}
+
+#time_daojishi {
+  position: absolute;
+  font-size: 11vw;
+  color: #fff;
+  width: 22vw;
+  height: 22vw;
+  line-height: 22vw;
+  left: 39vw;
+  top: 2vw;
+  font-family: Arial;
+  font-weight: bold;
+}
+
+.container {
+  padding-left: 15vw;
+  margin-top: 25vw;
+  text-align: left;
+  overflow: auto;
+  height: 70vw;
+  width: 68vw;
+  padding-right: 2vw;
+  font-weight: bold;
+}
+
+#footView {
+  top: 111vw;
+}
+
+#result_div {
+  display: none;
+}

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>首页</title>
+	<link rel="stylesheet" href="../css/base.css">
+	<link rel="stylesheet" href="../css/index.css">
+	<script src="../js/vconsole.min.js"></script>
+	<script src="../js/jweixin-1.0.0.js"></script>
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/base.js"></script>
+	<script src="../js/index.js"></script>
+	<script src="../js/shape.js"></script>
+	<script src="../js/music.js"></script>
+</head>
+
+<body>
+	<audio src="../music/index_bg.mp3" loop id="myAudio"></audio>
+	<audio src="../music/button.mp3" id="buttonPay"></audio>
+	<div onclick="isplay()" id="music_btn"></div>
+	<div class="btn_div">
+		<div class="button" onclick="train()"></div>
+		<div class="button" onclick="total_pk()"></div>
+		<div class="button" onclick="location.href = 'https://wechat-qa.lillyadmin.cn/iDoctorWeChat/ContentArea/Article?wechatid=27&contentAreaModuleId=103&moduleType=ArticleList&contentAreaMPId=1'"></div>
+		<div class="button" onclick="location.href = 'https://wechat-qa.lillyadmin.cn/idoctorwechat/medinfosearch/Main?event=MenuClick&wechatid=27&_Callback=1'"></div>
+		<div class="button" onclick="location.href = 'https://wechat-qa.lillyadmin.cn/iDoctorWeChat/ContentArea/Main?event=MenuClick&wechatid=27'"></div>
+		<div class="button" onclick="rankingList()"></div>
+	</div>
+	<div class="footer">
+		<img class="game_rule" src="../images/index_07.png">
+		<img class="center" src="../images/index_08.png" onclick="personal_center()">
+		<div class="role_guize">
+			<img src="../images/role_guize.png" />
+			<div class="shut"></div>
+		</div>
+	</div>
+	<div class="examine">PP-LD-CN-1002</div>
+</body>
+<script>
+	if (null == sessionStorage.getItem('isplay')) {
+		sessionStorage.setItem('isplay', 1);
+	}
+
+	$('.game_rule').click(function() {
+		$('.footer .role_guize').show();
+	})
+	$('.footer .shut').click(function(e) {
+		$('.footer .role_guize').hide();
+		e.stopPropagation();
+	})
+	
+	// 训练营
+	function train() {
+		if (sessionStorage.getItem('isplay') == 0) {
+			document.getElementById('buttonPay').play();
+		}
+		setTimeout(function () {
+			window.location.href = 'train.html'
+			// window.location.href = 'subject.html?levelId=1'
+		}, 400);
+	}
+
+	// 全民PK
+	function total_pk() {
+		if (sessionStorage.getItem('isplay') == 0) {
+			document.getElementById('buttonPay').play();
+		}
+		setTimeout(function () {
+			window.location.href = '../html/gamePK.html'
+		}, 400);
+	}
+
+	// 排行榜
+	function rankingList() {
+		if (sessionStorage.getItem('isplay') == 0) {
+			document.getElementById('buttonPay').play();
+		}
+		setTimeout(function () {
+			window.location.href = '../html/rankingList.html?userId=' + getCookie("userId")
+		}, 400);
+	}
+
+	// 个人中心
+	function personal_center() {
+		if (sessionStorage.getItem('isplay') == 0) {
+			document.getElementById('buttonPay').play();
+		}
+		setTimeout(function () {
+			window.location.href = '../html/me.html?userId=' + getCookie("userId")
+		}, 400);
+	}
+
+	getUserInfo();
+
+	function getUserInfo() {
+		//			var code = getQueryString('code');
+		var ticket = getQueryString('ticket');
+		console.log(ticket)
+		$.ajax({
+			url: baseUrl.base + baseUrl.wxInfo,
+			type: 'post',
+			data: {
+				//					userCode: code
+				userCode: ticket
+			},
+			error: function (err) {
+				//alert(JSON.stringify(err))
+			},
+			success: function (res) {
+				console.log(res)
+				//alert(JSON.stringify(res))
+				if (res.body.error_code != 0) {
+					alert(res.body.error_message)
+				}
+				if (res.code == 0) {
+					bodys = res.body;
+					var exp = new Date();
+					exp.setTime(exp.getTime() + 60 * 60 * 1000 * 24);
+					bodys.user_img;
+					bodys.user_name;
+					document.cookie = "userId" + "=" + escape(bodys.user_id) + ";expires=" + exp.toGMTString() + ";path=/";
+					document.cookie = "userImg" + "=" + escape(bodys.user_img) + ";expires=" + exp.toGMTString() + ";path=/";
+					document.cookie = "userName" + "=" + escape(bodys.user_name) + ";expires=" + exp.toGMTString() + ";path=/";
+					// 新加  
+					document.cookie = "wxUserName" + "=" + escape(bodys.wx_user_name) + ";expires=" + exp.toGMTString() + ";path=/";
+					document.cookie = "wxUserImg" + "=" + escape(bodys.wx_user_img) + ";expires=" + exp.toGMTString() + ";path=/";
+					document.cookie = "csUserName" + "=" + escape(bodys.cs_user_name) + ";expires=" + exp.toGMTString() + ";path=/";
+					document.cookie = "csUserImg" + "=" + escape(bodys.cs_user_img) + ";expires=" + exp.toGMTString() + ";path=/";
+					document.cookie = "userSex" + "=" + escape(bodys.user_sex) + ";expires=" + exp.toGMTString() + ";path=/";
+					document.cookie = "imgType" + "=" + escape(bodys.img_type) + ";expires=" + exp.toGMTString() + ";path=/";
+					if (bodys.first == 1) {
+						document.cookie = "userId" + "=" + escape(bodys.user_id) + ";expires=" + exp.toGMTString() + ";path=/";
+						window.location.href = '../html/me_info.html?backUrl=1'
+					}
+				} else if (res.code == 4) {
+					window.location.href = res.body.hcpProfileURL;
+					return;
+				}
+			}
+		})
+	}
+
+	var shapeUrl = baseUrl.base;
+	setShape()
+</script>
+
+</html>

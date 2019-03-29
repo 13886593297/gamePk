@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>个人中心</title>
+	<link rel="stylesheet" href="../css/base.css">
+	<link rel="stylesheet" href="../css/me.css">
+	<script src="../js/vconsole.min.js"></script>
+	<script src="../js/jweixin-1.0.0.js"></script>
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/base.js"></script>
+	<script src="../js/index.js"></script>
+	<script src="../js/shape.js"></script>
+	<script src="../js/music.js"></script>
+</head>
+
+<body>
+	<audio src="../music/index_bg.mp3" loop id="myAudio"></audio>
+	<audio src="../music/button.mp3" id="buttonPay"></audio>
+	<div onclick="isplay()" id="music_btn"></div>
+	<span class="tip" onclick="location.href = './me_info.html'">点击设置头像</span>
+	<div class="main">
+		<img id="head" class="head" src="../images/default.png" onclick="location.href = './me_info.html'">
+		<span id="name"></span>
+		<div class="table">
+			<table>
+				<tbody>
+					<tr>
+						<td>
+							<img src="../images/me_02.png"></img>
+						</td>
+						<td width="8%"></td>
+						<td>
+							<img src="../images/me_01.png"></img>
+						</td>
+					</tr>
+					<tr>
+						<td class="td_text" id="one_text">0</td>
+						<td width="8%"></td>
+						<td class="td_text" id="two_text">0</td>
+					</tr>
+					<tr>
+						<td><img src="../images/myAchievements_01.png"></img>
+						</td>
+						<td width="8%"></td>
+						<td><img src="../images/myAchievements_02.png"></img>
+						</td>
+					</tr>
+					<tr>
+						<td class="td_text" id="three_text">0</td>
+						<td width="8%"></td>
+						<td class="td_text" id="four_text">0</td>
+					</tr>
+					<tr>
+						<td><img src="../images/myAchievements_04.png"></img>
+						</td>
+						<td width="8%"></td>
+						<td><img src="../images/myAchievements_03.png"></img>
+						</td>
+					</tr>
+					<tr>
+						<td class="td_text" id="five_text">0</td>
+						<td width="8%"></td>
+						<td class="td_text" id="sex_text">0</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="btn_div">
+		<img id="flaunt_btn" src="../images/flaunt.png" onclick="flaunt()">
+		<img id="goHome" src="../images/backhome01.png" onclick="window.location.href = baseUrl.base">
+	</div>
+	<div id="dialog" onclick="modal_hide()"></div>
+</body>
+
+<script>
+	getUserInfo()
+	if (null == sessionStorage.getItem('isplay')) {
+		sessionStorage.setItem('isplay', 0);
+	}
+
+	if (window.history.length == 1) {
+		$('#flaunt_btn,.tip').hide();
+		$('#head').removeAttr('onclick');
+	}
+
+	getMeInfo();
+
+	function getMeInfo() {
+		$.ajax({
+			url: baseUrl.base + baseUrl.meinfo,
+			type: 'post',
+			data: {
+				userId: getQueryString('userId'),
+			},
+			success: function (res) {
+				console.log(res)
+				if (res.code == 0) {
+					$('#head').attr("src", res.body.user_img);
+					$('#name').html(res.body.user_name);
+					$('#one_text').html(res.body.week_rank);
+					$('#two_text').html(res.body.rank);
+					$('#three_text').html(res.body.pk_count);
+					$('#four_text').html(res.body.pk_win_count);
+					$('#five_text').html(res.body.user_score);
+					$('#sex_text').html(res.body.user_rate + "%");
+				}
+			}
+		})
+	}
+
+	var shapeUrl = window.location.href;
+	setShape();
+</script>
+
+</html>

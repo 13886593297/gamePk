@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>训练营</title>
+	<link rel="stylesheet" href="../css/animate.css">
+	<link rel="stylesheet" href="../css/base.css">
+	<link rel="stylesheet" href="../css/subject.css">
+	<script src="../js/vconsole.min.js"></script>
+	<script src="../js/jweixin-1.0.0.js"></script>
+	<!--		<script src="../js/bg_music.js"></script>-->
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/timer.jquery.js"></script>
+	<script src="../js/base.js"></script>
+	<script src="../js/index.js"></script>
+</head>
+
+<body>
+	<audio src="../music/time_out.mp3" id="timeOut" loop="loop"></audio>
+	<audio src="../music/select_click.mp3" id="selectClick"></audio>
+	<div class="pk_bg"></div>
+	<div id="time">20</div>
+	<span id="num"></span>
+	<div class="container scrollbar">
+		<div class="animated" id="title_div">
+			<span id="title"></span>
+		</div>
+		<div class="answer animated " onclick="doAnswer(this.id)" id="1">
+			<input type="radio" name="firstname">
+			<img id="1Img" name="img" src="../images/no_select.png" />
+			<span id="1Text" name="text"></span>
+		</div>
+		<div class="answer animated " onclick="doAnswer(this.id)" id="2">
+			<input type="radio" name="firstname">
+			<img id="2Img" name="img" src="../images/no_select.png" />
+			<span id="2Text" name="text"></span>
+		</div>
+		<div class="answer animated " onclick="doAnswer(this.id)" id="3">
+			<input type="radio" name="firstname">
+			<img id="3Img" name="img" src="../images/no_select.png" />
+			<span id="3Text" name="text"></span>
+		</div>
+		<div class="answer animated " onclick="doAnswer(this.id)" id="4">
+			<input type="radio" name="firstname">
+			<img id="4Img" name="img" src="../images/no_select.png" />
+			<span id="4Text" name="text"></span>
+		</div>
+		<div class="answer animated " onclick="doAnswer(this.id)" id="5">
+			<input type="radio" name="firstname">
+			<img id="5Img" name="img" src="../images/no_select.png" />
+			<span id="5Text" name="text"></span>
+		</div>
+		<div class="answer animated " onclick="doAnswer(this.id)" id="6">
+			<input type="radio" name="firstname">
+			<img id="6Img" name="img" src="../images/no_select.png" />
+			<span id="6Text" name="text"></span>
+		</div>
+	</div>
+	<div id="footView">
+		<div class="footerbg"></div>
+		<img id="img_adinfo" src="../images/ad_logo01.png">
+		<div id="test_adinfo">强效促成骨 提高骨质量 预防再骨折</div>
+	</div>
+
+</body>
+<script>
+	getUserInfo()
+	var question_index = 0;
+	var bodys;
+	var optionAnswer;
+	var selectCorrect = 0,
+		level_score = 0;
+
+	getAllQuestion();
+	//查询题目
+	function getAllQuestion() {
+		var levelId = getQueryString("levelId");
+		$.ajax({
+			url: baseUrl.base + baseUrl.findAllSubject,
+			type: 'post',
+			// url: '../../subject.json',
+			async: false,
+			data: {
+				userId: getCookie('userId'),
+				levelId: levelId
+			},
+			success: function (res) {
+				if (res.code == 0) {
+					bodys = res.body;
+					question_index = 0;
+					showQuestion();
+					showAdInfo(0);
+				} else if (res.code == 2) {
+					history.go(-(history.length - 2));
+					return true;
+				}
+			}
+		})
+	}
+
+	//展示题目
+	function showQuestion() {
+		var span = document.getElementsByName('text');
+		for (var i = 0; i < span.length; i++) {
+			$("#" + (i + 1) + "Img").attr("src", "../images/no_select.png");
+		}
+		for (var i = 0; i < span.length; i++) {
+			$("#" + (i + 1) + "Text").css("color", "#000000");
+		}
+
+		a = 20;
+		//倒计时
+		$('body').everyTime('1s', function () {
+			a = a - 1;
+			$("#time").html(a);
+			if (a <= 0) {
+				doAnswer(0)
+				a = 20;
+				$('body').stopTime();
+				if (question_index == bodys.length) {
+					$('body').stopTime();
+					window.location.href = '../html/finishTraining.html?selectCorrect=' + selectCorrect + "&level_score=" + level_score;
+					return true;
+				}
+				showQuestion();
+				return;
+			}
+		});
+		if (question_index > 0) {
+			$('body').oneTime('0s', hideAnimation);
+		}
+		if (question_index == bodys.length) {
+			$('body').everyTime('1s', function () {
+				$('body').everyTime('1s', function () {
+					$('body').stopTime();
+					window.location.href = '../html/finishTraining.html?selectCorrect=' + selectCorrect + "&level_score=" +
+						level_score;
+					return true;
+				})
+			})
+		} else {
+			$('body').oneTime('1s', function () {
+				$('.answer ').show();
+				if (bodys[question_index - 1].option_c == '') {
+					$('#3').hide();
+				}
+				if (bodys[question_index - 1].option_d == '') {
+					$('#4').hide();
+				}
+				if (!bodys[question_index - 1].option_e || bodys[question_index - 1].option_e == '') {
+					$('#5').hide();
+				}
+				if (!bodys[question_index - 1].option_f || bodys[question_index - 1].option_f == '') {
+					$('#6').hide();
+				}
+				$("#num").html((question_index) + "/" + bodys.length);
+				$("#title").html(bodys[question_index - 1].question_content);
+				$("#1Text").html(bodys[question_index - 1].option_a);
+				$("#2Text").html(bodys[question_index - 1].option_b);
+				$("#3Text").html(bodys[question_index - 1].option_c);
+				$("#4Text").html(bodys[question_index - 1].option_d);
+				$("#5Text").html(bodys[question_index - 1].option_e);
+				$("#6Text").html(bodys[question_index - 1].option_f);
+				optionAnswer = bodys[question_index - 1].option_answer;
+			})
+		}
+		$('body').oneTime('1s', showAnimation);
+		question_index++;
+	}
+
+	//答题
+	function doAnswer(sId) {
+		$('#1').removeAttr('onclick');
+		$('#2').removeAttr('onclick');
+		$('#3').removeAttr('onclick');
+		$('#4').removeAttr('onclick');
+		$('#5').removeAttr('onclick');
+		$('#6').removeAttr('onclick');
+		var select = optionAnswer;
+		$('body').stopTime();
+		if (sId == select) {
+			selectCorrect++;
+			$("#" + sId + "Img").attr("src", "../images/right.png");
+			$("#" + sId + "Text").css("color", "#2661b4");
+			level_score = level_score + bodys[question_index - 1].level_score;
+		} else {
+			$("#" + sId + "Img").attr("src", "../images/error.png");
+			$("#" + sId + "Text").css("color", "#fd8900");
+			// $("#" + select + "Img").attr("src", "../images/right.png");
+			// $("#" + select + "Text").css("color", "#ec8bb4");
+		}
+		sumbit(bodys[parseInt(question_index) - 1].question_id, (parseInt(sId)), question_index);
+		showAdInfo(parseInt(question_index) - 1);
+		$('body').oneTime('2.5s', function () {
+			$('#time').html(20);
+			showQuestion();
+		});
+	}
+
+	function sumbit(questionId, answerOption, position) {
+		if (sessionStorage.getItem('isplay') == 0) {
+			document.getElementById('selectClick').play();
+		}
+		console.log(getCookie('userId'))
+		$.ajax({
+			url: baseUrl.base + baseUrl.toanswer,
+			type: 'post',
+			data: {
+				userId: getCookie('userId'),
+				answerOption: answerOption,
+				questionId: questionId
+			},
+			success: function (res) {
+				console.log(res)
+				if (res.code == 0) {
+					if (position == bodys.length) {
+						if (question_index == bodys.length) {
+							$('body').everyTime('1s', function () {
+								$('body').stopTime();
+								window.location.href = '../html/finishTraining.html?selectCorrect=' + selectCorrect + "&level_score=" +
+									level_score;
+								return true;
+							})
+							//								window.location.href = '../html/finishTraining.html?selectCorrect=' + selectCorrect + "&level_score=" + level_score;
+							//								return true;
+						}
+					}
+				}
+			}
+		})
+	}
+
+	var a = 21;
+
+	function showAnimation() {
+		// $('#footView').css('margin-top', $('#count').height() + $(window).height() * 0.2 + 40);
+		//  展示下一题
+		//$("#title_div").removeClass("fadeIn");
+		$('.container').scrollTop(0)
+		$("#title_div").removeClass("fadeOut");
+		$("#title_div").addClass("fadeIn");
+		$("#1").removeClass("fadeOut");
+		$("#1").addClass("fadeIn");
+		$("#2").removeClass("fadeOut");
+		$("#2").addClass("fadeIn");
+		$("#3").removeClass("fadeOut");
+		$("#3").addClass("fadeIn");
+		$("#4").removeClass("fadeOut");
+		$("#4").addClass("fadeIn");
+		$("#5").removeClass("fadeOut");
+		$("#5").addClass("fadeIn");
+		$("#6").removeClass("fadeOut");
+		$("#6").addClass("fadeIn");
+
+		$("#1").attr("onclick", "doAnswer(1);");
+		$("#2").attr("onclick", "doAnswer(2);");
+		$("#3").attr("onclick", "doAnswer(3);");
+		$("#4").attr("onclick", "doAnswer(4);");
+		$("#5").attr("onclick", "doAnswer(5);");
+		$("#6").attr("onclick", "doAnswer(6);");
+	}
+
+	function hideAnimation() { //  展示下一题
+		// $('#footView').css('margin-top', $('#count').height() + $(window).height() * 0.2 + 40);
+		//$("#title_div").removeClass("fadeIn");
+		$("#title_div").removeClass("fadeIn");
+		$("#title_div").addClass("fadeOut");
+		$("#1").removeClass("fadeIn");
+		$("#1").addClass("fadeOut");
+		$("#2").removeClass("fadeIn");
+		$("#2").addClass("fadeOut");
+		$("#3").removeClass("fadeIn");
+		$("#3").addClass("fadeOut");
+		$("#4").removeClass("fadeIn");
+		$("#4").addClass("fadeOut");
+		$("#5").removeClass("fadeIn");
+		$("#5").addClass("fadeOut");
+		$("#6").removeClass("fadeIn");
+		$("#6").addClass("fadeOut");
+	}
+
+	function autoPlayAudio2() {
+		wx.config({
+			// 配置信息, 即使不正确也能使用 wx.ready
+			debug: false,
+			appId: '',
+			timestamp: 1,
+			nonceStr: '',
+			signature: '',
+			jsApiList: []
+		});
+		wx.ready(function () {
+			if (sessionStorage.getItem('isplay') == 0) {
+				document.getElementById('timeOut').play();
+			}
+		});
+	}
+	autoPlayAudio2()
+</script>
+
+</html>

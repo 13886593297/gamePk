@@ -1,0 +1,110 @@
+.page_bg {
+  background-image: url(../images/pkRecord.png);
+  left: 0;
+  width: 100%;
+}
+
+#one_count {
+  position: absolute;
+  overflow-y: auto;
+  width: 70vw;
+  height: 68vw;
+  top: 55vw;
+  left: 15vw;
+  font-size: 14px;
+}
+
+#one_count>div {
+  position: relative;
+  height: 16vw;
+  margin: 0 2vw 1vw
+}
+
+#one_count>div:last-child {
+  margin-bottom: 0;
+}
+
+#one_count .endTime {
+  position: absolute;
+  font-size: 8px;
+  font-weight: 600;
+  color: #fff;
+  width: 10vw;
+  height: 4vw;
+  line-height: 4vw;
+  text-align: center;
+}
+
+#one_count .type {
+  width: 23vw;
+  line-height: 17vw;
+  text-align: center;
+  font-weight: bold;
+  color: #ae1043;
+}
+
+#one_count div[id^='end'] {
+  position: absolute;
+  height: 100%;
+  width: 42vw;
+  left: 23vw;
+  top: 0;
+}
+
+#one_count .status {
+  position: absolute;
+  text-align: center;
+  padding-top: 5.5vw;
+  width: 21vw;
+  color: #ae1043;
+  font-weight: bold;
+}
+
+#one_count .status img {
+  position: absolute;
+  width: 12vw;
+  top: 3vw;
+  left: 4vw;
+}
+
+#one_count span[id^='jinxingzhong'] {
+  position: absolute;
+  line-height: 16vw;
+  text-align: center;
+  left: 23vw;
+  width: 41vw;
+  color: #ae1043;
+  font-weight: bold;
+}
+
+#one_count .details {
+  position: absolute;
+  width: 22vw;
+  left: 19vw;
+  font-size: 11px;
+  color: #898a8a;
+  padding-top: 4vw;
+}
+
+.arrow {
+  position: absolute;
+  display: none;
+  width: 100vw;
+  text-align: center;
+  top: 132vw;
+}
+
+.arrow img {
+  width: 5vw;
+}
+
+.back_home {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  top: 147vw;
+}
+
+.back_home img {
+  width: 60vw;
+}

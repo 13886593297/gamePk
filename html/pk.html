@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>PK</title>
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<link rel="stylesheet" href="../css/base.css">
+	<link rel="stylesheet" href="../css/pk.css">
+	<link rel="stylesheet" href="../css/pk_result.css">
+	<script src="../js/vconsole.min.js"></script>
+	<script src="../js/jweixin-1.0.0.js"></script>
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/base.js"></script>
+	<script src="../js/index.js"></script>
+	<script src="../js/shape.js"></script>
+</head>
+
+<body>
+	<audio src="../music/time_out.mp3" loop id="pipei"></audio>
+	<audio src="../music/button.mp3" id="buttonPay"></audio>
+	<audio src="../music/pk_cg.mp3" id="pk_cg"></audio>
+	<audio src="../music/pk_sb.mp3" id="pk_sb"></audio>
+	<audio src="../music/select_click.mp3" id="selectClick"></audio>
+	<div id="load_div">
+		<div>
+			<div class="name" id="meName"></div>
+			<div class="head_div"><img class="head" id="meHead"></div>
+		</div>
+		<div>
+			<div class="name" id="ta_name"></div>
+			<div class="head_div"><img class="head" id="ta_head" src="../images/wait_person.png"></div>
+		</div>
+		<div>
+			<div id="foot">
+				<span>匹配倒计时：</span><span id="countDown">10&nbsp;</span><span>s</span>
+			</div>
+			<button onclick="back()"></button>
+			<button onclick="window.location.href = baseUrl.base"></button>
+		</div>
+		<img src="../images/pk_03.png" alt="">
+	</div>
+	<div id="count_div">
+		<div class="pk_info">
+			<div class="me_head_bg" style="float: left;">
+				<div id="me_head" class="head"></div>
+				<p id="me_name"></p>
+			</div>
+			<div class="opponent_head_bg" style="float: right;">
+				<div id="opponent_head" class="head"></div>
+				<p id="opponent_name"></p>
+			</div>
+			<div class="text">
+				<div id="one_num"></div>
+				<div id="one_time"></div>
+			</div>
+			<div class="text" style="right: 0">
+				<div id="two_num"></div>
+				<div id="two_time"></div>
+			</div>
+		</div>
+		<div id="subject_count">
+			<div id="time_daojishi"></div>
+			<div class="container scrollbar">
+				<div class="animated">
+					<span id="title"></span>
+				</div>
+				<div class="answer animated " onclick="doAnswer(this.id)" id="1">
+					<input type="radio" name="firstname">
+					<img id="1Img" name="img" src="../images/no_select.png" />
+					<span id="1Text" name="text"></span>
+				</div>
+				<div class="answer animated " onclick="doAnswer(this.id)" id="2">
+					<input type="radio" name="firstname">
+					<img id="2Img" name="img" src="../images/no_select.png" />
+					<span id="2Text" name="text"></span>
+				</div>
+				<div class="answer animated " onclick="doAnswer(this.id)" id="3">
+					<input type="radio" name="firstname">
+					<img id="3Img" name="img" src="../images/no_select.png" />
+					<span id="3Text" name="text"></span>
+				</div>
+				<div class="answer animated " onclick="doAnswer(this.id)" id="4">
+					<input type="radio" name="firstname">
+					<img id="4Img" name="img" src="../images/no_select.png" />
+					<span id="4Text" name="text"></span>
+				</div>
+				<div class="answer animated " onclick="doAnswer(this.id)" id="5">
+					<input type="radio" name="firstname">
+					<img id="5Img" name="img" src="../images/no_select.png" />
+					<span id="5Text" name="text"></span>
+				</div>
+				<div class="answer animated " onclick="doAnswer(this.id)" id="6">
+					<input type="radio" name="firstname">
+					<img id="6Img" name="img" src="../images/no_select.png" />
+					<span id="6Text" name="text"></span>
+				</div>
+			</div>
+
+			<div id="footView">
+				<div class="footerbg"></div>
+				<img id="img_adinfo" src="../images/ad_logo01.png">
+				<div id="test_adinfo">强效促成骨 提高骨质量 预防再骨折</div>
+			</div>
+		</div>
+		<div id="result_div">
+			<img id="result_img">
+			<div class="fenshu_div">获得达人积分<span id="fenshu"></span></div>
+			<div class="btn_div">
+				<button class="continue img" onclick="ff()"></button>
+				<button class="flaunt img" onclick="shapeBenDi()"></button>
+				<button class="backHome img" onclick="goHome()"></button>
+			</div>
+			<img id="success_div" src="../images/anCrown.png" alt="">
+		</div>
+	</div>
+	<div id="dialog" onclick="modal_hide()"></div>
+	<div class="divTwo" onclick="window.history.go(-1)"><img id="cardww_img"></div>
+	<div class="divTwoww"><img id="cardwwss_img"></div>
+</body>
+
+<script>
+	if (sessionStorage.getItem('isplay') == 0) {
+		document.getElementById('pipei').pause()
+	}
+
+	var isShape = 0;
+	var shapeUrl = '';
+
+	function getUserInfo() {
+		var code = getQueryString('ticket');
+		$.ajax({
+			url: baseUrl.base + baseUrl.wxInfo,
+			type: 'post',
+			data: {
+				userCode: code
+			},
+			success: function (res) {
+				if (res.body.error_code != 0) {
+					alert(res.body.error_message)
+				}
+				if (res.code == 0) {
+					bodys = res.body;
+					var exp = new Date();
+					exp.setTime(exp.getTime() + 60 * 60 * 1000 * 24);
+					bodys.user_img;
+					bodys.user_name;
+					document.cookie = "userId" + "=" + escape(bodys.user_id) + ";expires=" + exp.toGMTString() + ";path=/";
+					document.cookie = "userImg" + "=" + escape(bodys.user_img) + ";expires=" + exp.toGMTString() + ";path=/";
+					document.cookie = "userName" + "=" + escape(bodys.user_name) + ";expires=" + exp.toGMTString() + ";path=/";
+					// 新加  
+					document.cookie = "wxUserName" + "=" + escape(bodys.wx_user_name) + ";expires=" + exp.toGMTString() + ";path=/";
+					document.cookie = "wxUserImg" + "=" + escape(bodys.wx_user_img) + ";expires=" + exp.toGMTString() + ";path=/";
+					document.cookie = "csUserName" + "=" + escape(bodys.cs_user_name) + ";expires=" + exp.toGMTString() + ";path=/";
+					document.cookie = "csUserImg" + "=" + escape(bodys.cs_user_img) + ";expires=" + exp.toGMTString() + ";path=/";
+					document.cookie = "userSex" + "=" + escape(bodys.user_sex) + ";expires=" + exp.toGMTString() + ";path=/";
+					document.cookie = "imgType" + "=" + escape(bodys.img_type) + ";expires=" + exp.toGMTString() + ";path=/";
+					if (bodys.first == 1) {
+						document.cookie = "userId" + "=" + escape(bodys.user_id) + ";expires=" + exp.toGMTString() + ";path=/";
+						window.location.href = '../html/me_info.html?backUrl=3'
+					} else {
+						openSocket();
+					}
+				} else if (res.code == 4) {
+					//						alert(res.body.hcpProfileURL)
+					window.location.href = res.body.hcpProfileURL;
+					return;
+				}
+			}
+		})
+	}
+
+	function ff() {
+		if (sessionStorage.getItem('isplay') == 0) {
+			document.getElementById('buttonPay').play();
+		}
+		setTimeout(function () {
+			$.ajax({
+				url: baseUrl.base + baseUrl.isPK,
+				type: 'post',
+				data: {
+					userId: getCookie('userId'),
+					pkType: 1
+				},
+				success: function (res) {
+					if (res.code == 0) {
+						setTimeout(function () {
+							window.location.reload()
+						}, 400)
+					} else if (res.code == 2) {
+						// 训练超过10次
+						$('.divTwo').show()
+						$('#cardww_img').attr('src', '../images/tankuang_10.png')
+					}
+				}
+			})
+		}, 400);
+	}
+
+	var mehead, meName, opponentHead, opponentName, oneone, twotwo;
+	var cc, questionId, option_answer,
+		metimetime = '0s',
+		tatimetime = '0s',
+		fenshu = 0,
+		iscg = 0;
+	$('#load_div').show();
+	$('#meHead').attr('src', getCookie('userImg'));
+	$('#meName').html(getCookie('userName'));
+
+	var ws;
+
+	if (null != getQueryString('ticket')) {
+		getUserInfo()
+	} else {
+		openSocket();
+	}
+
+	function openSocket() {
+		ws = new WebSocket('wss:' + baseUrl.basePk + baseUrl.pk + getCookie('userId'));
+		// var userAgent = window.navigator.userAgent;
+		// if (userAgent.length > 200) {
+		// 	ws = new WebSocket('wss:' + baseUrl.basePk + baseUrl.pk + '3');
+		// } else {
+		// 	ws = new WebSocket('wss:' + baseUrl.basePk + baseUrl.pk + '4');
+		// }
+
+		ws.onopen = function () {
+			ws.send('Hello Server!');
+		}
+		ws.onerror = function () {
+
+		}
+		ws.onmessage = function (event) {
+			var data = JSON.parse(event.data);
+			console.log(data);
+			if (data.c == 0) {
+				$('#foot').show();
+				$('#countDown').html(data.s + "&nbsp;");
+			} else if (data.c == 1) {
+				opponentName = data.u2.userName;
+				opponentHead = data.u2.userImg;
+				meName = getCookie('userName');
+				mehead = getCookie('userImg');
+
+				$('#ta_head').attr('src', data.u2.userImg);
+				$('#ta_name').html(data.u2.userName);
+				$('#foot').html('PK进行中... ...');
+				document.getElementById('pipei').pause()
+				setTimeout(function () {
+					ws.send('{"c":1}');
+				}, 2000);
+			} else if (data.c == 2) {
+				document.getElementById('pipei').pause()
+				$('#foot').css('visibility', 'hidden');
+				$('#dialog_one').show();
+				$('#ta_head').attr('src', '../images/wait_person.png')
+			} else if (data.c == 4) {
+				$('.divTwoww').hide()
+				if (sessionStorage.getItem('isplay') == 0) {
+					document.getElementById('pipei').play()
+				}
+				$('#me_name').html(meName);
+				$('#opponent_name').html(opponentName);
+				$('#me_head').css('background-image', 'url(' + mehead + ')');
+				$('#opponent_head').css('background-image', 'url(' + opponentHead + ')');
+				$('#load_div').hide();
+				$('#count_div').show();
+				$('#one_num').html('当前答题: ' + data.cc + "/" + data.ct);
+				$('#two_num').html('当前答题: ' + data.cc + "/" + data.ct);
+
+				oneone = data.cc + "/" + data.ct;
+				twotwo = data.cc + "/" + data.ct;
+
+				cc = data.cc;
+				questionId = data.q.question_id;
+				option_answer = data.q.option_answer;
+				$('.answer ').show();
+				if (data.q.option_c == '') {
+					$('#3').hide()
+				}
+				if (data.q.option_d == '') {
+					$('#4').hide()
+				}
+				if (!data.q.option_e || data.q.option_e == '') {
+					$('#5').hide()
+				}
+				if (!data.q.option_f || data.q.option_f == '') {
+					$('#6').hide()
+				}
+				$('#title').html(data.q.question_content);
+				$('#1Text').html(data.q.option_a);
+				$('#2Text').html(data.q.option_b);
+				$('#3Text').html(data.q.option_c);
+				$('#4Text').html(data.q.option_d);
+				$('#5Text').html(data.q.option_e);
+				$('#6Text').html(data.q.option_f);
+
+				$("#1").attr("onclick", "doAnswer(1);");
+				$("#2").attr("onclick", "doAnswer(2);");
+				$("#3").attr("onclick", "doAnswer(3);");
+				$("#4").attr("onclick", "doAnswer(4);");
+				$("#5").attr("onclick", "doAnswer(5);");
+				$("#6").attr("onclick", "doAnswer(6);");
+
+				for (var i = 1; i < 7; i++) {
+					$("#" + (i) + "Img").attr("src", "../images/no_select.png");
+					$("#" + (i) + "Text").css("color", "#000000");
+				}
+
+				$('#subject_count').show();
+
+				if (data.q.ad_info == null) {
+					$('#footView').hide();
+				} else {
+					$('#footView').show();
+					$('#img_adinfo').attr('src', data.q.ad_info.ad_img);
+					$('#test_adinfo').html(data.q.ad_info.ad_content);
+				}
+
+			} else if (data.c == 5) {
+				if (data.s <= 1) {
+					data.t1 += 19;
+					ws.send('{"c":5,"questionId":' + questionId + ',"answerOption":' + 0 + ',"cc":' + cc + '}');
+				}
+				if (sessionStorage.getItem('isplay') == 0) {
+					document.getElementById('pipei').play()
+				}
+				$('#one_time').html('累计用时: ' + data.t1 + "s");
+				$('#two_time').html('累计用时: ' + data.t2 + "s");
+				$('#time_daojishi').html(data.s);
+				metimetime = data.t1 + "s";
+				tatimetime = data.t2 + "s";
+			} else if (data.c == 6) {
+				$('.divTwoww').hide()
+				document.getElementById('pipei').src = '../music/pk_cg.mp3'
+				document.getElementById('pipei').removeAttribute('loop')
+				if (sessionStorage.getItem('isplay') == 0) {
+					document.getElementById('pipei').play()
+				}
+				$('#result_div').show();
+				// 成功  失败 跳出
+				$('#subject_count').hide();
+				$('#result_img').attr('src', '../images/success.png')
+				$('#success_div').show();
+				$('#success_img').attr('src', mehead)
+				$('#fenshu').html(data.s)
+				fenshu = data.s;
+				iscg = 0;
+			} else if (data.c == 7) {
+				$('.divTwoww').hide()
+				document.getElementById('pipei').src = '../music/pk_sb.mp3'
+				document.getElementById('pipei').removeAttribute('loop')
+				if (sessionStorage.getItem('isplay') == 0) {
+					document.getElementById('pipei').play()
+				}
+				$('#result_div').show();
+				$('#success_div').hide();
+				$('#subject_count').hide();
+				$('#result_img').attr('src', '../images/fail.png')
+				$('#fenshu').html(data.s)
+				fenshu = data.s;
+				iscg = 1
+			} else if (data.c == 8) {
+				$('.divTwoww').hide()
+				document.getElementById('pipei').src = '../music/pk_sb.mp3'
+				document.getElementById('pipei').removeAttribute('loop')
+				if (sessionStorage.getItem('isplay') == 0) {
+					document.getElementById('pipei').play()
+				}
+				$('#result_div').show();
+				$('#success_div').hide();
+				$('#subject_count').hide();
+				$('#result_img').attr('src', '../images/wuxiao.png')
+				$('#fenshu').html(data.s)
+				fenshu = data.s;
+				iscg = 2
+			}
+		};
+	}
+
+	function sb() {
+		setTimeout(function () {
+			document.getElementById('pk_sb').autoplay
+			if (sessionStorage.getItem('isplay') == 0) {
+				document.getElementById('pk_sb').play()
+			}
+		}, 1000)
+	}
+
+	function cg() {
+		setTimeout(function () {
+			document.getElementById('pk_cg').autoplay
+			if (sessionStorage.getItem('isplay') == 0) {
+				document.getElementById('pk_cg').play()
+			}
+		}, 1000)
+	}
+
+	function back() {
+		if (sessionStorage.getItem('isplay') == 0) {
+			document.getElementById('buttonPay').play();
+		}
+		setTimeout(function () {
+			window.location.href = '../html/gamePK.html'
+		}, 400)
+	}
+
+	// id  选择的答案 option_answer
+	function doAnswer(id) {
+		$('.divTwoww').show()
+		$('#cardwwss_img').attr('src', '../images/wait.png')
+
+		if (sessionStorage.getItem('isplay') == 0) {
+			document.getElementById('selectClick').play();
+		}
+		ws.send('{"c":5,"questionId":' + questionId + ',"answerOption":' + id + ',"cc":' + cc + '}');
+		console.log('{"c":5,"questionId":' + questionId + ',"answerOption":' + id + ',"cc":' + cc + '}');
+		if (id == option_answer) {
+			$("#" + id + "Img").attr("src", "../images/right.png");
+			$("#" + id + "Text").css("color", "#2661b4");
+		} else {
+			$("#" + id + "Img").attr("src", "../images/error.png");
+			$("#" + id + "Text").css("color", "#fd8900");
+			// $("#" + option_answer + "Img").attr("src", "../images/right.png");
+			// $("#" + option_answer + "Text").css("color", "#ec8bb4");
+		}
+		$('#1').removeAttr('onclick');
+		$('#2').removeAttr('onclick');
+		$('#3').removeAttr('onclick');
+		$('#4').removeAttr('onclick');
+		$('#5').removeAttr('onclick');
+		$('#6').removeAttr('onclick');
+	}
+
+	function shapeBenDi() {
+		isShape = 0
+		var shapeUrlResult = setPar()
+		if (sessionStorage.getItem('isplay') == 0) {
+			document.getElementById('buttonPay').play();
+		}
+		window.location.href = shapeUrlResult
+	}
+
+	function shapeOne() {
+		isShape = 1
+		getShapeUrl()
+		if (sessionStorage.getItem('isplay') == 0) {
+			document.getElementById('buttonPay').play();
+		}
+		setTimeout(function () {
+			$('#dialog').css('height', document.body.scrollHeight)
+			$('#dialog').show();
+		}, 400)
+	}
+
+	getShapeUrl()
+	setShape()
+
+	/**
+	 * 设置本地分享链接
+	 */
+	function getShapeUrl() {
+		//这个链接是邀请PK用的
+		var shapeUrlss = window.location.href.replace("pk.html", "testpk.html");
+		shapeUrl = shapeUrlss;
+	}
+
+	/**
+	 * 设置PK结果参数
+	 */
+	function setPar() {
+		//这个链接是PK结果的
+		var shapeUrlResult = window.location.href.replace("pk.html", "pk_result.html");
+		var meName = getCookie('userName'),
+			taName = opponentName,
+			meHead = getCookie('userImg'),
+			taHead = opponentHead,
+			meSubjectNum = oneone,
+			meTime = metimetime,
+			taSubjectNum = twotwo,
+			taTime = tatimetime,
+			fraction = fenshu,
+			flag = iscg; // 0 成功 1失败
+		shapeUrlResult = shapeUrlResult + "?meName=" + meName + "&taName=" + taName +
+			"&meHead=" + meHead + "&taHead=" + taHead +
+			"&meSubjectNum=" + meSubjectNum +
+			"&meTime=" + meTime +
+			"&taSubjectNum=" + taSubjectNum +
+			"&taTime=" + taTime + "&fraction=" + fraction + "&flag=" + flag;
+		return shapeUrlResult;
+	}
+
+	pipei()
+
+	function pipei() {
+		wx.config({
+			// 配置信息, 即使不正确也能使用 wx.ready
+			debug: false,
+			appId: '',
+			timestamp: 1,
+			nonceStr: '',
+			signature: '',
+			jsApiList: []
+		});
+		wx.ready(function () {
+			if (sessionStorage.getItem('isplay') == 0) {
+				document.getElementById('pipei').play();
+			}
+		});
+	}
+</script>
+
+</html>

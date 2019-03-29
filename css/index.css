@@ -1,0 +1,93 @@
+body {
+  background-image: url('../images/index_bg.jpg');
+}
+
+.btn_div {
+  position: absolute;
+  width: 90vw;
+  left: 5vw;
+  top: 122vw;
+}
+
+.btn_div .button {
+  width: 28vw;
+  margin-right: 3vw;
+  height: 12vw;
+  float: left;
+}
+
+.btn_div .button:nth-child(3n) {
+  margin-right: 0;
+}
+
+.btn_div .button:nth-child(1) {
+  background-image: url(../images/index_01.png);
+}
+
+.btn_div .button:nth-child(2) {
+  background-image: url(../images/index_02.png);
+}
+
+.btn_div .button:nth-child(3) {
+  background-image: url(../images/index_03.png);
+}
+
+.btn_div .button:nth-child(4) {
+  background-image: url(../images/index_04.png);
+}
+
+.btn_div .button:nth-child(5) {
+  background-image: url(../images/index_05.png);
+}
+
+.btn_div .button:nth-child(6) {
+  background-image: url(../images/index_06.png);
+}
+
+.footer {
+  position: absolute;
+  top: 152vw;
+  width: 90vw;
+  padding: 0 5vw;
+  z-index: 1;
+}
+
+.footer img {
+  width: 26vw;
+}
+
+.footer .center {
+  float: right;
+  width: 21vw;
+}
+
+.footer .role_guize {
+  position: fixed;
+  display: none;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  z-index: 4;
+}
+
+.footer .role_guize img {
+  width: 100vw;
+  margin-top: 13vw;
+}
+
+.footer .role_guize .shut {
+  position: absolute;
+  width: 10vw;
+  height: 10vw;
+  top: 15vw;
+  right: 7vw;
+}
+
+.examine {
+  position: absolute;
+  top: 154vw;
+  width: 100%;
+  text-align: center;
+  font-size: 10px;
+  color: #275fb2
+}

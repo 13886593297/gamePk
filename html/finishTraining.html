@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>完成训练</title>
+	<link rel="stylesheet" href="../css/base.css">
+	<link rel="stylesheet" href="../css/finishTraining.css">
+	<script src="../js/vconsole.min.js"></script>
+	<script src="../js/jweixin-1.0.0.js"></script>
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/base.js"></script>
+	<script src="../js/index.js"></script>
+	<script src="../js/shape.js"></script>
+</head>
+
+<body>
+	<audio src="../music/button.mp3" id="buttonPay"></audio>
+	<div class="main">
+		<div class="result">
+			<div id="fraction">0</div>
+			<div id="correct">0</div>
+			<div>获得积分</div>
+			<div>正确/错误</div>
+		</div>
+		<div class="btn_div">
+			<button class="button" onclick="back()"></button>
+			<button class="button2" onclick="flaunt()"></button>
+			<button class="button3" onclick="goHome()"></button>
+		</div>
+	</div>
+	<img class="finishTraining_01" src="../images/finishTraining_01.png" alt=""><br>
+	<img class="detail_btn" src="../images/finishTraining_02.png" alt="">
+	<div class="detail">
+		<img src="../images/finishTraining_03.png" alt="">
+		<div class="subject_answer">
+			<ul></ul>
+		</div>
+		<img src="../images/finishTraining_09.png" alt="" onclick="location.href = 'https://wechat-qa.lillyadmin.cn/iDoctorWeChat/ContentArea/Article?wechatid=27&contentAreaModuleId=103&moduleType=ArticleList&contentAreaMPId=1'">
+		<img src="../images/finishTraining_10.png" alt="" onclick="location.href = 'https://wechat-qa.lillyadmin.cn/idoctorwechat/medinfosearch/Main?event=MenuClick&wechatid=27&_Callback=1'">
+	</div>
+	<div id="dialog" onclick="modal_hide()"></div>
+</body>
+<script>
+	getUserInfo()
+	var selectCorrect = getQueryString("selectCorrect");
+	var level_score = getQueryString("level_score");
+	if (null != getQueryString('flag')) {
+		$('.button,.button2,.finishTraining_01,.detail_btn').hide()
+	}
+
+	$('#correct').html(selectCorrect + "/" + (5 - selectCorrect));
+	$('#fraction').html(level_score);
+
+	function back() {
+		if (sessionStorage.getItem('isplay') == 0) {
+			document.getElementById('buttonPay').play();
+		}
+		setTimeout(function () {
+			window.location.href = '../html/train.html';
+		}, 400);
+	}
+
+	var shapeUrl = window.location.href + "&flag=1";
+	setShape();
+
+	var flag = true;
+	$('.detail_btn').click(function () {
+		$('.detail_btn').toggleClass('active');
+		$('.detail').toggle();
+		if (flag) {
+			flag = false;
+			$.ajax({
+				url: baseUrl.base + '/api/pk/getlastestresult',
+				type: 'post',
+				// url: '../../finishTraining.json',
+				data: {
+					userId: getCookie('userId')
+				},
+				success: function (res) {
+					console.log(res)
+					for (var i = 4; i >= 0; i--) {
+						var content_right, content_wrong;
+						switch (res.body[i].option_answer) {
+							case 1:
+								content_right = res.body[i].option_a;
+								break;
+							case 2:
+								content_right = res.body[i].option_b;
+								break;
+							case 3:
+								content_right = res.body[i].option_c;
+								break;
+							case 4:
+								content_right = res.body[i].option_d;
+								break;
+						}
+						switch (res.body[i].answer_option) {
+							case 1:
+								content_wrong = res.body[i].option_a;
+								break;
+							case 2:
+								content_wrong = res.body[i].option_b;
+								break;
+							case 3:
+								content_wrong = res.body[i].option_c;
+								break;
+							case 4:
+								content_wrong = res.body[i].option_d;
+								break;
+							default:
+								content_wrong = '未作答';
+						}
+
+						var option =
+							`<li class="option"><img src="../images/right.png" alt=""><span class="content">${content_right}</span></li>`;
+						if (res.body[i].option_answer != res.body[i].answer_option) {
+							option +=
+								`<li class="option"><img src="../images/error.png" alt=""><span class="content">${content_wrong}</span></li>`;
+						}
+
+						var html =
+							`<li>
+							<img class="rank" src="../images/finishTraining_0${8-i}.png" alt="">
+							<div class="question">
+								<div class="question_content">${res.body[i].question_content}</div>
+								<ul>${option}</ul>
+							</div>
+						</li>`
+						$('.subject_answer>ul').append(html);
+					}
+				}
+			})
+		}
+	})
+</script>
+
+</html>

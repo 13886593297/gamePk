@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>全民PK</title>
+	<link rel="stylesheet" href="../css/base.css">
+	<link rel="stylesheet" href="../css/animate.css">
+	<link rel="stylesheet" href="../css/gamePK.css">
+	<script src="../js/vconsole.min.js"></script>
+	<script src="../js/jweixin-1.0.0.js"></script>
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/base.js"></script>
+	<script src="../js/index.js"></script>
+	<script src="../js/music.js"></script>
+</head>
+
+<body>
+	<audio src="../music/index_bg.mp3" loop="loop" id="myAudio"></audio>
+	<audio src="../music/button.mp3" id="buttonPay"></audio>
+	<div onclick="isplay()" id="music_btn"></div>
+	<div class="page_bg"></div>
+	<div class="btn_div">
+		<button class="button animated" onclick="online_pk()"></button>
+		<button class="button2 box animated" onclick="invitation_pk()"></button>
+		<button class="button3 box animated" onclick="pk_record()"></button>
+		<button class="button4 box animated" onclick="pk_grade()"></button>
+	</div>
+
+	<div class="divTwo" onclick="shuaxin()">
+		<img id="card_img">
+		<div id="one_dialog">
+			<a href="./train.html"></a>
+			<a href="./index.html"></a>
+		</div>
+	</div>
+</body>
+<script>
+	getUserInfo()
+	if (null == sessionStorage.getItem('isplay')) {
+		sessionStorage.setItem('isplay', 0);
+	}
+
+	function autoPlayAudio1() {
+		wx.config({
+			// 配置信息, 即使不正确也能使用 wx.ready
+			debug: false,
+			appId: '',
+			timestamp: 1,
+			nonceStr: '', 
+			signature: '',
+			jsApiList: []
+		});
+		wx.ready(function () {
+			if (sessionStorage.getItem('isplay') == 0) {
+				document.getElementById('myAudio').play();
+			}
+		});
+	}
+	autoPlayAudio1()
+
+	function online_pk() {
+		if (sessionStorage.getItem('isplay') == 0) {
+			document.getElementById('buttonPay').play();
+		}
+		setTimeout(function () {
+			$.ajax({
+				url: baseUrl.base + baseUrl.isPK,
+				type: 'post',
+				data: {
+					userId: getCookie('userId'),
+					pkType: 1
+				},
+				success: function (res) {
+					if (res.code == 0) {
+						window.location.href = '../html/pk.html';
+					} else if (res.code == 2) {
+						$('.divTwo').show()
+						$('#one_dialog').hide()
+						$('#card_img').attr('src', '../images/tankuang_10.png')
+						// 训练超过10次
+					} else if (res.code == 7) {
+						//没有认证
+						$('.divTwo').show().attr('onclick', '');
+						$('#card_img').attr('src', '../images/tankuang.png')
+						$('#one_dialog').show()
+					}
+				}
+			})
+		}, 400);
+	}
+
+	function invitation_pk() {
+		if (sessionStorage.getItem('isplay') == 0) {
+			document.getElementById('buttonPay').play();
+		}
+		setTimeout(function () {
+			$.ajax({
+				url: baseUrl.base + baseUrl.isPK,
+				type: 'post',
+				data: {
+					userId: getCookie('userId'),
+					pkType: 2
+				},
+				success: function (res) {
+					if (res.code == 0) {
+						window.location.href = '../html/setPK.html'
+					} else if (res.code == 2) {
+						// 训练超过10次
+						$('.divTwo').show()
+						$('#card_img').attr('src', '../images/tankuang_10.png')
+					} else if (res.code == 7) {
+						//没有认证
+						$('.divTwo').show().attr('onclick', '');
+						$('#card_img').attr('src', '../images/tankuang.png')
+						$('#one_dialog').show()
+					}
+				}
+			})
+		}, 400);
+	}
+
+	function pk_record() {
+		if (sessionStorage.getItem('isplay') == 0) {
+			document.getElementById('buttonPay').play();
+		}
+		setTimeout(function () {
+			window.location.href = '../html/pkRecord.html'
+		}, 400);
+	}
+
+	function pk_grade() {
+		if (sessionStorage.getItem('isplay') == 0) {
+			document.getElementById('buttonPay').play();
+		}
+		setTimeout(function () {
+			window.location.href = '../html/myAchievements.html?userId=' + getCookie('userId')
+		}, 400);
+	}
+
+	function shuaxin() {
+		$('.divTwo').hide();
+	}
+</script>
+
+</html>

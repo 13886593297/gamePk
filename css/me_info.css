@@ -1,0 +1,94 @@
+.page_bg {
+  background-image: url(../images/me_info.png);
+  width: 100%;
+  left: 0;
+}
+
+.content {
+  padding: 45vw 10vw 0;
+  text-align: center;
+  position: absolute;
+}
+
+.content .w50 {
+  width: 50%;
+  height: 100%;
+  float: left;
+}
+
+.avatar {
+  border-radius: 50%;
+  display: inline-block;
+  width: 24vw;
+  height: 24vw;
+  border: 1vw solid #fff;
+  box-shadow: 0 0 20px #1a4290;
+}
+
+#me_name {
+  height: 7vw;
+  line-height: 7vw;
+  color: #c32677;
+  font-size: 12px;
+  margin-top: 3vw;
+  font-weight: bold;
+}
+
+.select_img {
+  width: 5vw;
+  height: 5vw;
+  margin: 2vw 0 3vw;
+}
+
+.switch {
+  position: relative;
+  width: 26vw;
+  display: inline-block;
+}
+
+.switch_arrow {
+  position: absolute;
+  top: 20vw;
+  left: 2vw;
+  width: 22vw;
+}
+
+#sex_div {
+  display: inline-block;
+  margin-top: 3vw;
+  width: 28vw;
+  height: 7vw;
+}
+
+#sex_div input::placeholder {
+  color: #5686c3;
+}
+
+#sex_div input {
+  background: none;
+  width: 20vw;
+  color: #5686c3;
+  font-size: 12px;
+  text-align: center;
+  line-height: 7vw;
+  transform: translateX(-2vw);
+  -webkit-user-select: text !important;
+}
+
+#message_info {
+  padding-left: 4vw;
+  text-align: left;
+  font-size: 10px;
+  height: 30vw;
+  overflow: auto;
+  color: #fff;
+}
+
+.determine {
+  background-image: url(../images/me_info_01.png);
+  position: absolute;
+  width: 60vw;
+  height: 15vw;
+  left: 20vw;
+  top: 118vw;
+}

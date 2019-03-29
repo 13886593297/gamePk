@@ -1,0 +1,189 @@
+* {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+  /* For some Androids */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -moz-touch-callout: none;
+  -ms-touch-callout: none;
+  margin: 0;
+  padding: 0;
+  background: 0 0 / 100% no-repeat transparent;
+}
+
+body {
+  background-image: url(../images/bg.jpg);
+  width: 100vw;
+  height: 100vh;
+}
+
+input,
+button {
+  border: none;
+  outline: none;
+}
+
+img {
+  vertical-align: middle;
+}
+
+button {
+  animation-name: fadeInLeft;
+}
+
+.page_bg {
+  position: absolute;
+  top: 12vw;
+  left: 8vw;
+  width: 88vw;
+  height: 140vw;
+}
+
+#music_btn {
+  position: absolute;
+  width: 9vw;
+  height: 9vw;
+  top: 5vw;
+  left: 3vw;
+  z-index: 3;
+}
+
+.divTwo,
+.divTwoww {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  display: none;
+  z-index: 3;
+}
+
+#card_img,
+#cardww_img,
+#cardwwss_img {
+  position: absolute;
+  width: 60vw;
+  left: 20vw;
+  top: 70vw;
+  z-index: 2;
+}
+
+.head {
+  border-radius: 50%;
+}
+
+span {
+  display: inline-block;
+}
+
+li {
+  list-style: none;
+}
+
+#dialog,
+#dialog_one {
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9;
+  display: none;
+  background-color: rgba(0, 0, 0, .8);
+}
+
+#dialog {
+  background-image: url(../images/shape.png);
+}
+
+#dialog_one {
+  background-color: rgba(0, 0, 0, .5);
+}
+
+.back {
+  position: absolute;
+  left: 4vw;
+  top: 4vw;
+  color: #fff;
+  font-size: 14px;
+  text-decoration: none;
+  outline: none;
+}
+
+#footView {
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  height: 7vw;
+  line-height: 7.3vw;
+  top: 145vw;
+}
+
+#footView .footerbg {
+  background-image: url(../images/foot.png);
+  display: inline-block;
+  width: 74vw;
+  height: 7vw;
+}
+
+#img_adinfo {
+  position: absolute;
+  width: 17vw;
+  left: 14vw;
+  top: 2vw;
+}
+
+#test_adinfo {
+  position: absolute;
+  display: inline-block;
+  left: 38vw;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 2vw;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background: #d5e8f9
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #2761b5;
+}
+
+#title {
+  font-size: 15px;
+  color: #275fb2;
+}
+
+.answer {
+  margin-top: 2.5vw;
+  word-break: break-all;
+  display: none;
+}
+
+.answer img {
+  width: 8vw;
+  height: 8vw;
+  vertical-align: top;
+  transform: translateY(-2px);
+}
+
+.answer input {
+  display: none;
+}
+
+.answer span {
+  font-size: 14px;
+  width: 56vw;
+}

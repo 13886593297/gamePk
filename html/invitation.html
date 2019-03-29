@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>PK邀请</title>
+	<link rel="stylesheet" href="../css/base.css">
+	<link rel="stylesheet" href="../css/invitation.css">
+	<script src="../js/vconsole.min.js"></script>
+	<script src="../js/jweixin-1.0.0.js"></script>
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/base.js"></script>
+	<script src="../js/qrcode.js"></script>
+	<script src="../js/jquery.qrcode.min.js"></script>
+	<script src="../js/index.js"></script>
+	<script src="../js/shape.js"></script>
+	<style>
+		
+	</style>
+</head>
+
+<body>
+	<audio src="../music/button.mp3" id="buttonPay"></audio>
+	<div class="page_bg">
+		<p class="text">邀请您参加<br>《乐拼王者》<br>糖尿病知识答题<br>精彩活动</p>
+	</div>
+	<div class="game_begin">
+		<img src="../images/invitation_01.png" onclick="game_begin()">
+		<div id="qrcode"></div>
+	</div>
+	<div id="dialog" onclick="modal_hide()" style="display: block;"></div>
+	<div class="divTwo" onclick="shuaxin()">
+		<img id="card_img">
+		<div id="one_dialog">
+			<a href="./train.html"></a>
+			<a href="./index.html"></a>
+		</div>
+	</div>
+</body>
+
+<script>
+	if (null != getQueryString('ticket')) {
+		shuaxin();
+		getUserInfo()
+	}
+
+	function getUserInfo() {
+		var code = getQueryString('ticket');
+		$.ajax({
+			url: baseUrl.base + baseUrl.wxInfo,
+			type: 'post',
+			data: {
+				userCode: code
+			},
+			success: function (res) {
+				if (res.body.error_code != 0) {
+					alert(res.body.error_message)
+				}
+				if (res.code == 0) {
+					console.log(res)
+					bodys = res.body;
+					var exp = new Date();
+					exp.setTime(exp.getTime() + 60 * 60 * 1000 * 24);
+					bodys.user_img;
+					bodys.user_name;
+					document.cookie = "userId" + "=" + escape(bodys.user_id) + ";expires=" + exp.toGMTString() + ";path=/";
+					document.cookie = "userImg" + "=" + escape(bodys.user_img) + ";expires=" + exp.toGMTString() + ";path=/";
+					document.cookie = "userName" + "=" + escape(bodys.user_name) + ";expires=" + exp.toGMTString() + ";path=/";
+					// 新加  
+					document.cookie = "wxUserName" + "=" + escape(bodys.wx_user_name) + ";expires=" + exp.toGMTString() + ";path=/";
+					document.cookie = "wxUserImg" + "=" + escape(bodys.wx_user_img) + ";expires=" + exp.toGMTString() + ";path=/";
+					document.cookie = "csUserName" + "=" + escape(bodys.cs_user_name) + ";expires=" + exp.toGMTString() + ";path=/";
+					document.cookie = "csUserImg" + "=" + escape(bodys.cs_user_img) + ";expires=" + exp.toGMTString() + ";path=/";
+					document.cookie = "userSex" + "=" + escape(bodys.user_sex) + ";expires=" + exp.toGMTString() + ";path=/";
+					document.cookie = "imgType" + "=" + escape(bodys.img_type) + ";expires=" + exp.toGMTString() + ";path=/";
+					if (bodys.first == 1) {
+						document.cookie = "userId" + "=" + escape(bodys.user_id) + ";expires=" + exp.toGMTString() + ";path=/";
+						window.location.href = '../html/me_info.html?backUrl=2'
+					}
+				} else if (res.code == 4) {
+					window.location.href = res.body.hcpProfileURL;
+					return;
+				}
+			}
+		})
+	}
+
+	function shuaxin() {
+		$('#dialog,.divTwo').hide();
+	}
+
+	function game_begin() {
+		if (sessionStorage.getItem('isplay') == 0) {
+			document.getElementById('buttonPay').play();
+		}
+		setTimeout(function () {
+			$.ajax({
+				url: baseUrl.base + baseUrl.isPK,
+				type: 'post',
+				data: {
+					userId: getCookie('userId'),
+					pkId: getQueryString('pkId'),
+					pkType: 2
+				},
+				success: function (res) {
+					if (res.code == 0) {
+						window.location.href = '../html/fightAgainst.html?pkId=' + getQueryString('pkId')
+					} else if (res.code == 2) {
+						// 训练超过10次
+						$('.divTwo').show()
+						$('#card_img').attr('src', '../images/tankuang_10.png')
+					} else if(res.code == 7) {
+						//没有认证
+						$('.divTwo').show().attr('onclick', '');
+						$('#card_img').attr('src', '../images/tankuang.png')
+						$('#one_dialog').show()
+					} else if (res.code == 11) {
+						//已经答题了
+						if (null != getQueryString('code')) {
+							WeixinJSBridge.call('closeWindow');
+						}
+						alert('您已经答过该题了，请等待结果')
+					} else if (res.code == 9) {
+						alert('该活动已结束')
+					} else {
+						alert(res.msg)
+					}
+				}
+			})
+		}, 400)
+	}
+
+	var shapeUrl = window.location.href.replace("invitation", "test");
+	setShape();
+
+	jQuery(function () {
+		jQuery('#qrcode').qrcode({
+			width: 80,
+			height: 80,
+			correctLevel: 1,
+			text: window.location.href.replace("invitation", "test")
+		});
+	})
+</script>
+
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>我的PK战绩</title>
+	<link rel="stylesheet" href="../css/base.css">
+	<link rel="stylesheet" href="../css/myAchievements.css">
+	<script src="../js/vconsole.min.js"></script>
+	<script src="../js/jweixin-1.0.0.js"></script>
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/base.js"></script>
+	<script src="../js/index.js"></script>
+	<script src="../js/shape.js"></script>
+</head>
+
+<body>
+	<audio src="../music/button.mp3" id="buttonPay"></audio>
+	<div class="main">
+		<img id="head" class="head" src="../images/default.png">
+		<span id="name"></span>
+		<div id="achieve">
+			<div>
+				<img src="../images/myAchievements_01.png"></img>
+				<p id="pk_count">0</p>
+				<img src="../images/myAchievements_02.png"></img>
+				<p id="pk_win_count">0</p>
+			</div>
+			<div>
+				<img src="../images/myAchievements_03.png"></img>
+				<p id="user_rate">0</p>
+				<img src="../images/myAchievements_04.png"></img>
+				<p id="user_score">0</p>
+			</div>
+		</div>
+	</div>
+	<div class="btn_div">
+		<img id="flaunt_btn" src="../images/flaunt.png" onclick="flaunt()" />
+		<img id="goHome" src="../images/backhome01.png" onclick="window.location.href = baseUrl.base" />
+	</div>
+	<div class="dialog" id="dialog" onclick="modal_hide()">
+
+	</div>
+</body>
+
+<script>
+	getUserInfo()
+	if (window.history.length == 1) {
+		$('#flaunt_btn').hide()
+	}
+
+	getMeInfo();
+
+	function getMeInfo() {
+		$.ajax({
+			url: baseUrl.base + baseUrl.pkInfo,
+			type: 'post',
+			data: {
+				userId: getQueryString('userId'),
+			},
+			success: function (res) {
+				if (res.code == 0) {
+					$('#head').attr("src", res.body.user_img);
+					$('#name').html(res.body.user_name);
+					$('#user_score').html(res.body.user_score);
+					$('#user_rate').html(res.body.user_rate + "%");
+					$('#pk_win_count').html(res.body.pk_win_count);
+					$('#pk_count').html(res.body.pk_count);
+				}
+			}
+		})
+	}
+
+	var shapeUrl = window.location.href;
+	setShape()
+</script>
+
+</html>

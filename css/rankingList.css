@@ -1,0 +1,110 @@
+.main {
+  background-image: url(../images/rankingList.png);
+  position: absolute;
+  top: 10vw;
+  width: 100%;
+  height: 140vw;
+  color: #ae1042;
+  font-weight: bold;
+}
+
+#one_count {
+  position: absolute;
+  overflow-y: auto;
+  height: 58vw;
+  width: 70vw;
+  left: 15vw;
+  top: 46vw;
+}
+
+#one_count .one_count_list {
+  background-image: url('../images/rankingList_01.png');
+  position: relative;
+  height: 16VW;
+  margin: 0 2vw 2vw;
+}
+
+#one_count .one_count_list:last-child {
+  margin-bottom: 0;
+}
+
+#one_count .one_count_list .avatar {
+  position: absolute;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  width: 12vw;
+  height: 12vw;
+  left: 4vw;
+  top: 2vw;
+}
+
+#one_count .one_count_list .rank {
+  position: absolute;
+  color: #fff;
+  left: 1vw;
+  font-size: 12px;
+}
+
+#one_count .one_count_list .name {
+  position: absolute;
+  font-size: 3.5vw;
+  left: 18vw;
+  top: 3vw;
+}
+
+#one_count .one_count_list .score {
+  position: absolute;
+  font-size: 4vw;
+  left: 47vw;
+  top: 3vw;
+}
+
+.myself {
+  background-image: url(../images/rankingList_02.png);
+  position: absolute;
+  height: 16vw;
+  width: 68vw;
+  top: 119vw;
+  left: 17vw;
+  color: #ae1042;
+  font-weight: bold;
+}
+
+#head {
+  position: absolute;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  width: 12vw;
+  height: 12vw;
+  left: 2vw;
+  top: 1vw;
+}
+
+#name {
+  margin-left: 17vw;
+  margin-top: 2vw;
+  font-size: 3.5vw;
+}
+
+.myself .rank {
+  position: absolute;
+  line-height: 6vw;
+  left: 39vw;
+  top: 1.5vw;
+}
+
+.myself .rank span {
+  font-size: 12px;
+}
+
+.arrow {
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  top: 136vw;
+  display: none;
+}
+
+.arrow img {
+  width: 5vw;
+}

@@ -1,0 +1,117 @@
+#count_div .pk_info {
+  position: absolute;
+  text-align: center;
+  color: #2761b5;
+  top: 11vw;
+  width: 100vw;
+}
+
+#count_div .pk_info .me_head_bg {
+  background-image: url(../images/pk_info01.png);
+}
+
+#count_div .pk_info .opponent_head_bg {
+  background-image: url(../images/pk_info02.png);
+}
+
+#count_div .pk_info>div:nth-child(-n+2) {
+  position: relative;
+  width: 46vw;
+  height: 40vw;
+}
+
+#me_head,
+#opponent_head {
+  position: absolute;
+  width: 16vw;
+  height: 16vw;
+  top: 1vw;
+  border: 2px solid #fff;
+}
+
+#me_head {
+  right: 1vw;
+}
+
+#opponent_head {
+  left: 1vw;
+}
+
+#me_name,
+#opponent_name {
+  width: 25vw;
+  line-height: 19vw;
+  font-size: 5vw;
+  text-align: right;
+}
+
+#opponent_name {
+  margin-left: 21vw;
+  text-align: left;
+}
+
+#count_div .text {
+  width: 36vw;
+  line-height: 5vw;
+  font-size: 3.5vw;
+  position: absolute;
+  top: 24vw;
+  font-weight: bold;
+}
+
+#result_div {
+  text-align: center;
+}
+
+#result_img {
+  width: 100vw;
+}
+
+.fenshu_div {
+  color: #fff;
+  font-size: 4vw;
+  position: absolute;
+  width: 100%;
+  top: 90vw;
+}
+
+#fenshu {
+  font-size: 6vw;
+  margin-left: 2vw;
+}
+
+.btn_div {
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  top: 100vw;
+}
+
+.btn_div button {
+  width: 60vw;
+  height: 15vw;
+}
+
+.continue {
+  background-image: url('../images/result_one.png');
+}
+
+/* .share {
+  background-image: url('../images/result_two.png');
+} */
+
+.flaunt {
+  background-image: url('../images/flaunt.png');
+}
+
+.backHome {
+  background-image: url('../images/backHome.png');
+}
+
+#success_div {
+  position: absolute;
+  width: 14vw;
+  height: 14vw;
+  top: 2vw;
+  left: 36vw;
+}

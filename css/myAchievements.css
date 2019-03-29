@@ -1,0 +1,59 @@
+.main {
+  background-image: url(../images/myAchievements.png);
+  position: absolute;
+  top: 13vw;
+  left: 8vw;
+  width: 86vw;
+}
+
+#head {
+  position: absolute;
+  left: 31.5vw;
+  top: 2.5vw;
+  width: 20vw;
+  height: 20vw;
+}
+
+#name {
+  position: absolute;
+  top: 40vw;
+  text-align: center;
+  width: 97%;
+  color: #2761b5;
+}
+
+#achieve {
+  padding: 30vw 12vw 0 10vw;
+  height: 83vw;
+  text-align: center;
+}
+
+#achieve>div {
+  display: inline-block;
+  padding-top: 24vw;
+  width: 40%;
+  text-align: center
+}
+
+#achieve img {
+  width: 21vw;
+}
+
+#achieve p {
+  margin: 1vw 0 3vw;
+  font-weight: 900;
+  font-size: 6vw;
+  color: #af1042;
+}
+
+.btn_div {
+  position: absolute;
+  text-align: center;
+  width: 100vw;
+  top: 127vw;
+}
+
+.btn_div img {
+  width: 58vw;
+  margin-bottom: 1vw;
+}

@@ -1,0 +1,50 @@
+.page_bg {
+  background-image: url(../images/gamePK.png);
+  width: 100%;
+  left: 0;
+}
+
+.btn_div {
+  position: absolute;
+  text-align: center;
+  top: 50vw;
+}
+
+.btn_div button {
+  width: 70vw;
+  height: 21vw;
+}
+
+.button {
+  background-image: url(../images/pk_button_1.png);
+}
+
+.button2 {
+  background-image: url(../images/pk_button_2.png);
+  animation-delay: .25s;
+}
+
+.button3 {
+  background-image: url(../images/pk_button_3.png);
+  animation-delay: .5s;
+}
+
+.button4 {
+  background-image: url(../images/pk_button_4.png);
+  animation-delay: .75s;
+}
+
+.divTwo #one_dialog {
+  display: none;
+  position: absolute;
+  top: 88vw;
+  width: 100%;
+  text-align: center;
+  z-index: 3;
+}
+
+.divTwo #one_dialog a {
+  display: inline-block;
+  width: 30vw;
+  height: 10vw;
+}

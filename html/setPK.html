@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>设置PK</title>
+	<link rel="stylesheet" href="../css/base.css">
+	<link rel="stylesheet" href="../css/setPK.css">
+	<script src="../js/vconsole.min.js"></script>
+	<script src="../js/jweixin-1.0.0.js"></script>
+	<script src="../js/bg_music.js"></script>
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/base.js"></script>
+	<script src="../js/index.js"></script>
+</head>
+
+<body>
+	<audio src="../music/button.mp3" id="buttonPay"></audio>
+	<div class="page_bg">
+		<div>
+			<p>1.请设定题目数量</p>
+			<select id="select_subject_num"></select>
+			<p>2.请设定PK结束时间</p>
+			<input id="time" type="datetime-local">
+			<p>3.请设定PK人数上限</p>
+			<select id="select_person_num"></select>
+			<p>4.请设定题目主题</p>
+			<select id="select_subject_type"></select>
+		</div>
+	</div>
+	<div id="test" onclick="save()">
+		<img src="../images/determine.png" alt="">
+	</div>
+	<div class="divTwo" onclick="shuaxin()">
+		<img id="card_img" src="../images/tankuang_10.png">
+	</div>
+</body>
+<script>
+	getUserInfo()
+	function p(s) {
+		return s < 10 ? '0' + s : s;
+	}
+	getTime()
+
+	function getTime() {
+		var myDate = new Date();
+		//获取当前年
+		var year = myDate.getFullYear();
+		//获取当前月
+		var month = myDate.getMonth() + 1;
+		//获取当前日
+		var date = myDate.getDate();
+		var h = myDate.getHours() + 1; //获取当前小时数(0-23)
+		var m = myDate.getMinutes(); //获取当前分钟数(0-59)
+		var s = myDate.getSeconds();
+		var now = year + '-' + p(month) + "-" + p(date) + "T" + p(h) + ':' + p(m) + ":" + p(s);
+		$('#time').val(now)
+	}
+
+	//		for(var i = 3; i <= 40; i += 5) {
+	$("#select_person_num").append("<option value='" + 2 + "'>" + 2 + "人" + "</option>");
+	$("#select_person_num").append("<option value='" + 5 + "'>" + 5 + "人" + "</option>");
+	$("#select_person_num").append("<option value='" + 10 + "'>" + 10 + "人" + "</option>");
+	$("#select_person_num").append("<option value='" + 99999 + "'>" + '不限人数' + "</option>");
+	//		}
+
+	//		for(var i = 5; i <= 10; i++) {
+	$("#select_subject_num").append("<option value='" + 10 + "'>" + 10 + "道题" + "</option>");
+	$("#select_subject_num").append("<option value='" + 15 + "'>" + 15 + "道题" + "</option>");
+	$("#select_subject_num").append("<option value='" + 20 + "'>" + 20 + "道题" + "</option>");
+	//		}
+	var typeArr = ['全部', '疾病管理', '速效', '特殊人群', '优泌乐25', '优泌乐50', '预混', '指南共识', '复泰奥'];
+	for (var i = 0; i < typeArr.length; i++) {
+		$("#select_subject_type").append("<option value='"+ i +"'>" + typeArr[i] + "</option>");
+	}
+
+	$(function () {
+		window.addEventListener('pageshow', function (e) {
+			//				$('#test').removeAttr('onclick');
+			$('#test').attr('onclick', 'save()');
+		})
+	})
+
+	function shuaxin() {
+		$('.divTwo').hide();
+	}
+
+	function save() {
+		$('#test').removeAttr('onclick');
+		var select_person_num = $("#select_person_num").val()
+		var select_subject_num = $("#select_subject_num").val()
+		var time = document.getElementById("time").value.substring(0, 16).replace('T', " ").trim();
+		var type = $('#select_subject_type').val();
+		//			var time = "2018-12-12 12"
+		if (sessionStorage.getItem('isplay') == 0) {
+			document.getElementById('buttonPay').play();
+		}
+		setTimeout(function () {
+			createPK(select_person_num, select_subject_num, time, type)
+		}, 400)
+	}
+
+	function createPK(select_person_num, select_subject_num, timess, type) {
+		$.ajax({
+			url: baseUrl.base + baseUrl.caeatePk,
+			type: 'post',
+			data: {
+				userId: getCookie('userId'),
+				questionCount: select_subject_num,
+				'date': timess,
+				users: select_person_num,
+				selectedQuestionTag: type,
+				pkType: 2
+			},
+			success: function (res) {
+				console.log(res)
+				if (res.code == 0) {
+					window.location.href = '../html/invitation.html?pkId=' + res.body.pk_id
+				} else if (res.code == 2) {
+					$('.divTwo').show()
+				} else if (res.code == 13) {
+					$("#test").attr("onclick", "save()");
+					alert('当前分类下面的题目数量不足');
+				} else {
+					$("#test").attr("onclick", "save()");
+					alert("请选择大于一个小时的时间" + timess)
+				}
+			}
+		})
+	}
+</script>
+
+</html>

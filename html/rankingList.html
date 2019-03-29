@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>排行榜</title>
+	<link rel="stylesheet" href="../css/base.css">
+	<link rel="stylesheet" href="../css/rankingList.css">
+	<script src="../js/vconsole.min.js"></script>
+	<script src="../js/jweixin-1.0.0.js"></script>
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/base.js"></script>
+	<script src="../js/index.js"></script>
+	<script src="../js/music.js"></script>
+</head>
+
+<body>
+	<audio src="../music/index_bg.mp3" loop="loop" id="myAudio"></audio>
+	<audio src="../music/button.mp3" id="buttonPay"></audio>
+	<div onclick="isplay()" id="music_btn"></div>
+	<div class="main">
+		<div id="one_count" class="scrollbar"></div>
+	</div>
+	<div class="myself">
+		<img id="head">
+		<span id="name"></span>
+		<div class="rank">
+			<span class="rank_month">月排名&nbsp;&nbsp;&nbsp;&nbsp;第<span id="yueminci"></span>名</span>
+			<span class="rank_week">周排名&nbsp;&nbsp;&nbsp;&nbsp;第<span id="zouminci"></span>名</span>
+		</div>
+	</div>
+	<div class="arrow"><img src="../images/arrow.png" alt=""></div>
+	<!-- <a class="back" href="javascript: history.go(-1)">返回</a> -->
+</body>
+
+<script>
+	getUserInfo()
+	if (null == sessionStorage.getItem('isplay')) {
+		sessionStorage.setItem('isplay', 0);
+	}
+	var myAudio = document.getElementById("myAudio");
+	if (sessionStorage.getItem('isplay') == 1) {
+		document.getElementById("myAudio").pause();
+	} else {
+		document.getElementById("myAudio").play();
+	}
+
+	function addView() {
+		for (var i = 0; i < rankList.length; i++) {
+			var px = 20 + i * 75;
+			var pxTwo = 4 + i * 75;
+			var view =
+				`<div class="one_count_list">
+					<span class="rank">${rankList[i].rank}</span>
+					<img class="avatar" src="${rankList[i].user_img}" alt="">
+					<span class="name">${rankList[i].user_name}</span>
+					<span class="score">${rankList[i].user_score}</span>
+				</div>`;
+			$('#one_count').append(view);
+			if ($('#one_count > div').outerHeight(true) * $('#one_count > div').length > $('#one_count').height()) {
+				$('.arrow').show();
+				$('.arrow').click(function () {
+					$('#one_count').scrollTop($('#one_count').scrollTop() + 60);
+				})
+			}
+		}
+	}
+
+	//		addView()
+	getMeInfo();
+	var rankList;
+
+	function getMeInfo() {
+		$.ajax({
+			url: baseUrl.base + baseUrl.rankList,
+			type: 'post',
+			// url: '../../rankingList.json',
+			data: {
+				userId: getQueryString('userId'),
+			},
+			success: function (res) {
+				if (res.code == 0) {
+					rankList = res.body.rankList;
+					addView();
+					$('#name').html(res.body.userInfo.user_name)
+					//$('#fenshu').html(res.body.userInfo.user_score)
+					$('#zouminci').html(res.body.userInfo.week_rank)
+					$('#yueminci').html(res.body.userInfo.rank)
+					$('#head').attr('src', res.body.userInfo.user_img)
+				}
+			}
+		})
+	}
+</script>
+
+</html>

@@ -1,0 +1,61 @@
+.page_bg {
+  background-image: url(../images/fightAgainst.png);
+  width: 100%;
+  top: 36vw;
+  left: 0;
+}
+
+.match_info {
+  background-image: url(../images/fightAgainst_01.png);
+  position: absolute;
+  right: 0;
+  width: 45vw;
+  height: 25vw;
+  top: 14vw;
+  padding: 6vw 5vw 5vw 10vw;
+}
+
+.match_info p {
+  font-size: 4vw;
+  color: #2860b4;
+  text-align: right;
+  font-weight: bold;
+}
+
+.match_info p:first-child {
+  text-align: center;
+  padding-left: 3vw;
+}
+
+#time {
+  position: absolute;
+  font-size: 11vw;
+  color: #fff;
+  width: 24vw;
+  height: 23vw;
+  line-height: 23vw;
+  left: 41vw;
+  top: 15vw;
+  text-align: center;
+  font-family: Arial;
+  font-weight: bold;
+}
+
+#num {
+  position: absolute;
+  font-size: 5vw;
+  color: #275fb2;
+  top: 40vw;
+  left: 18vw;
+}
+
+.container {
+  position: absolute;
+  overflow: auto;
+  height: 70vw;
+  width: 68vw;
+  top: 46vw;
+  left: 18vw;
+  padding-right: 2vw;
+  font-weight: bold;
+}

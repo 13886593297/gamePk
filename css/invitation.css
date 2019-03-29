@@ -1,0 +1,44 @@
+.page_bg {
+  background-image: url(../images/invitation.png);
+}
+
+.page_bg .text {
+  margin-top: 40vw;
+  width: 44vw;
+  margin-left: 16vw;
+  padding: 8vw 5vw;
+  color: #2860b5;
+  font-size: 5vw;
+  font-weight: bold;
+  text-align: center;
+}
+
+.game_begin {
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  top: 98vw;
+}
+
+.game_begin img {
+  width: 45vw;
+}
+
+#qrcode {
+  margin-top: 10vw;
+}
+
+.divTwo #one_dialog {
+  display: none;
+  position: absolute;
+  top: 88vw;
+  width: 100%;
+  text-align: center;
+  z-index: 3;
+}
+
+.divTwo #one_dialog a {
+  display: inline-block;
+  width: 30vw;
+  height: 10vw;
+}

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>PK记录</title>
+	<link rel="stylesheet" href="../css/base.css">
+	<link rel="stylesheet" href="../css/pkRecord.css">
+	<script src="../js/vconsole.min.js"></script>
+	<script src="../js/jweixin-1.0.0.js"></script>
+	<script src="../js/bg_music.js"></script>
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/base.js"></script>
+	<script src="../js/index.js"></script>
+</head>
+
+<body>
+	<audio src="../music/index_bg.mp3" loop id="myAudio"></audio>
+	<audio src="../music/button.mp3" id="buttonPay"></audio>
+	<div class="page_bg"></div>
+	<div id="one_count" class="scrollbar"></div>
+	<div class="arrow"><img src="../images/arrow.png"></div>
+	<div class="back_home" onclick="location.href = baseUrl.base"><img src="../images/backhome.png" alt=""></div>
+	<!-- <a class="back" onclick="window.location.href = baseUrl.base">返回首页</a> -->
+</body>
+
+<script>
+	getUserInfo()
+	function addView() {
+		var type = '';
+		for (var i = 0; i < rankList.length; i++) {
+			type = rankList[i].type == 1 ? '在线匹配' : '邀请对战';
+			var view =
+				`<div id="${i}" style="background-image: url(../images/pkRecord_01.png)">
+					<span class="endTime">${rankList[i].date}</span>
+					<span class="type">${type}</span>
+					<div id="end${i}">
+						<span class="status"><span>${rankList[i].res}</span><br><img src="../images/pkRecord_02.png"></span>
+						<div class='details'>
+							<span class="time">用时: ${rankList[i].time}</span><br>
+							<span class='rate'>正确率: ${rankList[i].rate}%</span>
+						</div>
+					</div>
+					<span id="jinxingzhong${i}">进行中... ...</span>
+				</div>`;
+
+			$('#one_count').append(view);
+			if (rankList[i].end == 1) {
+				$('#end' + i).show()
+				$('#jinxingzhong' + i).hide()
+			} else {
+				$('#end' + i).hide()
+				$('#jinxingzhong' + i).show()
+			}
+			$("#" + i).click(function () {
+				if (rankList[$(this).attr('id')].type == 2 && rankList[$(this).attr('id')].end == 1)
+					window.location.href = '../html/pkRoom.html?pkId=' + rankList[$(this).attr('id')].pkId
+			});
+		}
+	}
+
+	getMeInfo();
+	var rankList;
+
+	function getMeInfo() {
+		$.ajax({
+			url: baseUrl.base + baseUrl.record,
+			type: 'post',
+			// url: '../../pkRecord.json',
+			data: {
+				// userId: 2,
+				userId: getCookie('userId'),
+			},
+			success: function (res) {
+				if (res.code == 0) {
+					rankList = res.body;
+					console.log(res)
+					addView();
+					if ($('#one_count > div').outerHeight(true) * $('#one_count > div').length > $('#one_count').height()) {
+						$('.arrow').show();
+						$('.arrow').click(function () {
+							$('#one_count').scrollTop($('#one_count').scrollTop() + 75)
+						})
+					}
+				}
+			}
+		})
+	}
+</script>
+
+</html>

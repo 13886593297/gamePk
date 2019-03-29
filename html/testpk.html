@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/base.js"></script>
+</head>
+
+<body>
+
+</body>
+<script>
+	window.onload = function () {
+		//			var shapeUrl = 
+		//				'https://wechat.lillyadmin.cn/idoctorApi/Access/Login?backurl=' +
+		//				encodeURIComponent('https://pkgame-q.lillyadmin.cn/client/pkgame/html/index.html') +
+		//				'&needTicket=true';
+		//			window.location.href = shapeUrl
+
+		var shapeUrl =
+			baseUrl.shapeUrl + 'idoctorApi/Access/Login?backurl=' +
+			encodeURIComponent(baseUrl.base + 'client/pkgame/html/pk.html') +
+			'&needTicket=true';
+		window.location.href = shapeUrl
+	}
+
+	/**
+	 * 截取传参
+	 * @param name key值
+	 * @returns {null}
+	 * @constructor
+	 */
+	function getQueryString(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null) return decodeURI(r[2]);
+		return null;
+	}
+</script>
+
+</html>

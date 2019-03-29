@@ -1,0 +1,33 @@
+.page_bg {
+  background-image: url(../images/train.png);
+  position: absolute;
+  top: 10vw;
+  width: 100%;
+  left: 0;
+}
+
+.btn_div {
+  position: absolute;
+  text-align: center;
+  top: 53vw;
+}
+
+button {
+  width: 70vw;
+  height: 22vw;
+  margin-bottom: 5vw;
+}
+
+.button1 {
+  background-image: url(../images/train_01.png);
+}
+
+.button2 {
+  background-image: url(../images/train_02.png);
+  animation-delay: 0.25s;
+}
+
+.button3 {
+  background-image: url(../images/train_03.png);
+  animation-delay: 0.5s;
+}

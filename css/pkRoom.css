@@ -1,0 +1,147 @@
+#me_div {
+  position: absolute;
+  top: 10vw;
+  width: 50vw;
+  height: 20vw;
+  line-height: 18vw;
+  text-align: right;
+  color: #275fb2;
+  font-weight: bold;
+  background-image: url(../images/pkRoom_top.png);
+}
+
+#meHead {
+  width: 16vw;
+  height: 16vw;
+  margin-right: 2vw;
+  border-radius: 50%;
+  margin-top: 1.5vw;
+}
+
+#meName {
+  width: 30vw;
+  text-align: center;
+}
+
+.main {
+  background-image: url(../images/pkRoom.png);
+  position: absolute;
+  top: 33vw;
+  left: 5vw;
+  width: 80vw;
+  height: 108vw;
+  color: #fff;
+  padding: 5vw;
+}
+
+#num {
+  text-align: center;
+  line-height: 10vw;
+  height: 10vw;
+  background-color: #fff;
+  border-radius: 20px;
+  color: #275fb2;
+  font-weight: bold;
+  font-size: 4vw;
+}
+
+#count_div {
+  overflow-y: auto;
+  height: 80vw;
+  margin-top: 2vw;
+}
+
+#count_div>div {
+  position: relative;
+  height: 18vw;
+  padding: 0 2vw;
+  background-color: #2761b5;
+  margin-bottom: 2vw;
+  border-radius: 20px;
+  margin-right: 3vw;
+}
+
+#count_div>div:last-child {
+  margin-bottom: 0;
+}
+
+#count_div>div.active {
+  background-color: #fe842f;
+}
+
+.head {
+  border: 2px solid #fff;
+  width: 15vw;
+  height: 15vw;
+  margin: 1vw 0;
+}
+
+.name {
+  font-size: 4vw;
+  width: 20vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transform: translateY(4px);
+}
+
+.detail {
+  position: absolute;
+  font-size: 10px;
+  left: 40vw;
+  top: 0;
+  line-height: 1.2;
+}
+
+.detail div:nth-child(1) {
+  font-size: 4vw;
+  margin: 3vw 0 2vw
+}
+
+.main .arrow {
+  width: 5vw;
+  margin-left: 35vw;
+  margin-top: 3vw;
+}
+
+.rank_icon {
+  position: absolute;
+  right: 2vw;
+  top: 1vw;
+}
+
+.rank_icon img {
+  width: 16vw;
+}
+
+.rank_icon span {
+  position: absolute;
+  width: 7vw;
+  height: 7vw;
+  line-height: 7vw;
+  left: 4.5vw;
+  top: 4vw;
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+  font-family: Arial;
+}
+
+.rank_icon span.num {
+  width: 8vw;
+  height: 8vw;
+  line-height: 8vw;
+  top: 3vw;
+  left: 3.8vw;
+}
+
+.back_home {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  top: 146vw;
+}
+
+.back_home img {
+  width: 60vw;
+}

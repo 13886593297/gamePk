@@ -1,0 +1,64 @@
+.page_bg {
+  background-image: url(../images/setPK.png);
+}
+
+.page_bg > div {
+  width: 60vw;
+  height: 70vw;
+  margin-top: 40vw;
+  margin-left: 9vw;
+  border: 1vw solid #c2def6;
+  border-radius: 20px;
+  background-color: #fff;
+  padding-left: 5vw;
+  color: #275fb4;
+}
+
+.page_bg p {
+  font-weight: 600;
+  line-height: 9vw;
+  font-size: 14px;
+}
+
+.page_bg input,
+.page_bg select {
+  width: 54vw;
+  height: 8vw;
+  border: 0;
+  text-indent: 2vw;
+  outline: none;
+  border-radius: 20px;
+  background-color: #bdddf6;
+  color: #275fb4;
+  font-weight: 600;
+}
+
+.page_bg select {
+  text-indent: 5vw;
+  background-image: url(../images/downArrow.png);
+  background-position: 48vw;
+  background-size: 16px;
+}
+
+.page_bg input {
+  width: 51vw;
+  padding-right: 3vw;
+}
+
+select {
+  appearance:none;
+  -moz-appearance:none;
+  -webkit-appearance:none;
+}
+
+#test {
+  position: absolute;
+  text-align: center;
+  top: 126vw;
+  width: 100%;
+  left: 0;
+}
+
+#test img {
+  width: 45vw;
+}	

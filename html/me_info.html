@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>用户编辑</title>
+	<link rel="stylesheet" href="../css/base.css">
+	<link rel="stylesheet" href="../css/me_info.css">
+	<script src="../js/vconsole.min.js"></script>
+	<script src="../js/jweixin-1.0.0.js"></script>
+	<script src="../js/bg_music.js"></script>
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/base.js"></script>
+	<script src="../js/index.js"></script>
+</head>
+
+<body>
+	<div class="page_bg"></div>
+	<div class="content">
+		<div class="w50">
+			<img class="avatar" id="me_head">
+			<div id="me_name"></div>
+			<div onclick="me_click()" id="me_click">
+				<img class="select_img" src="../images/select.png" id="me_iv"/>
+			</div>
+			<div class="scrollbar" id="message_info"></div>
+		</div>
+
+		<div class="w50">
+			<div class="switch" onclick="switchsex()">
+				<img class="avatar" id="ta_head">
+				<img class="switch_arrow" src="../images/me_info_02.png" alt="">
+			</div>
+			<div id="sex_div">
+				<input placeholder="请输入昵称" type="text" id="ta_name">
+			</div>
+			<div onclick="ta_click()">
+				<img class="select_img" src="../images/not_select.png" id="ta_iv">
+			</div>
+			<div style="font-size: 10px; color: #fff">默认头像可以点击切换哦</div>
+		</div>
+	</div>
+	<div class="determine" onclick="updata()"></div>
+</body>
+
+<script>
+	var flag = 1,
+		flagSex = getCookie('userSex');
+	var taHead = '';
+	
+	if (flagSex == 1) {
+		//女
+		$('#sex_div').css('background-image', 'url(../images/woman.png)')
+		$('#ta_head').attr('src', '../images/default-woman.png')
+	} else {
+		$('#sex_div').css('background-image', 'url(../images/man.png)')
+		$('#ta_head').attr('src', '../images/default.png')
+	}
+
+	function switchsex() {
+		var url = $('#ta_head').attr('src');
+		if (flagSex == 1) {
+			$('#sex_div').css('background-image', 'url(../images/man.png)');
+			flagSex = 0;
+			if (url.indexOf('default-woman.png') >= 0) {
+				$('#ta_head').attr('src', '../images/default.png');
+				taHead = baseUrl.headImageUrl;
+			}
+		} else {
+			$('#sex_div').css('background-image', 'url(../images/woman.png)');
+			flagSex = 1;
+			if (url.indexOf('default.png') >= 0) {
+				$('#ta_head').attr('src', '../images/default-woman.png');
+				taHead = baseUrl.wuManHeadImageUrl;
+			}
+		}
+	}
+	if (1 == getCookie('imgType')) {
+		flag = 2;
+		$('#ta_iv').attr('src', '../images/select.png')
+		$('#me_iv').attr('src', '../images/not_select.png')
+	} else {
+		flag = 1;
+		$('#ta_iv').attr('src', '../images/not_select.png')
+		$('#me_iv').attr('src', '../images/select.png')
+	}
+
+	var nn = getCookie('wxUserName');
+	if (null == nn || nn.length == 0) {
+		$('#me_click').removeAttr('onclick')
+		flag = 2;
+		$('#ta_iv').attr('src', '../images/select.png')
+		$('#me_iv').attr('src', '../images/not_select.png')
+	} else {
+		$('#me_click').attr('onclick', 'me_click()')
+	}
+
+	$('#me_head').attr('src', getCookie('wxUserImg'))
+	$('#me_name').html(getCookie('wxUserName'))
+
+	$('#ta_head').attr('src', getCookie('csUserImg'))
+	$('#ta_name').val(getCookie('csUserName'))
+
+	var nnaa = getCookie('wxUserName');
+	if (null == nnaa || nnaa.length == 0) {
+		$("#message_info").html('关注礼医公众号可以显示您的微信昵称和头像')
+	} else {
+		$("#message_info").html('该选项表明您同意礼来在“乐拼王者”的PK中心、个人中心和排行榜中使用您的微信昵称和头像，并且“乐拼王者”的其他参与者亦可以看到并在微信中分享含有您微信昵称和头像的游戏页面。')
+	}
+
+	function me_click() {
+		flag = 1;
+		$('#me_iv').attr('src', '../images/select.png')
+		$('#ta_iv').attr('src', '../images/not_select.png')
+	}
+
+	function ta_click() {
+		flag = 2;
+		$('#ta_iv').attr('src', '../images/select.png')
+		$('#me_iv').attr('src', '../images/not_select.png')
+	}
+
+	$("#file1").change(function () {
+		var data = new FormData();
+		data.append("imgFile", $('#file1')[0].files[0])
+		$.ajax({
+			url: baseUrl.base + "api/Upload/Image",
+			type: 'POST',
+			data: data,
+			dataType: 'JSON',
+			cache: false,
+			processData: false,
+			contentType: false,
+			success: function (res) {
+				if (0 == res.code) {
+					$('#ta_head').attr('src', res.urls)
+					taHead = res.urls;
+				}
+			},
+			complete: function () {
+				//					alert("dddd")
+			},
+			error: function (e) {
+				alert("错误 请重试")
+			}
+		})
+	});
+
+	function getObjectURL(file) {
+		var url = null;
+		if (window.createObjectURL != undefined) { // basic
+			url = window.createObjectURL(file);
+		} else if (window.URL != undefined) { // mozilla(firefox)
+			url = window.URL.createObjectURL(file);
+		} else if (window.webkitURL != undefined) { // webkit or chrome
+			url = window.webkitURL.createObjectURL(file);
+		}
+		return url;
+	}
+
+	function updata() {
+		var par = {};
+		if ($('#ta_name').val().trim() == '') {
+			alert('请输入昵称');
+			return;
+		}
+		if (flag == 1) {
+			//微信
+			par.userName = getCookie('wxUserName');
+			par.userImg = getCookie('wxUserImg');
+		} else {
+			par.userName = $('#ta_name').val();
+			par.userSex = flagSex;
+			if (taHead.length > 0) {
+				par.userImg = taHead;
+			}
+		}
+		par.userId = getCookie('userId');
+		par.type = flag - 1;
+		$.ajax({
+			url: baseUrl.base + 'api/user/update',
+			type: 'post',
+			data: par,
+			success: function (res) {
+				if (res.code == 0) {
+					var exp = new Date();
+					exp.setTime(exp.getTime() + 60 * 60 * 1000 * 24);
+					document.cookie = "userImg" + "=" + escape(taHead) + ";expires=" + exp.toGMTString() + ";path=/";
+					document.cookie = "userName" + "=" + escape(par.userName) + ";expires=" + exp.toGMTString() + ";path=/";
+					document.cookie = "imgType" + "=" + escape(par.type) + ";expires=" + exp.toGMTString() + ";path=/";
+					if (2 == flag) {
+						if (taHead.length > 0) {
+							document.cookie = "csUserImg" + "=" + escape(taHead) + ";expires=" + exp.toGMTString() + ";path=/";
+						}
+						document.cookie = "csUserName" + "=" + escape(par.userName) + ";expires=" + exp.toGMTString() + ";path=/";
+						document.cookie = "userSex" + "=" + escape(par.userSex) + ";expires=" + exp.toGMTString() + ";path=/";
+					}
+					if (null != getQueryString('backUrl')) {
+						if (1 == getQueryString('backUrl')) {
+							//首页
+							window.location.href = baseUrl.base
+						} else if (2 == getQueryString('backUrl')) {
+							//设置答题
+							window.location.href = '../html/invitation.html'
+						} else if (3 == getQueryString('backUrl')) {
+							//pk
+							window.location.href = '../html/pk.html'
+						}
+
+					} else {
+						window.location.href = '../html/me.html?userId=' + getCookie('userId')
+						//							window.history.go(-1)
+					}
+				}
+			}
+		})
+	}
+</script>
+
+</html>

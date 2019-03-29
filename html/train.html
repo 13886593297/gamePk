@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>训练场</title>
+	<link rel="stylesheet" href="../css/animate.css">
+	<link rel="stylesheet" href="../css/base.css">
+	<link rel="stylesheet" href="../css/train.css">
+	<script src="../js/vconsole.min.js"></script>
+	<script src="../js/jweixin-1.0.0.js"></script>
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/base.js"></script>
+	<script src="../js/index.js"></script>
+	<script src="../js/music.js"></script>
+</head>
+
+<body>
+	<audio src="../music/index_bg.mp3" loop id="myAudio"></audio>
+	<audio src="../music/button.mp3" id="buttonPay"></audio>
+	<div onclick="isplay()" id="music_btn"></div>
+	<div class="page_bg"></div>
+	<div class="btn_div">
+		<button class="button1 animated" onclick="onclickOne()"></button>
+		<button class="button2 animated" onclick="onclickTwo()"></button>
+		<button class="button3 animated" onclick="onclickThree()"></button>
+	</div>
+	<div class="divTwo" onclick="shuaxin()">
+		<img src="../images/projectile_frame_over_two.png" id="card_img" />
+	</div>
+</body>
+<script>
+	getUserInfo()
+	var one, two, three;
+	if (null == sessionStorage.getItem('isplay')) {
+		sessionStorage.setItem('isplay', 0);
+	}
+
+	function autoPlayAudio1() {
+		wx.config({
+			// 配置信息, 即使不正确也能使用 wx.ready
+			debug: false,
+			appId: '',
+			timestamp: 1,
+			nonceStr: '',
+			signature: '',
+			jsApiList: []
+		});
+		wx.ready(function () {
+			if (sessionStorage.getItem('isplay') == 0) {
+				document.getElementById('myAudio').play();
+			}
+		});
+	}
+
+	autoPlayAudio1()
+	
+	function onclickOne() {
+		if (sessionStorage.getItem('isplay') == 0) {
+			document.getElementById('buttonPay').play();
+		}
+		if (one >= 5 && two >= 5 && three >= 5) {
+			$("#card_img").attr("src", "../images/projectile_frame_over.png");
+			$('.divTwo').show();
+		} else {
+			if (one == undefined) {
+				setTimeout(function () {
+					window.location.href = 'subject.html?levelId=1'
+				}, 400);
+			} else if (one < 5) {
+				setTimeout(function () {
+					window.location.href = 'subject.html?levelId=1'
+				}, 400);
+			} else {
+				$('.divTwo').show();
+			}
+		}
+
+	}
+
+	function onclickTwo() {
+		if (sessionStorage.getItem('isplay') == 0) {
+			document.getElementById('buttonPay').play();
+		}
+		if (one >= 5 && two >= 5 && three >= 5) {
+			$("#card_img").attr("src", "../images/projectile_frame_over.png");
+			$('.divTwo').show();
+		} else {
+			if (two == undefined) {
+				setTimeout(function () {
+					window.location.href = 'subject.html?levelId=2'
+				}, 400);
+			} else if (two < 5) {
+				setTimeout(function () {
+					window.location.href = 'subject.html?levelId=2'
+				}, 400);
+			} else {
+				$('.divTwo').show();
+			}
+		}
+	}
+
+	function onclickThree() {
+		if (sessionStorage.getItem('isplay') == 0) {
+			document.getElementById('buttonPay').play();
+		}
+		if (one >= 5 && two >= 5 && three >= 5) {
+			$("#card_img").attr("src", "../images/projectile_frame_over.png");
+			$('.divTwo').show();
+		} else {
+			if (three == undefined) {
+				setTimeout(function () {
+					window.location.href = 'subject.html?levelId=3'
+				}, 400);
+			} else if (three < 5) {
+				setTimeout(function () {
+					window.location.href = 'subject.html?levelId=3'
+				}, 400);
+			} else {
+				$('.divTwo').show();
+			}
+		}
+	}
+
+	function find() {
+		$.ajax({
+			url: baseUrl.base + baseUrl.count,
+			type: 'post',
+			data: {
+				userId: getCookie('userId'),
+			},
+			success: function (res) {
+				if (res.code == 0) {
+					one = res.body['1'];
+					two = res.body['2'];
+					three = res.body['3'];
+					if (one >= 5 && two >= 5 && three >= 5) {
+						setTimeout(function () {
+							$("#card_img").attr("src", "../images/projectile_frame_over.png");
+							$('.divTwo').show();
+						}, 1500);
+					}
+				}
+			}
+		})
+	}
+	find();
+
+	function shuaxin() {
+		$('.divTwo').hide();
+		findview();
+	}
+
+	function findview() {
+		$.ajax({
+			url: baseUrl.base + baseUrl.count,
+			type: 'post',
+			data: {
+				userId: getCookie('userId'),
+			},
+			success: function (res) {
+				if (res.code == 0) {
+					one = res.body['1'];
+					two = res.body['2'];
+					three = res.body['3'];
+				}
+			}
+		})
+	}
+
+	window.addEventListener("popstate", function (e) {
+		alert("我监听到了浏览器的返回按钮事件啦"); //根据自己的需求实现自己的功能  
+	}, false);
+</script>
+
+</html>

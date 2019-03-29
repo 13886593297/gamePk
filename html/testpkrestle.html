@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/base.js"></script>
+</head>
+
+<body>
+
+</body>
+<script>
+	window.onload = function () {
+		var meName = getQueryString('meName'),
+			taName = getQueryString('taName'),
+			//			meHead = getQueryString('meHead'),
+			//			taHead = getQueryString('taHead'),
+			meSubjectNum = getQueryString('meSubjectNum'),
+			meTime = getQueryString('meTime'),
+			taSubjectNum = getQueryString('taSubjectNum'),
+			taTime = getQueryString('taTime'),
+			fraction = '20',
+			flag = 1;
+
+		var ss = "?meName=" + meName + "&taName=" + taName +
+			//		"&meHead=" + meHead + "&taHead=" + taHead + 
+			"&meSubjectNum=" + meSubjectNum + "&meTime=" + meTime +
+			"&taSubjectNum=" + taSubjectNum + "&taTime=" + taTime + "&fraction=" + fraction + "&flag=" + flag;
+
+		var shapeUrl =
+			baseUrl.shapeUrl + 'idoctorApi/Access/Login?backurl=' +
+			encodeURIComponent(baseUrl.base + 'client/pkgame/html/pk_result.html' + ss) +
+			'&needTicket=true';
+		window.location.href = shapeUrl
+	}
+
+	/**
+	 * 截取传参
+	 * @param name key值
+	 * @returns {null}
+	 * @constructor
+	 */
+	function getQueryString(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null) return decodeURI(r[2]);
+		return null;
+	}
+</script>
+
+</html>
