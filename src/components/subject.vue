@@ -92,7 +92,7 @@ export default {
           this.correct++
           this.score += this.list[this.question_index].level_score
         } else {
-          this.$refs.img[answerOption - 1].src = '/static/images/error.png'
+          this.$refs.img[answerOption - 1].src = '/static/images/wrong.png'
         }
         setTimeout(() => {
           this.isClick = false
