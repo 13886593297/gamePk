@@ -1,7 +1,14 @@
 {
-  "code": 200,
-  "isFixedHead": 1,
-  "uid": 10000022,
-  "headImgUrl": "",
-  "nickname": "张三"
+  "code": 0,
+  "body": {
+    "first": 0,
+    "user_name": "周武",
+    "wx_user_name": "周武",
+    "cs_user_name": "赵四",
+    "user_sex": 0,
+    "user_id": 194,
+    "img_type": 1,
+    "user_img": "https://pkgame-q.lillyadmin.cn/Images/default.png",
+    "wx_user_img": "http://thirdwx.qlogo.cn/mmopen/g7kl2Z9KyjQzvQjgnibqyOxxObNvicrQWNGmc7kG30F0CIQO7BWUBQUwboNianicomDT3icwOibxrq0LxuYk0UJ59oWnRY730xfs0S/132"
+  }
 }

@@ -47,7 +47,7 @@ export default {
 
 <style lang="scss" scoped>
 .main {
-  background-image: url("/static/img/rank_bg.jpg");
+  background-image: url("/static/images/rank_bg.jpg");
 }
 
 a {
@@ -66,7 +66,7 @@ a {
     li {
       height: 17.7vw;
       margin: 0 5vw 3vw;
-      background: url("/static/img/rank_01.png") no-repeat;
+      background: url("/static/images/rank_01.png") no-repeat;
       background-size: 100%;
       position: relative;
       span {
@@ -92,7 +92,7 @@ a {
     }
   }
   .myRank {
-    background: url("/static/img/rank_02.png") no-repeat;
+    background: url("/static/images/rank_02.png") no-repeat;
     background-size: 100%;
     margin-top: 4vw;
     height: 19vw;

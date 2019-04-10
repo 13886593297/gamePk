@@ -1,19 +1,31 @@
 <template>
-  <div class="main">
-    <div class="role self">
-      <img :src="headImgUrl" alt>
-      <span class="name">{{ nickname }}</span>
+  <div>
+    <div class="load" v-if="loadShow">
+      <div class="user">
+        <span>{{ user_name }}</span>
+        <div>
+          <img :src="user_img">
+        </div>
+      </div>
+      <div class="opponent">
+        <span>{{ opponent_name }}</span>
+        <div>
+          <img :src="opponent_img">
+        </div>
+      </div>
+      <div class>
+        <div class="text" ref="text">匹配倒计时：{{ countNum }} s</div>
+        <router-link to="/gamePK"></router-link>
+        <router-link to="/"></router-link>
+      </div>
+      <img src="/static/images/pk_03.png" alt>
     </div>
-    <div class="role rival">
-      <img :src="rivalHeadImgUrl" alt>
-      <span class="name">{{ rivalNickname }}</span>
+    <div class="march">
+      
     </div>
-    <p class="time">匹配倒计时：{{ time }}s</p>
-    <div class="route">
-      <router-link to="/totalPk"></router-link>
-      <router-link to="/"></router-link>
+    <div class="modal" v-show="isShow" @click="isShow = 0">
+      <img src="/static/images/tankuang_10.png" ref="img">
     </div>
-    <div class="tip">当前无对手应战<br>请稍后再来！<i>X</i></div>
   </div>
 </template>
 <script>
@@ -21,123 +33,131 @@
 export default {
   data() {
     return {
-      nickname: this.$storageHandler.getStorage('nickname'),
-      headImgUrl: this.$storageHandler.getStorage('headImgUrl'),
-      rivalNickname: '',
-      rivalHeadImgUrl: '/static/img/default.png',
-      time: 61,
-      timer: ''
+      user_id: this.$handler.getStorage('user_id'),
+      loadShow: 1,  // 默认显示loading区域，匹配到对手后隐藏
+      user_name: this.$handler.getStorage('user_name'),
+      user_img: this.$handler.getStorage('user_img'),
+      opponent_name: '',
+      opponent_img: '/static/images/wait_person.png',
+      countNum: 10,  // 倒计时
+      socket: '',
+      isShow: 0,
+      data: ''
     }
   },
   mounted() {
-    this.timer = setInterval(() => {
-      this.time--
-      if (this.time <= 0) {
-        var route = 'main.pkHandler.cancelMatch'
-        pomelo.request(route, {}, data => {
-          console.log(data)
-          clearInterval(this.timer)
-        })
+    this.init()
+  },
+  methods: {
+    init() {
+      this.socket = new WebSocket('wss:' + this.$baseUrl.basePk + this.$baseUrl.pk + this.user_id)
+      this.socket.onmessage = this.getMessage
+    },
+    getMessage(msg) {
+      this.data = JSON.parse(msg.data)
+      console.log(this.data)
+      if (this.data.c == 0) {
+        this.countNum = this.data.s
+      } else if (this.data.c == 1) {
+        this.opponent_name = this.data.u2.userName
+        this.opponent_img = this.data.u2.userImg.replace('/Images', '/static/images')
+        this.$refs.text.innerHTML = 'PK进行中... ...'
+        setTimeout(() => {
+          this.send('{"c":1}')
+        }, 2000)
+      } else if (this.data.c == 2) {
+        // 没有对手
+      } else if (this.data.c == 4) {
+        this.loadShow = 0
       }
-    }, 1000)
-    var route = 'main.pkHandler.joinRoomMatch'
-    pomelo.request(route, {}, data => {
-      console.log(data)
-    })
+    },
+    send(params) {
+      this.socket.send(params)
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.main {
-  background-image: url("/static/img/onLinePk_bg.jpg");
-}
-
-.role {
-  img {
-    width: 16vw;
-    margin-top: 1vw;
-    border-radius: 50%;
-  }
-  transform: translate(-3000px);
-  position: absolute;
-  width: 43vw;
-  height: 18vw;
-  line-height: 18vw;
-  border: 2px solid #fff;
-  color: #fff;
-  letter-spacing: 1.5vw;
-  &.self {
-    top: 17vw;
-    border-left: 0;
-    animation: slideInLeft 0.5s 0.5s 1 forwards;
-    border-radius: 0 40px 40px 0;
-    background-color: #bc0000;
-    .name,
-    img {
-      float: right;
-      margin-right: 1vw;
+.load {
+  > div {
+    &:nth-child(-n + 2) {
+      position: absolute;
+      width: 60vw;
+      height: 28vw;
+      div {
+        position: absolute;
+        width: 26vw;
+        height: 26vw;
+        top: 1vw;
+        background-image: url(/static/images/avatar_bg.png);
+        img {
+          width: 20vw;
+          height: 20vw;
+          position: absolute;
+          top: 2.3vw;
+          left: 2.8vw;
+          border-radius: 50%;
+        }
+      }
+      span {
+        display: inline-block;
+        line-height: 26vw;
+        font-size: 5vw;
+        width: 33vw;
+        color: #2761b5;
+      }
     }
-  }
-  &.rival {
-    top: 83vw;
-    right: 0;
-    border-right: 0;
-    animation: slideInRight 0.5s 1.5s 1 forwards;
-    border-radius: 40px 0 0 40px;
-    background-color: #000;
-    .name {
-      float: left;
-      margin-left: 2vw;
-    }
-    img {
-      float: left;
-      margin-left: 1vw;
-    }
-  }
-}
-
-.time {
-  position: absolute;
-  top: 111vw;
-  width: 100%;
-  font-weight: 600;
-  font-size: 16px;
-  text-align: center;
-  opacity: 0;
-  animation: fadeIn 1s 2.1s 1 forwards;
-}
-
-.route {
-  opacity: 0;
-  animation: fadeIn 1s 2.1s 1 forwards;
-  position: absolute;
-  top: 120vw;
-  width: 100%;
-  text-align: center;
-  a {
-    display: inline-block;
-    width: 80vw;
-    height: 14vw;
-    margin-bottom: 3vw;
-    &:first-child {
-      background: url(/static/img/onLinePk_01.png) no-repeat;
-      background-size: 100%;
+    &:nth-child(1) {
+      top: 15vw;
+      background-image: url(/static/images/pk_01.png);
+      div {
+        right: 0;
+      }
+      span {
+        text-align: right;
+      }
     }
     &:nth-child(2) {
-      background: url(/static/img/onLinePk_02.png) no-repeat;
-      background-size: 100%;
+      top: 80vw;
+      right: 0;
+      background-image: url(/static/images/pk_02.png);
+      div {
+        left: 0;
+      }
+      span {
+        margin-left: 27vw;
+        text-align: left;
+      }
+    }
+    &:nth-child(3) {
+      position: absolute;
+      text-align: center;
+      width: 100vw;
+      top: 115vw;
+      .text {
+        margin-bottom: 4vw;
+        font-weight: 600;
+        font-size: 16px;
+        color: #2761b5;
+      }
+      a {
+        display: inline-block;
+        width: 56vw;
+        height: 15vw;
+        &:nth-of-type(1) {
+          background-image: url(/static/images/back_pk.png);
+        }
+        &:nth-of-type(2) {
+          background-image: url(/static/images/backhome.png);
+        }
+      }
     }
   }
-}
-
-.tip {
-  position: absolute;
-  top: 50vw;
-  width: 80vw;
-  height: 30vw;
-  margin: 0 auto;
-  border: 2px solid #fff;
-  
+  > img {
+    position: absolute;
+    top: 40vw;
+    width: 100vw;
+  }
 }
 </style>

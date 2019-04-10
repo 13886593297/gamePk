@@ -1,11 +1,11 @@
 var hander = {
   getStorage(name) {
-    return JSON.parse(window.localStorage.getItem('role'))[name]
+    return JSON.parse(window.localStorage.getItem('user'))[name]
   },
   setStorage(name, value) {
-    var role = JSON.parse(window.localStorage.getItem('role'))
-    role[name] = value
-    window.localStorage.setItem('role', JSON.stringify(role))
+    var user = JSON.parse(window.localStorage.getItem('user'))
+    user[name] = value
+    window.localStorage.setItem('user', JSON.stringify(user))
   },
   getQueryString(name) {
 		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");

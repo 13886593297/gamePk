@@ -110,7 +110,7 @@ export default {
 
 <style lang="scss" scoped>
 .main {
-  background-image: url("/static/img/trainAnswer.jpg");
+  background-image: url("/static/images/trainAnswer.jpg");
 }
 
 .time {
@@ -180,7 +180,7 @@ export default {
         display: inline-block;
         width: 20px;
         height: 21px;
-        background: url("/static/img/trainAnswerSprite.png") no-repeat;
+        background: url("/static/images/trainAnswerSprite.png") no-repeat;
         background-position: -60px 2px;
         background-size: 80px;
         position: absolute;

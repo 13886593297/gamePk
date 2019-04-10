@@ -2,22 +2,62 @@
   <div class="main">
     <div class="result">
       <div>
-        <span class="big" v-text="totalTime"></span>
-        <span>用时</span>
+        <div class="num" v-text="score"></div>
+        <div>获得积分</div>
       </div>
       <div>
-        <span class="big" v-text="correctNum"></span>
-        <span>正确</span>
-      </div>
-      <div>
-        <span class="big" v-text="addPoint"></span>
-        <span>积分</span>
+        <div class="num" v-text="correct"></div>
+        <div>正确/错误</div>
       </div>
     </div>
     <div class="route">
-      <router-link to="/train"></router-link>
-      <router-link to="/train"></router-link>
-      <router-link to="/"></router-link>
+      <button @click="continueTrain"></button>
+      <button @click="flaunt = 1"></button>
+      <button @click="backHome"></button>
+    </div>
+    <div class="answerDetail">
+      <img class="icon" src="/static/images/finishTraining_01.png">
+      <br>
+      <img
+        src="/static/images/finishTraining_02.png"
+        class="arrow"
+        :class="{active: isShow}"
+        @click="showDetail"
+      >
+      <div class="detail" v-show="isShow">
+        <img src="/static/images/finishTraining_03.png">
+        <div class="subject_answer">
+          <ul>
+            <li v-for="(value, key) in list" :key="key">
+              <img class="rank" :src="imgs[key]" alt>
+              <div class="question">
+                <div class="question_content">{{value.question_content}}</div>
+                <ul>
+                  <li class="option">
+                    <img src="/static/images/right.png" alt>
+                    <span class="content" v-text="content_rightArr[key]"></span>
+                  </li>
+                  <li class="option" v-if="content_rightArr[key] != content_wrongArr[key]">
+                    <img src="/static/images/error.png" alt>
+                    <span class="content" v-text="content_wrongArr[key]"></span>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <img
+          src="/static/images/finishTraining_09.png"
+          onclick="location.href = 'https://wechat-qa.lillyadmin.cn/iDoctorWeChat/ContentArea/Article?wechatid=27&contentAreaModuleId=103&moduleType=ArticleList&contentAreaMPId=1'"
+        >
+        <img
+          src="/static/images/finishTraining_10.png"
+          onclick="location.href = 'https://wechat-qa.lillyadmin.cn/idoctorwechat/medinfosearch/Main?event=MenuClick&wechatid=27&_Callback=1'"
+        >
+      </div>
+    </div>
+    <div class="share" v-show="flaunt" @click="flaunt = 0">
+      <img src="/static/images/share.png" alt>
     </div>
   </div>
 </template>
@@ -26,18 +66,56 @@
 export default {
   data() {
     return {
-      totalTime: '10s',
-      correctNum: 0,
-      addPoint: 0
+      correct: this.$route.query.correct + '/' + (5 - this.$route.query.correct),
+      score: this.$route.query.score,
+      user_id: this.$handler.getStorage('user_id'),
+      flaunt: 0,
+      isShow: 0,
+      list: '',
+      imgs: ['/static/images/finishTraining_04.png', '/static/images/finishTraining_05.png', '/static/images/finishTraining_06.png', '/static/images/finishTraining_07.png', '/static/images/finishTraining_08.png'],
+      content_rightArr: [],
+      content_wrongArr: []
     }
   },
   mounted() {
-    console.log(this.$route.params)
-    this.totalTime = Math.floor((this.$route.params.trainObj.totalTime - this.$route.params.trainObj.buffer * this.$route.params.trainObj.questionLength) / 1000) + 's'
-    this.correctNum = this.$route.params.trainObj.correctNum
-    this.addPoint = '+' + this.$route.params.trainObj.addPoint
-    if (this.correctNum == 0) {
-      document.querySelector('.main').classList.add('main1')
+    this.$Axios.post(this.$baseUrl.base + 'api/pk/getlastestresult', {
+      userId: this.user_id
+    }).then(res => {
+      this.list = res.data.body.reverse()
+      for (var i = 0; i < this.list.length; i++) {
+        if (this.list[i].option_answer == 1) {
+          this.content_rightArr.push(this.list[i].option_a)
+        } else if (this.list[i].option_answer == 2) {
+          this.content_rightArr.push(this.list[i].option_b)
+        } else if (this.list[i].option_answer == 3) {
+          this.content_rightArr.push(this.list[i].option_c)
+        } else if (this.list[i].option_answer == 4) {
+          this.content_rightArr.push(this.list[i].option_d)
+        }
+
+        if (this.list[i].answer_option == 1) {
+          this.content_wrongArr.push(this.list[i].option_a)
+        } else if (this.list[i].answer_option == 2) {
+          this.content_wrongArr.push(this.list[i].option_b)
+        } else if (this.list[i].answer_option == 3) {
+          this.content_wrongArr.push(this.list[i].option_c)
+        } else if (this.list[i].answer_option == 4) {
+          this.content_wrongArr.push(this.list[i].option_d)
+        } else {
+          this.content_wrongArr.push('未作答')
+        }
+      }
+    })
+  },
+  methods: {
+    continueTrain() {
+      this.$router.push('train')
+    },
+    backHome() {
+      this.$router.push('/')
+    },
+    showDetail(e) {
+      this.isShow = !this.isShow
     }
   }
 }
@@ -45,48 +123,110 @@ export default {
 
 <style lang="scss" scoped>
 .main {
-  background-image: url("/static/img/trainFinish_bg1.jpg");
-}
-
-.main1 {
-  background-image: url("/static/img/trainFinish_bg2.jpg");
+  background-image: url("/static/images/finishTraining.png");
+  height: 138vw;
 }
 
 .result {
-  padding: 45vw 8vw 0 11vw;
+  padding: 60vw 15vw 0;
   display: flex;
   justify-content: center;
-  div {
+  color: #fff;
+  font-weight: bold;
+  > div {
     text-align: center;
     width: 50%;
-    .big {
-      font-size: 30px;
-      font-weight: 600;
-      margin: 4vw 0 1vw;
-      display: block;
-      color: #bc0000;
+    .num {
+      font-size: 8vw;
     }
   }
 }
 
 .route {
-  padding-left: 22vw;
-  padding-top: 4vw;
-  a {
-    width: 55vw;
-    height: 16vw;
-    display: inline-block;
+  text-align: center;
+  button {
+    width: 60vw;
+    height: 15vw;
     &:first-child {
-      background: url("/static/img/trainFinish_01.png") no-repeat;
-      background-size: 100%;
+      background-image: url("/static/images/continue.png");
+      margin-top: 2vw;
     }
     &:nth-child(2) {
-      background: url("/static/img/trainFinish_02.png") no-repeat;
-      background-size: 100%;
+      background-image: url("/static/images/flaunt.png");
     }
     &:nth-child(3) {
-      background: url("/static/img/trainFinish_03.png") no-repeat;
-      background-size: 100%;
+      background-image: url("/static/images/backhome01.png");
+    }
+  }
+}
+
+.answerDetail {
+  text-align: center;
+  margin-top: 11vw;
+  .icon {
+    width: 54vw;
+  }
+  .arrow {
+    width: 10vw;
+    &.active {
+      transform: rotateZ(180deg);
+    }
+  }
+  .detail {
+    margin: 30vw 0 5vw 5vw;
+    width: 90vw;
+    border: 1vw solid #2761b5;
+    border-radius: 10px;
+    background-color: #97c6f0;
+    padding-bottom: 5vw;
+    > img {
+      &:first-child {
+        width: 70vw;
+        margin-top: -25vw;
+      }
+      &:nth-last-child(-n + 2) {
+        width: 40vw;
+      }
+    }
+    .subject_answer {
+      .rank {
+        width: 10vw;
+        margin-left: 2vw;
+      }
+      > ul > li {
+        border-radius: 100px 15px 15px 100px;
+        text-align: left;
+        width: 86vw;
+        background-color: #cbe1f7;
+        margin-left: 2vw;
+        display: flex;
+        align-items: center;
+        padding: 4vw 0;
+        margin-bottom: 3vw;
+      }
+      .question {
+        width: 69vw;
+        margin-left: 3vw;
+        display: inline-block;
+        color: #2761b5;
+        font-weight: bold;
+        .question_content {
+          font-size: 13px;
+        }
+        li {
+          font-size: 11px;
+          line-height: 6vw;
+          display: flex;
+          align-items: flex-start;
+          img {
+            width: 6vw;
+            height: 6vw;
+          }
+          .content {
+            width: 60vw;
+          }
+        }
+      }
     }
   }
 }

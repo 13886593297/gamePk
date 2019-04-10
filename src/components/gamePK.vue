@@ -1,12 +1,17 @@
 <template>
   <div class="main">
-    <div class="choose">
-      <img src="/static/img/totalPk_01.png" alt>
-    </div>
     <div class="route">
-      <router-link to="/onLinePk"></router-link>
-      <router-link :to="{name:'trainAnswer', params: {level_id: 2}}"></router-link>
-      <router-link :to="{name:'trainAnswer', params: {level_id: 3}}"></router-link>
+      <button class="animated" @click="pkMethod(1)"></button>
+      <button class="animated" @click="pkMethod(2)"></button>
+      <button class="animated" @click="pkRecord"></button>
+      <button class="animated" @click="pkGrade"></button>
+    </div>
+    <div class="modal" v-show="isShow" @click="isShow = 0">
+      <img src="/static/images/tankuang_10.png" ref="img">
+      <div class="one_dialog" v-if="dialogShow">
+        <router-link to="/train"></router-link>
+        <router-link to="/"></router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -15,7 +20,39 @@
 export default {
   data() {
     return {
-
+      user_id: this.$handler.getStorage('user_id'),
+      isShow: 0,
+      dialogShow: 0
+    }
+  },
+  methods: {
+    pkMethod(pkType) {
+      this.$Axios.post(this.$baseUrl.base + this.$baseUrl.isPK, {
+        userId: this.user_id,
+        pkType
+      }).then(res => {
+        if (res.data.code == 0) {
+          if (pkType == 1) {
+            this.$router.push('pk')
+          } else if (pkType == 2) {
+            this.$router.push('fightAgainst')
+          }
+        } else if (res.data.code == 2) {
+          // 训练超过10次
+          this.isShow = 1
+        } else if (res.data.code == 7) {
+          // 没有认证
+          this.isShow = 1
+          this.dialogShow = 1
+          this.$refs.img.src = '/static/images/tankuang.png'
+        }
+      })
+    },
+    pkRecord() {
+      this.$router.push('pkRecord')
+    },
+    pkGrade() {
+      this.$router.push('pkGrade')
     }
   }
 }
@@ -23,42 +60,51 @@ export default {
 
 <style lang="scss" scoped>
 .main {
-  background-image: url("/static/img/p03_bg.jpg");
-}
-
-.choose {
-  text-align: center;
-  padding: 49vw 0 10vw;
-  img {
-    width: 70vw;
-  }
+  background-image: url(/static/images/gamePK.png);
+  position: absolute;
+  top: 10vw;
+  left: 0;
+  width: 100%;
+  height: 140vw;
 }
 
 .route {
   position: absolute;
-  bottom: 20vh;
-  padding-left: 10vw;
-  a {
-    width: 80vw;
-    height: 19vw;
-    transform: translate(-3000px);
-    display: block;
-    margin-bottom: 8vw;
+  text-align: center;
+  top: 40vw;
+  button {
+    display: inline-block;
+    width: 70vw;
+    height: 21vw;
+    animation-name: fadeInLeft;
     &:first-child {
-      animation: bounceInLeft 1s 0.1s 1 forwards;
-      background: url("/static/img/totalPk_02.png") no-repeat;
-      background-size: 100%;
+      background-image: url("/static/images/gamePK_01.png");
     }
     &:nth-child(2) {
-      animation: bounceInLeft 1s 1.1s 1 forwards;
-      background: url("/static/img/totalPk_03.png") no-repeat;
-      background-size: 100%;
+      background-image: url("/static/images/gamePK_02.png");
+      animation-delay: 0.25s;
     }
     &:nth-child(3) {
-      animation: bounceInLeft 1s 2.1s 1 forwards;
-      background: url("/static/img/totalPk_04.png") no-repeat;
-      background-size: 100%;
+      background-image: url("/static/images/gamePK_03.png");
+      animation-delay: 0.5s;
     }
+    &:nth-child(4) {
+      background-image: url("/static/images/gamePK_04.png");
+      animation-delay: 0.75s;
+    }
+  }
+}
+
+.one_dialog {
+  position: absolute;
+  top: 86vw;
+  width: 100%;
+  text-align: center;
+  z-index: 3;
+  a {
+    display: inline-block;
+    width: 30vw;
+    height: 10vw;
   }
 }
 </style>

@@ -1,60 +1,96 @@
 <template>
   <div class="main">
     <div class="set_avatar">
-      <div class="default_user" @click="changeActive(0)" :class="activeClass == 0 ? 'active' : ''">
-        <img class="avatar" :src="headImgUrl">
-        <h5>{{ nickname }}</h5>
+      <div class="default_user" @click="changeActive(0)" :class="img_type == 0 ? 'active' : ''">
+        <img class="avatar" :src="wx_user_img">
+        <h5>{{ wx_user_name }}</h5>
         <div class="select"></div>
         <div class="tip">
-          该选项表面您同意礼来在“希力王者”的PK中心、个人中心和排行榜中使用您的微信昵称和头像，并且“希力王者”的其他参与者亦可以看到并在微信中分享含有您微信昵称和头像的游戏页面。
+          <span v-if="!wx_user_name">关注礼医公众号可以显示您的微信昵称和头像</span>
+          <span
+            v-if="wx_user_name"
+          >该选项表面您同意礼来在“乐拼王者”的PK中心、个人中心和排行榜中使用您的微信昵称和头像，并且“希力王者”的其他参与者亦可以看到并在微信中分享含有您微信昵称和头像的游戏页面。</span>
         </div>
       </div>
-      <div class="set_user" @click="changeActive(1)" :class="activeClass == 1 ? 'active' : ''">
-        <img @click="changeAvatar" class="avatar" v-if="type == 2" src="/static/img/default-woman.png">
-        <img @click="changeAvatar" class="avatar" v-if="type == 1" src="/static/img/default.png">
+      <div class="set_user" @click="changeActive(1)" :class="img_type == 1 ? 'active' : ''">
+        <img
+          @click="changeAvatar"
+          class="avatar"
+          v-if="user_sex == 1"
+          src="/static/images/default-woman.png"
+        >
+        <img
+          @click="changeAvatar"
+          class="avatar"
+          v-if="user_sex == 0"
+          src="/static/images/default.png"
+        >
         <div class="avatarIcon">
-          <img :src="iconUrl" alt>
-          <input type="text" name="user_name" placeholder="请输入昵称" autocomplete="off" ref="name">
+          <img v-if="user_sex == 1" src="/static/images/woman.png">
+          <img v-if="user_sex == 0" src="/static/images/man.png">
+          <input
+            type="text"
+            name="user_name"
+            v-model.trim="cs_user_name"
+            placeholder="请输入昵称"
+            autocomplete="off"
+          >
         </div>
         <div class="select"></div>
         <div class="tip">默认头像可以点击切换哦</div>
       </div>
-      <input type="submit" @click="saveMsg" value>
+      <input type="submit" @click="update" value>
     </div>
   </div>
 </template>
 
 <script>
-// 引入 vuebus
-import Bus from './bus.js'
 export default {
   data() {
     return {
-      nickname: this.$handler.getStorage('nickname'),
-      headImgUrl: this.$handler.getStorage('headImgUrl') || '/static/img/default.png',
-      activeClass: 0,
-      type: 1,  // 1 男人  2 女人
-      iconUrl: '/static/img/man.png'
+      wx_user_name: this.$handler.getStorage('wx_user_name'),  // 微信昵称
+      cs_user_name: this.$handler.getStorage('cs_user_name'),  // 游戏中昵称
+      wx_user_img: this.$handler.getStorage('wx_user_img') || '/static/images/default-wx.png',  // 微信头像
+      img_type: this.$handler.getStorage('img_type'),  // 默认选中微信选项还是游戏选项，当未关注公众号时只能选择游戏选项
+      user_sex: this.$handler.getStorage('user_sex'),  // 游戏头像性别 0 man  1 woman
     }
   },
   methods: {
     changeActive(index) {
-      this.activeClass = index;
+      if (this.wx_user_name) {
+        this.img_type = index;
+      }
     },
     changeAvatar() {
-      this.type = this.type == 2 ? 1 : 2
-      this.iconUrl = this.type == 2 ? '/static/img/woman.png' : '/static/img/man.png'
+      this.user_sex = this.user_sex == 0 ? 1 : 0
     },
-    saveMsg() {
-      // 获取用户输入的名称
-      this.nickname = this.$refs.name.value.trim() ? this.$refs.name.value.trim() : this.nickname
-      // 更新localStorage
-      this.$handler.setStorage('nickname', this.nickname)
-      this.$router.push('user')
-      Bus.$emit('isFixedHead', 1)
-      Bus.$emit('resetNameAndAvatar', {
-        nickname: this.nickname,
-        type: this.type
+    update() {
+      var data = {}
+      if (this.img_type == 1) {
+        if (!this.cs_user_name) {
+          alert('请输入昵称！')
+          return
+        }
+        data.userName = this.cs_user_name
+        data.userSex = this.user_sex
+        data.userImg = this.user_sex == 0 ? this.$baseUrl.headImageUrl : this.$baseUrl.wuManHeadImageUrl
+      } else {
+        data.userName = this.wx_user_name
+        data.userImg = this.wx_user_img
+      }
+      data.userId = this.$handler.getStorage('user_id')
+      data.type = this.img_type
+      this.$Axios.post(this.$baseUrl.base + 'api/user/update', data).then(res => {
+        if (res.data.code == 0) {
+          this.$handler.setStorage('user_img', data.userImg)
+          this.$handler.setStorage('user_name', data.userName)
+          this.$handler.setStorage('img_type', data.type)
+          if (this.img_type == 1) {
+            this.$handler.setStorage('cs_user_name', data.userName)
+            this.$handler.setStorage('user_sex', data.userSex)
+          }
+          this.$router.push('user')
+        }
       })
     }
   }
@@ -63,7 +99,7 @@ export default {
 
 <style lang="scss" scoped>
 .main {
-  background-image: url("/static/img/me_info.png");
+  background-image: url("/static/images/me_info.png");
   position: absolute;
   width: 100%;
   height: 132vw;
@@ -85,6 +121,7 @@ export default {
     h5 {
       color: #c32677;
       margin: 3vw 0;
+      height: 4vw;
     }
     .avatar {
       border-radius: 50%;
@@ -143,7 +180,7 @@ export default {
     color: #fff;
   }
   input[type="submit"] {
-    background-image: url("/static/img/me_info_01.png");
+    background-image: url("/static/images/me_info_01.png");
     width: 60vw;
     height: 15vw;
     margin-top: 8vw;

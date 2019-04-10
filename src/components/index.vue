@@ -14,10 +14,10 @@
       </div>
     </div>
     <div class="footer">
-      <img src="/static/img/index_07.png" alt class="game_rule" @click="showRule">
+      <img src="/static/images/index_07.png" alt class="game_rule" @click="showRule">
       <router-link to="/user"></router-link>
       <div class="role_guize" v-show="show_role">
-        <img src="/static/img/role_guize.png">
+        <img src="/static/images/role_guize.png">
         <div class="shut" @click="showRule"></div>
       </div>
     </div>
@@ -26,21 +26,15 @@
 </template>
 
 <script>
-// 引入 vuebus
-import Bus from './bus.js'
 export default {
   data() {
     return {
-      isFixedHead: JSON.parse(window.localStorage.getItem('login')).isFixedHead,
-      show_role: 0,
-      isplay: 0
+      show_role: 0,  // 游戏规则
+      isplay: 0      // 背景音乐
     }
   },
   mounted() {
-    var _this = this
-    Bus.$on('isFixedHead', (e) => {
-      _this.isFixedHead = e;
-    })
+    
   },
   methods: {
     showRule() {
@@ -57,7 +51,7 @@ export default {
 .main {
   width: 100vw;
   height: 100vh;
-  background-image: url("/static/img/index_bg.jpg");
+  background-image: url("/static/images/index_bg.jpg");
 }
 
 .music_btn {
@@ -69,11 +63,11 @@ export default {
 }
 
 .play {
-  background-image: url("/static/img/play.png");
+  background-image: url("/static/images/play.png");
 }
 
 .pause {
-  background-image: url("/static/img/suspend.png");
+  background-image: url("/static/images/suspend.png");
 }
 
 .route {
@@ -90,26 +84,26 @@ export default {
     &:first-child {
       a {
         &:first-child {
-          background-image: url("/static/img/index_01.png");
+          background-image: url("/static/images/index_01.png");
         }
         &:nth-child(2) {
-          background-image: url("/static/img/index_02.png");
+          background-image: url("/static/images/index_02.png");
         }
         &:nth-child(3) {
-          background-image: url("/static/img/index_03.png");
+          background-image: url("/static/images/index_03.png");
         }
       }
     }
     &:nth-child(2) {
       a {
         &:first-child {
-          background-image: url("/static/img/index_04.png");
+          background-image: url("/static/images/index_04.png");
         }
         &:nth-child(2) {
-          background-image: url("/static/img/index_05.png");
+          background-image: url("/static/images/index_05.png");
         }
         &:nth-child(3) {
-          background-image: url("/static/img/index_06.png");
+          background-image: url("/static/images/index_06.png");
         }
       }
     }
@@ -126,7 +120,7 @@ export default {
     width: 26vw;
   }
   a {
-    background-image: url('/static/img/index_08.png');
+    background-image: url('/static/images/index_08.png');
     float: right;
     width: 21vw;
     height: 5vw;
