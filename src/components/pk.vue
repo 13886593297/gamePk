@@ -85,7 +85,8 @@ export default {
       question_content: '',
       option_answer: '',
       option: [],
-      no_select: ''
+      isWin: '',
+      score: ''
     }
   },
   mounted() {
@@ -139,23 +140,40 @@ export default {
         if (this.pk_countdown <= 1) {
           this.send('{"c":5,"questionId":' + this.question_id + ',"answerOption":' + 0 + ',"cc":' + this.question_index + '}')
         }
-      } else if (this.data.c == 6) {
+      } else if (this.data.c == 6 || this.data.c == 7 || this.data.c == 8) {
         this.isShow = 0
         this.user_time = this.data.t1
         this.opponent_time = this.data.t2
+        this.score = this.data.s
+        if (this.data.c == 6) {
+          this.isWin = 1  // 赢
+        } else if (this.data.c == 7) {
+          this.isWin = 2  // 输
+        } else {
+          this.isWin = 0  // 无效
+        }
+        this.close()
+        setTimeout(() => {
+          this.$router.push({ name: 'pk_result', query: { opponent_name: this.opponent_name, opponent_img: this.opponent_img, question_index: this.question_index, question_amount: this.question_amount, user_time: this.user_time, opponent_time: this.opponent_time, isWin: this.isWin, score: this.score} })
+        }, 500)
       }
     },
     send(params) {
       this.socket.send(params)
     },
+    close() {
+      this.socket.close()
+    },
     doAnswer(id) {
       this.isShow = 1
-      this.send('{"c":5,"questionId":' + this.question_id + ',"answerOption":' + id + 1 + ',"cc":' + this.question_index + '}')
+      setTimeout(() => {
+        this.send('{"c":5,"questionId":' + this.question_id + ',"answerOption":' + id + 1 + ',"cc":' + this.question_index + '}')
+      }, 1000)
       if (id + 1 == this.option_answer) {
         this.$refs.select[id].src = '/static/images/right.png'
         this.$refs.option[id].style.color = '#2661b4'
       } else {
-        this.$refs.select[id].src = '/static/images/error.png'
+        this.$refs.select[id].src = '/static/images/wrong.png'
         this.$refs.option[id].style.color = '#fd8900'
       }
     }

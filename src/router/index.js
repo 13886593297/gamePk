@@ -7,6 +7,7 @@ import Train from '@/components/train'
 import GamePK from '@/components/gamePK'
 import Subject from '@/components/subject'
 import SetAvatar from '@/components/setAvatar'
+import Pk_result from '@/components/pk_result'
 import RankingList from '@/components/rankingList'
 import FightAgainst from '@/components/fightAgainst'
 import FinishTraining from '@/components/finishTraining'
@@ -23,6 +24,7 @@ export default new Router({
     { path: '/gamePK', name: 'gamePK', component: GamePK },
     { path: '/subject', name: 'subject', component: Subject },
     { path: '/setAvatar', name: 'setAvatar', component: SetAvatar },
+    { path: '/pk_result', name: 'pk_result', component: Pk_result },
     { path: '/rankingList', name: 'rankingList', component: RankingList },
     { path: '/fightAgainst', name: 'fightAgainst', component: FightAgainst },
     { path: '/finishTraining', name: 'finishTraining', component: FinishTraining },
