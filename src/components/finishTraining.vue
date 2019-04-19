@@ -38,7 +38,7 @@
                     <span class="content" v-text="content_rightArr[key]"></span>
                   </li>
                   <li class="option" v-if="content_rightArr[key] != content_wrongArr[key]">
-                    <img src="/static/images/error.png" alt>
+                    <img src="/static/images/wrong.png" alt>
                     <span class="content" v-text="content_wrongArr[key]"></span>
                   </li>
                 </ul>

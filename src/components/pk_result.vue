@@ -2,6 +2,7 @@
   <div>
     <div class="pk_info">
       <div class="user">
+        <img class="crown" v-if="isWin == 1" src="/static/images/crown.png" alt>
         <img :src="user_img">
         <div class="name">{{ user_name }}</div>
         <div class="text">
@@ -51,7 +52,7 @@ export default {
       isWin: this.$route.query.isWin,
       score: this.$route.query.score,
       result_img: '',
-      flaunt: 0
+      flaunt: 0,
     }
   },
   mounted() {
@@ -118,6 +119,14 @@ export default {
       height: 14vw;
       text-align: left;
       padding: 5vw 4vw 0;
+    }
+    .crown {
+      position: absolute;
+      width: 14vw;
+      height: 14vw;
+      top: -9vw;
+      left: 37vw;
+      border: none;
     }
   }
 }

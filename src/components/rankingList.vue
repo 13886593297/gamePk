@@ -1,122 +1,163 @@
 <template>
   <div class="main">
-    <router-link to="/">返回</router-link>
-    <div class="monthRankArr">
-      <ul>
-        <li v-for="(item, index) in monthRankArr" :key="index">
-          <span class="rank">{{ item.rank }}</span>
-          <img :src="item.headImgUrl" alt>
-          <span class="name">{{ item.nickname }}</span>
-          <span class="point">{{ item.monthPoint }}</span>
-        </li>
-      </ul>
-      <div class="myRank">
-        <img :src="headImgUrl" alt>
-        <span class="name">{{ nickname }}</span>
-        <span class="monthRank">月排名&nbsp;&nbsp;&nbsp;第{{ monthRank }}名</span>
-        <span class="weekRank">周排名&nbsp;&nbsp;&nbsp;第{{ weekRank }}名</span>
+    <ul class="scrollbar" ref="ul">
+      <li v-for="(v, i) in info.rankList" :key="i">
+        <span class="rank">{{v.rank}}</span>
+        <img class="avatar" :src="v.user_img" alt>
+        <span class="name">{{v.user_name}}</span>
+        <span class="score">{{v.user_score}}</span>
+      </li>
+    </ul>
+    <div class="myself">
+      <img id="head" :src="user_img">
+      <span id="name">{{user_name}}</span>
+      <div class="rank">
+        <div class="rank_month">
+          月排名
+          <span>第{{rank}}名</span>
+        </div>
+        <div class="rank_week">
+          周排名
+          <span>第{{week_rank}}名</span>
+        </div>
       </div>
+    </div>
+    <div class="arrow" @click="clickMore">
+      <img src="/static/images/arrow.png" alt>
     </div>
   </div>
 </template>
-
 <script>
+
 export default {
   data() {
     return {
-      monthRank: 1,        // 月排名
-      weekRank: 1,         // 周排名
-      monthRankArr: [],    // 排行榜
-      nickname: this.$storageHandler.getStorage('nickname'),  // 用户姓名
-      headImgUrl: this.$storageHandler.getStorage('headImgUrl')   // 用户头像
+      user_id: this.$handler.getStorage('user_id'),
+      info: {},
+      user_img: '',
+      user_name: '',
+      rank: '',
+      week_rank: '',
     }
   },
   mounted() {
-    var route = 'main.rankHandler.rank'
-    pomelo.request(route, {}, data => {
-      console.log(data);
-      this.monthRank = data.monthRank
-      this.weekRank = data.weekRank
-      this.monthRankArr = data.monthRankArr
-      console.log(this.monthRankArr);
-
+    this.$Axios.post(this.$baseUrl.base + this.$baseUrl.rankList, {
+      userId: this.user_id
+    }).then(res => {
+      if (res.data.code == 0) {
+        this.info = res.data.body
+        this.user_img = this.info.userInfo.user_img
+        this.user_name = this.info.userInfo.user_name
+        this.rank = this.info.userInfo.rank
+        this.week_rank = this.info.userInfo.week_rank
+      }
     })
+  },
+  methods: {
+    clickMore() {
+      this.$refs.ul.scrollTop += 60
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .main {
-  background-image: url("/static/images/rank_bg.jpg");
-}
-
-a {
+  background-image: url(/static/images/rankingList.png);
   position: absolute;
-  color: #fff;
-  right: 2vw;
-  top: 4vw;
-  font-size: 16px;
-}
-
-.monthRankArr {
-  padding: 50vw 11vw 0 12vw;
+  top: 10vw;
+  left: 0;
+  width: 100%;
+  height: 140vw;
   ul {
-    height: 60vw;
-    overflow-y: scroll;
+    position: absolute;
+    overflow-y: auto;
+    color: #ae1042;
+    font-weight: bold;
+    height: 58vw;
+    width: 70vw;
+    left: 15vw;
+    top: 46vw;
     li {
-      height: 17.7vw;
-      margin: 0 5vw 3vw;
-      background: url("/static/images/rank_01.png") no-repeat;
-      background-size: 100%;
+      background-image: url(/static/images/rankingList_01.png);
       position: relative;
-      span {
-        color: #bc0000;
-        position: absolute;
-        top: 3vw;
-        font-weight: 600;
+      height: 16vw;
+      margin: 0 2vw 2vw;
+      &:last-child {
+        margin-bottom: 0;
       }
       .rank {
+        position: absolute;
         color: #fff;
-        font-weight: normal;
-        left: 2vw;
-        top: 0;
+        left: 1vw;
+        font-size: 12px;
       }
-      .point {
-        left: 52vw;
-      }
-      img {
-        width: 13vw;
-        margin: 2vw 3vw 0 4.5vw;
+      .avatar {
+        position: absolute;
+        border: 2px solid #fff;
         border-radius: 50%;
+        width: 12vw;
+        height: 12vw;
+        left: 4vw;
+        top: 2vw;
+      }
+      .name {
+        position: absolute;
+        font-size: 3.5vw;
+        left: 18vw;
+        top: 3vw;
+      }
+      .score {
+        position: absolute;
+        font-size: 4vw;
+        left: 47vw;
+        top: 3vw;
       }
     }
   }
-  .myRank {
-    background: url("/static/images/rank_02.png") no-repeat;
-    background-size: 100%;
-    margin-top: 4vw;
-    height: 19vw;
-    color: #fff;
-    position: relative;
-    img {
-      width: 13vw;
-      margin: 3vw;
-      border-radius: 50%;
-    }
-    span {
+
+  .myself {
+    background-image: url(/static/images/rankingList_02.png);
+    position: absolute;
+    height: 16vw;
+    width: 68vw;
+    top: 110vw;
+    left: 17vw;
+    color: #ae1042;
+    font-weight: bold;
+    #head {
       position: absolute;
-      top: 3.2vw;
-      left: 20vw;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      width: 12vw;
+      height: 12vw;
+      left: 2vw;
+      top: 1vw;
     }
-    .name {
-      letter-spacing: 3px;
+    #name {
+      display: inline-block;
+      margin-left: 17vw;
+      margin-top: 2vw;
+      font-size: 3.5vw;
     }
-    .monthRank {
-      left: 46vw;
+    .rank {
+      position: absolute;
+      line-height: 6vw;
+      left: 39vw;
+      top: 1.5vw;
+      font-size: 12px;
+      span {
+        margin-left: 4vw;
+      }
     }
-    .weekRank {
-      top: 11vw;
-      left: 46vw;
+  }
+  .arrow {
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    top: 127vw;
+    img {
+      width: 5vw;
     }
   }
 }

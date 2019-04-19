@@ -44,13 +44,17 @@
         <div class="container scrollbar">
           <div class="title">{{ question_content }}</div>
           <ul>
-            <li v-for="(v, i) in option" :key="i" @click="doAnswer(i)">
+            <li v-for="(v, i) in option" :key="i" @click="doAnswer(i + 1)">
               <img src="/static/images/no_select.png" alt ref="select">
               <div class="option" ref="option">{{ v }}</div>
             </li>
           </ul>
         </div>
       </div>
+    </div>
+    <div class="ad" v-if="ad_isShow">
+      <img :src="adInfo_img">
+      <span v-text="adInfo_value"></span>
     </div>
     <div class="modal" v-show="isShow">
       <img src="/static/images/wait.png" ref="img">
@@ -76,30 +80,31 @@ export default {
       question_amount: 5,  // 题目总数
       user_time: 0,  // 自己答题时间
       opponent_time: 0,  // 对手答题时间
-      ad_info: {  // 广告
-        ad_img: '',
-        ad_content: ''
-      },
-      pk_countdown: 20,
-      question_id: '',
-      question_content: '',
-      option_answer: '',
-      option: [],
-      isWin: '',
-      score: ''
+      ad_isShow: 0,  // 是否显示广告
+      adInfo_img: '/static/images/ad_logo01.png',   // 广告图标
+      adInfo_value: '强效促成骨 提高骨质量 预防再骨折',  // 广告标语
+      pk_countdown: 20,  // 答题倒计时
+      question_id: '',  // 题目id
+      question_content: '',  // 题目标题
+      option_answer: '',  // 题目正确答案
+      option: [],  // 题目选项
+      isWin: '',  // 1 赢   2 输   3 无效
+      score: ''  // 获得积分
     }
   },
   mounted() {
-    // this.init()
+    this.init()
   },
   methods: {
     init() {
       this.socket = new WebSocket('wss:' + this.$baseUrl.basePk + this.$baseUrl.pk + this.user_id)
       this.socket.onmessage = this.getMessage
+      this.socket.onerror = function (e) {
+        console.log(e)
+      }
     },
     getMessage(msg) {
       this.data = JSON.parse(msg.data)
-      console.log(this.data)
       if (this.data.c == 0) {
         this.match_countdown = this.data.s
       } else if (this.data.c == 1) {
@@ -118,6 +123,11 @@ export default {
       } else if (this.data.c == 4) {
         this.loadShow = 0
         this.isShow = 0
+        if (this.data.q.ad_info != null) {
+          this.ad_isShow = 1
+          this.adInfo_img = this.data.q.ad_info.ad_img
+          this.adInfo_value = this.data.q.ad_info.ad_content
+        }
         this.question_index = this.data.cc
         this.question_amount = this.data.ct
         this.ad_info = this.data.q.ad_info
@@ -126,12 +136,8 @@ export default {
         this.option_answer = this.data.q.option_answer
         this.option = [this.data.q.option_a, this.data.q.option_b, this.data.q.option_c, this.data.q.option_d]
         try {
-          this.$refs.select.forEach((v, i) => {
-            v.src = '/static/images/no_select.png'
-          })
-          this.$refs.option.forEach((v, i) => {
-            v.style.color = '#000'
-          })
+          this.$refs.select.forEach(v => v.src = '/static/images/no_select.png')
+          this.$refs.option.forEach(v => v.style.color = '#000')
         } catch (err) { }
       } else if (this.data.c == 5) {
         this.user_time = this.data.t1
@@ -154,7 +160,19 @@ export default {
         }
         this.close()
         setTimeout(() => {
-          this.$router.push({ name: 'pk_result', query: { opponent_name: this.opponent_name, opponent_img: this.opponent_img, question_index: this.question_index, question_amount: this.question_amount, user_time: this.user_time, opponent_time: this.opponent_time, isWin: this.isWin, score: this.score} })
+          this.$router.push({
+            name: 'pk_result',
+            query: {
+              opponent_name: this.opponent_name,
+              opponent_img: this.opponent_img,
+              question_index: this.question_index,
+              question_amount: this.question_amount,
+              user_time: this.user_time,
+              opponent_time: this.opponent_time,
+              isWin: this.isWin,
+              score: this.score
+            }
+          })
         }, 500)
       }
     },
@@ -167,14 +185,14 @@ export default {
     doAnswer(id) {
       this.isShow = 1
       setTimeout(() => {
-        this.send('{"c":5,"questionId":' + this.question_id + ',"answerOption":' + id + 1 + ',"cc":' + this.question_index + '}')
+        this.send('{"c":5,"questionId":' + this.question_id + ',"answerOption":' + id + ',"cc":' + this.question_index + '}')
       }, 1000)
-      if (id + 1 == this.option_answer) {
-        this.$refs.select[id].src = '/static/images/right.png'
-        this.$refs.option[id].style.color = '#2661b4'
+      if (id == this.option_answer) {
+        this.$refs.select[id - 1].src = '/static/images/right.png'
+        this.$refs.option[id - 1].style.color = '#2661b4'
       } else {
-        this.$refs.select[id].src = '/static/images/wrong.png'
-        this.$refs.option[id].style.color = '#fd8900'
+        this.$refs.select[id - 1].src = '/static/images/wrong.png'
+        this.$refs.option[id - 1].style.color = '#fd8900'
       }
     }
   }
@@ -372,6 +390,30 @@ export default {
         }
       }
     }
+  }
+}
+.ad {
+  position: absolute;
+  background-image: url(/static/images/foot.png);
+  height: 8vw;
+  width: 80vw;
+  top: 150vw;
+  left: 10vw;
+  img {
+    position: absolute;
+    width: 18vw;
+    left: 1.5vw;
+    top: 1.5vw;
+  }
+  span {
+    position: absolute;
+    display: inline-block;
+    left: 28vw;
+    width: 50vw;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    top: 1.2vw;
   }
 }
 </style>

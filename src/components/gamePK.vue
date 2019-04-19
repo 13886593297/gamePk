@@ -4,7 +4,7 @@
       <button class="animated" @click="pkMethod(1)"></button>
       <button class="animated" @click="pkMethod(2)"></button>
       <button class="animated" @click="pkRecord"></button>
-      <button class="animated" @click="pkGrade"></button>
+      <button class="animated" @click="myAchievements"></button>
     </div>
     <div class="modal" v-show="isShow" @click="isShow = 0">
       <img src="/static/images/tankuang_10.png" ref="img">
@@ -35,7 +35,7 @@ export default {
           if (pkType == 1) {
             this.$router.push('pk')
           } else if (pkType == 2) {
-            this.$router.push('fightAgainst')
+            this.$router.push('setpk')
           }
         } else if (res.data.code == 2) {
           // 训练超过10次
@@ -51,8 +51,8 @@ export default {
     pkRecord() {
       this.$router.push('pkRecord')
     },
-    pkGrade() {
-      this.$router.push('pkGrade')
+    myAchievements() {
+      this.$router.push('myAchievements')
     }
   }
 }

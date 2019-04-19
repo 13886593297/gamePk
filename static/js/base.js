@@ -10,7 +10,7 @@ var baseUrl = {
   pkInfo: 'api/pk/info',
   pk: 'api/wschat?user=',
   basePk: '//pkgame-q.lillyadmin.cn/',
-  caeatePk: 'api/pk/create',
+  createPk: 'api/pk/create',
   questions: 'api/pk/questions',
   toanswerpk: 'api/pk/toanswer',
   record: '/api/pk/record',
