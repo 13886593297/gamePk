@@ -7,7 +7,7 @@
 body {
   font-size: 14px;
   height: 100vh;
-  background-image: url(../images/bg.jpg);
+  background-image: url(~img/bg.jpg);
   background-attachment: fixed;
 }
 
@@ -32,6 +32,22 @@ button,
 input {
   outline: none;
   border: none;
+}
+
+.music_btn {
+  position: absolute;
+  width: 9vw;
+  height: 9vw;
+  top: -5vw;
+  left: 3vw;
+}
+
+.music_btn.play {
+  background-image: url("~img/play.png");
+}
+
+.music_btn.pause {
+  background-image: url("~img/suspend.png");
 }
 
 .share {

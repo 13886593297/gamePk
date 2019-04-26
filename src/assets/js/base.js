@@ -1,4 +1,4 @@
-var baseUrl = {
+export default {
   base: 'https://pkgame-q.lillyadmin.cn/',
   findAllSubject: 'api/exercise/questions',
   toanswer: 'api/exercise/toanswer',
@@ -21,5 +21,3 @@ var baseUrl = {
   headImageUrl: '/static/images/default.png',
   wuManHeadImageUrl: '/static/images/default-woman.png'
 }
-
-export default baseUrl;

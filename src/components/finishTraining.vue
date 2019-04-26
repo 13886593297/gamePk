@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+    <audio src="/static/music/button.mp3" id="buttonPlay"></audio>
     <div class="result">
       <div>
         <div class="num" v-text="score"></div>
@@ -12,20 +13,20 @@
     </div>
     <div class="route">
       <button @click="continueTrain"></button>
-      <button @click="flaunt = 1"></button>
+      <button @click="doFlaunt"></button>
       <button @click="backHome"></button>
     </div>
     <div class="answerDetail">
-      <img class="icon" src="/static/images/finishTraining_01.png">
+      <img class="icon" src="~img/finishTraining_01.png">
       <br>
       <img
-        src="/static/images/finishTraining_02.png"
+        src="~img/finishTraining_02.png"
         class="arrow"
         :class="{active: isShow}"
         @click="showDetail"
       >
       <div class="detail" v-show="isShow">
-        <img src="/static/images/finishTraining_03.png">
+        <img src="~img/finishTraining_03.png">
         <div class="subject_answer">
           <ul>
             <li v-for="(value, key) in list" :key="key">
@@ -34,11 +35,11 @@
                 <div class="question_content">{{value.question_content}}</div>
                 <ul>
                   <li class="option">
-                    <img src="/static/images/right.png" alt>
+                    <img src="~img/right.png" alt>
                     <span class="content" v-text="content_rightArr[key]"></span>
                   </li>
                   <li class="option" v-if="content_rightArr[key] != content_wrongArr[key]">
-                    <img src="/static/images/wrong.png" alt>
+                    <img src="~img/wrong.png" alt>
                     <span class="content" v-text="content_wrongArr[key]"></span>
                   </li>
                 </ul>
@@ -47,17 +48,17 @@
           </ul>
         </div>
         <img
-          src="/static/images/finishTraining_09.png"
+          src="~img/finishTraining_09.png"
           onclick="location.href = 'https://wechat-qa.lillyadmin.cn/iDoctorWeChat/ContentArea/Article?wechatid=27&contentAreaModuleId=103&moduleType=ArticleList&contentAreaMPId=1'"
         >
         <img
-          src="/static/images/finishTraining_10.png"
+          src="~img/finishTraining_10.png"
           onclick="location.href = 'https://wechat-qa.lillyadmin.cn/idoctorwechat/medinfosearch/Main?event=MenuClick&wechatid=27&_Callback=1'"
         >
       </div>
     </div>
     <div class="share" v-show="flaunt" @click="flaunt = 0">
-      <img src="/static/images/share.png" alt>
+      <img src="~img/share.png" alt>
     </div>
   </div>
 </template>
@@ -66,13 +67,14 @@
 export default {
   data() {
     return {
+      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
       correct: this.$route.query.correct + '/' + (5 - this.$route.query.correct),
       score: this.$route.query.score,
       user_id: this.$handler.getStorage('user_id'),
       flaunt: 0,
       isShow: 0,
-      list: '',
-      imgs: ['/static/images/finishTraining_04.png', '/static/images/finishTraining_05.png', '/static/images/finishTraining_06.png', '/static/images/finishTraining_07.png', '/static/images/finishTraining_08.png'],
+      list: [],
+      imgs: [require('img/finishTraining_04.png'), require('img/finishTraining_05.png'), require('img/finishTraining_06.png'), require('img/finishTraining_07.png'), require('img/finishTraining_08.png')],
       content_rightArr: [],
       content_wrongArr: []
     }
@@ -108,11 +110,20 @@ export default {
     })
   },
   methods: {
+    beforeJump(cb) {
+      if (this.autoplay) {
+        this.$handler.btnPlay('buttonPlay')
+      }
+      setTimeout(() => cb(), 500)
+    },
     continueTrain() {
-      this.$router.push('train')
+      this.beforeJump(() => this.$router.push('train'))
+    },
+    doFlaunt() {
+      this.beforeJump(() => this.flaunt = 1)
     },
     backHome() {
-      this.$router.push('/')
+      this.beforeJump(() => this.$router.push('/'))
     },
     showDetail(e) {
       this.isShow = !this.isShow
@@ -123,7 +134,7 @@ export default {
 
 <style lang="scss" scoped>
 .main {
-  background-image: url("/static/images/finishTraining.png");
+  background-image: url("~img/finishTraining.png");
   height: 138vw;
 }
 
@@ -148,14 +159,14 @@ export default {
     width: 60vw;
     height: 15vw;
     &:first-child {
-      background-image: url("/static/images/continue.png");
+      background-image: url("~img/continue.png");
       margin-top: 2vw;
     }
     &:nth-child(2) {
-      background-image: url("/static/images/flaunt.png");
+      background-image: url("~img/flaunt.png");
     }
     &:nth-child(3) {
-      background-image: url("/static/images/backhome01.png");
+      background-image: url("~img/backhome01.png");
     }
   }
 }

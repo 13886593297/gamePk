@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+    <audio src="/static/music/button.mp3" id="buttonPlay"></audio>
     <div class="set_avatar">
       <div class="default_user" @click="changeActive(0)" :class="img_type == 0 ? 'active' : ''">
         <img class="avatar" :src="wx_user_img">
@@ -17,17 +18,17 @@
           @click="changeAvatar"
           class="avatar"
           v-if="user_sex == 1"
-          src="/static/images/default-woman.png"
+          src="~img/default-woman.png"
         >
         <img
           @click="changeAvatar"
           class="avatar"
           v-if="user_sex == 0"
-          src="/static/images/default.png"
+          src="~img/default.png"
         >
         <div class="avatarIcon">
-          <img v-if="user_sex == 1" src="/static/images/woman.png">
-          <img v-if="user_sex == 0" src="/static/images/man.png">
+          <img v-if="user_sex == 1" src="~img/woman.png">
+          <img v-if="user_sex == 0" src="~img/man.png">
           <input
             type="text"
             name="user_name"
@@ -39,7 +40,7 @@
         <div class="select"></div>
         <div class="tip">默认头像可以点击切换哦</div>
       </div>
-      <input type="submit" @click="update" value>
+      <button @click="update"></button>
     </div>
   </div>
 </template>
@@ -48,9 +49,10 @@
 export default {
   data() {
     return {
+      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
       wx_user_name: this.$handler.getStorage('wx_user_name'),  // 微信昵称
       cs_user_name: this.$handler.getStorage('cs_user_name'),  // 游戏中昵称
-      wx_user_img: this.$handler.getStorage('wx_user_img') || '/static/images/default-wx.png',  // 微信头像
+      wx_user_img: this.$handler.getStorage('wx_user_img') || require('img/default-wx.png'),  // 微信头像
       img_type: this.$handler.getStorage('img_type'),  // 默认选中微信选项还是游戏选项，当未关注公众号时只能选择游戏选项
       user_sex: this.$handler.getStorage('user_sex'),  // 游戏头像性别 0 man  1 woman
     }
@@ -65,6 +67,9 @@ export default {
       this.user_sex = this.user_sex == 0 ? 1 : 0
     },
     update() {
+      if (this.autoplay) {
+        this.$handler.btnPlay('buttonPlay')
+      }
       var data = {}
       if (this.img_type == 1) {
         if (!this.cs_user_name) {
@@ -99,7 +104,7 @@ export default {
 
 <style lang="scss" scoped>
 .main {
-  background-image: url("/static/images/me_info.png");
+  background-image: url("~img/me_info.png");
   position: absolute;
   width: 100%;
   height: 132vw;
@@ -179,8 +184,8 @@ export default {
     overflow: auto;
     color: #fff;
   }
-  input[type="submit"] {
-    background-image: url("/static/images/me_info_01.png");
+  button {
+    background-image: url("~img/me_info_01.png");
     width: 60vw;
     height: 15vw;
     margin-top: 8vw;

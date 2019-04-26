@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+    <audio src="/static/music/button.mp3" id="buttonPlay"></audio>
     <p class="text">
       邀请您参加
       <br>《乐拼王者》
@@ -7,16 +8,16 @@
       <br>精彩活动
     </p>
     <div class="game_begin">
-      <img src="/static/images/invitation_01.png" @click="game_begin">
+      <img src="~img/invitation_01.png" @click="game_begin">
       <div id="qrcode">
         <canvas ref="canvas"></canvas>
       </div>
     </div>
     <div class="share" v-show="flaunt" @click="flaunt = 0">
-      <img src="/static/images/share.png" alt>
+      <img src="~img/share.png" alt>
     </div>
     <div class="modal" v-show="isShow" @click="isShow = 0">
-      <img src="/static/images/tankuang_10.png" ref="img">
+      <img src="~img/tankuang_10.png" ref="img">
       <div class="one_dialog" v-if="dialogShow">
         <router-link to="/train"></router-link>
         <router-link to="/"></router-link>
@@ -29,6 +30,7 @@ import QrCodeWithLogo from 'qr-code-with-logo'
 export default {
   data() {
     return {
+      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
       user_id: this.$handler.getStorage('user_id'),
       pkId: this.$route.query.pkId,
       flaunt: 1,
@@ -46,8 +48,8 @@ export default {
     qrcode() {
       QrCodeWithLogo.toCanvas({
         canvas: this.$refs.canvas,
-        // content: 'window.location.href',
-        content: 'https://pkgame-q.lillyadmin.cn/client/pkgame/html/invitation.html?pkId=' + this.pkId,
+        content: 'window.location.href',
+        // content: 'https://pkgame-q.lillyadmin.cn/client/pkgame/html/invitation.html?pkId=' + this.pkId,
         width: 80,
         nodeQrCodeOptions: {
           margin: 0,
@@ -55,6 +57,9 @@ export default {
       })
     },
     game_begin() {
+      if (this.autoplay) {
+        this.$handler.btnPlay('buttonPlay')
+      }
       this.$Axios.post(this.$baseUrl.base + this.$baseUrl.isPK, {
         userId: this.user_id,
         pkId: this.pkId,
@@ -74,7 +79,7 @@ export default {
           // 没有认证
           this.isShow = 1
           this.dialogShow = 1
-          this.$refs.img.src = '/static/images/tankuang.png'
+          this.$refs.img.src = require('img/tankuang.png')
         } else if (res.data.code == 11){
           alert('您已经答过该题了，请等待结果')
         } else if (res.data.code == 9) {
@@ -87,7 +92,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .main {
-  background-image: url(/static/images/invitation.png);
+  background-image: url(~img/invitation.png);
   position: absolute;
   top: 12vw;
   left: 8vw;

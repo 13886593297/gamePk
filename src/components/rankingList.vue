@@ -1,5 +1,7 @@
 <template>
   <div class="main">
+    <audio src="/static/music/index_bg.mp3" loop id="myAudio" :autoplay="autoplay"></audio>
+    <div class="music_btn" @click="audioControl" :class="{play: autoplay, pause: !autoplay}"></div>
     <ul class="scrollbar" ref="ul">
       <li v-for="(v, i) in info.rankList" :key="i">
         <span class="rank">{{v.rank}}</span>
@@ -23,7 +25,7 @@
       </div>
     </div>
     <div class="arrow" @click="clickMore">
-      <img src="/static/images/arrow.png" alt>
+      <img src="~img/arrow.png" alt>
     </div>
   </div>
 </template>
@@ -32,6 +34,7 @@
 export default {
   data() {
     return {
+      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
       user_id: this.$handler.getStorage('user_id'),
       info: {},
       user_img: '',
@@ -54,6 +57,11 @@ export default {
     })
   },
   methods: {
+    audioControl() {
+      this.autoplay = !this.autoplay
+      this.$handler.isPlay('myAudio')
+      window.sessionStorage.setItem('autoplay', this.autoplay)
+    },
     clickMore() {
       this.$refs.ul.scrollTop += 60
     }
@@ -63,7 +71,7 @@ export default {
 
 <style lang="scss" scoped>
 .main {
-  background-image: url(/static/images/rankingList.png);
+  background-image: url(~img/rankingList.png);
   position: absolute;
   top: 10vw;
   left: 0;
@@ -79,7 +87,7 @@ export default {
     left: 15vw;
     top: 46vw;
     li {
-      background-image: url(/static/images/rankingList_01.png);
+      background-image: url(~img/rankingList_01.png);
       position: relative;
       height: 16vw;
       margin: 0 2vw 2vw;
@@ -117,7 +125,7 @@ export default {
   }
 
   .myself {
-    background-image: url(/static/images/rankingList_02.png);
+    background-image: url(~img/rankingList_02.png);
     position: absolute;
     height: 16vw;
     width: 68vw;

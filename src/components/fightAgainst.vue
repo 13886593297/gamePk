@@ -1,5 +1,7 @@
 <template>
   <div>
+    <audio src="/static/music/time_out.mp3" id="timeOut" loop="loop" :autoplay="autoplay"></audio>
+    <audio src="/static/music/select_click.mp3" id="selectClick"></audio>
     <div class="match_info">
       <p>
         本场PK剩余时间：
@@ -24,19 +26,19 @@
               <div class="current">{{key + 1}}/{{list.length}}</div>
               <div class="title">{{ value.question_content }}</div>
               <div class="option_a" v-if="value.option_a != ''" @click="doAnswer(1)">
-                <img src="/static/images/no_select.png" ref="img">
+                <img src="~img/no_select.png" ref="img">
                 <span ref="text">{{ value.option_a }}</span>
               </div>
               <div class="option_b" v-if="value.option_b != ''" @click="doAnswer(2)">
-                <img src="/static/images/no_select.png" ref="img">
+                <img src="~img/no_select.png" ref="img">
                 <span ref="text">{{ value.option_b }}</span>
               </div>
               <div class="option_c" v-if="value.option_c != ''" @click="doAnswer(3)">
-                <img src="/static/images/no_select.png" ref="img">
+                <img src="~img/no_select.png" ref="img">
                 <span ref="text">{{ value.option_c }}</span>
               </div>
               <div class="option_d" v-if="value.option_d != ''" @click="doAnswer(4)">
-                <img src="/static/images/no_select.png" ref="img">
+                <img src="~img/no_select.png" ref="img">
                 <span ref="text">{{ value.option_d }}</span>
               </div>
             </div>
@@ -54,6 +56,7 @@
 export default {
   data() {
     return {
+      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
       user_id: this.$handler.getStorage('user_id'),
       pkId: this.$route.query.pkId,
       list: [],
@@ -62,7 +65,7 @@ export default {
       question_index: 0,   // 当前第几题
       isClick: false,  // 禁止重复点击
       ad_isShow: 0,  // 是否显示广告
-      adInfo_img: '/static/images/ad_logo01.png',   // 广告图标
+      adInfo_img: require('img/ad_logo01.png'),   // 广告图标
       adInfo_value: '强效促成骨 提高骨质量 预防再骨折',  // 广告标语
       person_num: 0,  // 本场已完成PK人数
       remaining_time: '3599',  // 本场PK剩余时间
@@ -73,10 +76,13 @@ export default {
   mounted() {
     this.init()
   },
+  destroyed() {
+    clearInterval(this.timer)
+    clearInterval(this.match_timer)
+  },
   methods: {
     init() {
-      // this.$Axios.post(this.$baseUrl.base + this.$baseUrl.questions, {
-      this.$Axios.get('/static/fightAgainst.json', {
+      this.$Axios.post(this.$baseUrl.base + this.$baseUrl.questions, {
         userId: this.user_id,
         pkId: this.pkId
       }).then(res => {
@@ -86,7 +92,7 @@ export default {
           this.remaining_time = res.data.body.time
           this.person_num = res.data.body.userCount
           this.addTime()
-          this.showQuestion()
+          this.intervalHandler()
           this.showAdInfo()
         } else if (res.data.code == 11) {
           alert("您已经答过题了")
@@ -111,7 +117,7 @@ export default {
         this.adInfo_value = this.list[this.question_index].ad_info.ad_content
       }
     },
-    showQuestion() {
+    intervalHandler() {
       this.timer = setInterval(() => {
         this.time--
         if (this.time < 1) {
@@ -123,21 +129,24 @@ export default {
     doAnswer(answerOption) {
       // answerOption: 玩家回答的选项
       if (this.isClick) return  // 防止重复点击
+      if (this.autoplay) {
+        this.$handler.btnPlay('selectClick')
+      }
       this.isClick = true
       clearInterval(this.timer)
       if (this.list[this.question_index].option_answer == answerOption) {
-        this.$refs.img[answerOption - 1].src = '/static/images/right.png'
+        this.$refs.img[answerOption - 1].src = require('img/right.png')
         this.$refs.text[answerOption - 1].style.color = '#2661b4'
         this.correct++
         this.score += this.list[this.question_index].level_score
       } else {
-        this.$refs.img[answerOption - 1].src = '/static/images/wrong.png'
+        this.$refs.img[answerOption - 1].src = require('img/wrong.png')
         this.$refs.text[answerOption - 1].style.color = '#fd8900'
       }
       setTimeout(() => {
         this.sumbit(answerOption)
         this.isClick = false
-        this.showQuestion()
+        this.intervalHandler()
       }, 3000)
     },
     sumbit(answerOption) {
@@ -153,7 +162,7 @@ export default {
           clearInterval(this.timer)
           clearInterval(this.match_timer)
           alert('您已完成PK邀请答题，请稍后进入PK中心查看结果')
-          this.$router.push('/')
+          this.$router.push('pkRecord')
         } else {
           this.time = 20
           this.question_index++
@@ -177,7 +186,7 @@ export default {
 <style lang="scss" scoped>
 $color: #275fb2;
 .match_info {
-  background-image: url(/static/images/fightAgainst_01.png);
+  background-image: url(~img/fightAgainst_01.png);
   position: absolute;
   right: 0;
   width: 45vw;
@@ -197,7 +206,7 @@ $color: #275fb2;
 }
 
 .main {
-  background-image: url(/static/images/fightAgainst.png);
+  background-image: url(~img/fightAgainst.png);
   position: absolute;
   top: 33vw;
   left: 0;
@@ -254,7 +263,7 @@ $color: #275fb2;
 }
 .ad {
   position: absolute;
-  background-image: url(/static/images/foot.png);
+  background-image: url(~img/foot.png);
   height: 8vw;
   width: 80vw;
   top: 163vw;

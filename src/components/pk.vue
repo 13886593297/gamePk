@@ -1,5 +1,7 @@
 <template>
   <div>
+    <audio src="/static/music/time_out.mp3" id="timeOut" loop="loop" :autoplay="autoplay"></audio>
+    <audio src="/static/music/select_click.mp3" id="selectClick"></audio>
     <div class="load" v-if="loadShow">
       <div class="user">
         <span>{{ user_name }}</span>
@@ -18,7 +20,7 @@
         <router-link to="/gamePK"></router-link>
         <router-link to="/"></router-link>
       </div>
-      <img src="/static/images/pk_03.png" alt>
+      <img src="~img/pk_03.png" alt>
     </div>
     <div class="pk" v-if="!loadShow">
       <div class="pk_info">
@@ -45,7 +47,7 @@
           <div class="title">{{ question_content }}</div>
           <ul>
             <li v-for="(v, i) in option" :key="i" @click="doAnswer(i + 1)">
-              <img src="/static/images/no_select.png" alt ref="select">
+              <img src="~img/no_select.png" alt ref="select">
               <div class="option" ref="option">{{ v }}</div>
             </li>
           </ul>
@@ -57,7 +59,7 @@
       <span v-text="adInfo_value"></span>
     </div>
     <div class="modal" v-show="isShow">
-      <img src="/static/images/wait.png" ref="img">
+      <img src="~img/wait.png" ref="img">
     </div>
   </div>
 </template>
@@ -66,12 +68,13 @@
 export default {
   data() {
     return {
+      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
       user_id: this.$handler.getStorage('user_id'),
       loadShow: 1,  // 默认显示loading区域，匹配到对手后隐藏
       user_name: this.$handler.getStorage('user_name'),  // 自己名字
       user_img: this.$handler.getStorage('user_img'),  // 自己头像
       opponent_name: '',  // 对手名字
-      opponent_img: '/static/images/wait_person.png', // 对手头像
+      opponent_img: require('img/wait_person.png'), // 对手头像
       match_countdown: 10,  // 匹配倒计时 
       socket: '',  // websocket
       isShow: 0,  // 显示正在答题弹窗
@@ -81,8 +84,8 @@ export default {
       user_time: 0,  // 自己答题时间
       opponent_time: 0,  // 对手答题时间
       ad_isShow: 0,  // 是否显示广告
-      adInfo_img: '/static/images/ad_logo01.png',   // 广告图标
-      adInfo_value: '强效促成骨 提高骨质量 预防再骨折',  // 广告标语
+      adInfo_img: require('img/ad_logo01.png'),   // 广告图标
+      adInfo_value: '强效促成骨 提高骨质量 预防再骨折',  //  
       pk_countdown: 20,  // 答题倒计时
       question_id: '',  // 题目id
       question_content: '',  // 题目标题
@@ -94,6 +97,18 @@ export default {
   },
   mounted() {
     this.init()
+    this.$Axios.post(this.$baseUrl.base + this.$baseUrl.isPK, {
+      userId: this.user_id,
+      pkType: 1
+    }).then(res => {
+      if (res.data.code == 2) {
+        // 训练超过10次
+        this.$router.push('gamePK')
+      }
+    })
+  },
+  destroyed() {
+    this.close()
   },
   methods: {
     init() {
@@ -110,7 +125,7 @@ export default {
       } else if (this.data.c == 1) {
         this.opponent_name = this.data.u2.userName
         if (this.data.u2.userImg == '/Images/robot.png') {
-          this.opponent_img = '/static/images/robot.png'
+          this.opponent_img = require('img/robot.png')
         } else {
           this.opponent_img = this.data.u2.userImg
         }
@@ -136,7 +151,7 @@ export default {
         this.option_answer = this.data.q.option_answer
         this.option = [this.data.q.option_a, this.data.q.option_b, this.data.q.option_c, this.data.q.option_d]
         try {
-          this.$refs.select.forEach(v => v.src = '/static/images/no_select.png')
+          this.$refs.select.forEach(v => v.src = require('img/no_select.png'))
           this.$refs.option.forEach(v => v.style.color = '#000')
         } catch (err) { }
       } else if (this.data.c == 5) {
@@ -184,14 +199,17 @@ export default {
     },
     doAnswer(id) {
       this.isShow = 1
+      if (this.autoplay) {
+        this.$handler.btnPlay('selectClick')
+      }
       setTimeout(() => {
         this.send('{"c":5,"questionId":' + this.question_id + ',"answerOption":' + id + ',"cc":' + this.question_index + '}')
       }, 1000)
       if (id == this.option_answer) {
-        this.$refs.select[id - 1].src = '/static/images/right.png'
+        this.$refs.select[id - 1].src = require('img/right.png')
         this.$refs.option[id - 1].style.color = '#2661b4'
       } else {
-        this.$refs.select[id - 1].src = '/static/images/wrong.png'
+        this.$refs.select[id - 1].src = require('img/wrong.png')
         this.$refs.option[id - 1].style.color = '#fd8900'
       }
     }
@@ -211,7 +229,7 @@ export default {
         width: 26vw;
         height: 26vw;
         top: 1vw;
-        background-image: url(/static/images/avatar_bg.png);
+        background-image: url(~img/avatar_bg.png);
         img {
           width: 20vw;
           height: 20vw;
@@ -231,7 +249,7 @@ export default {
     }
     &:nth-child(1) {
       top: 15vw;
-      background-image: url(/static/images/pk_01.png);
+      background-image: url(~img/pk_01.png);
       div {
         right: 0;
       }
@@ -242,7 +260,7 @@ export default {
     &:nth-child(2) {
       top: 80vw;
       right: 0;
-      background-image: url(/static/images/pk_02.png);
+      background-image: url(~img/pk_02.png);
       div {
         left: 0;
       }
@@ -267,10 +285,10 @@ export default {
         width: 56vw;
         height: 15vw;
         &:nth-of-type(1) {
-          background-image: url(/static/images/back_pk.png);
+          background-image: url(~img/back_pk.png);
         }
         &:nth-of-type(2) {
-          background-image: url(/static/images/backhome.png);
+          background-image: url(~img/backhome.png);
         }
       }
     }
@@ -297,14 +315,14 @@ export default {
       }
       &:nth-child(1) {
         float: left;
-        background-image: url(/static/images/pk_info01.png);
+        background-image: url(~img/pk_info01.png);
         img {
           right: 1vw;
         }
       }
       &:nth-child(2) {
         float: right;
-        background-image: url(/static/images/pk_info02.png);
+        background-image: url(~img/pk_info02.png);
         img {
           left: 1vw;
         }
@@ -339,7 +357,7 @@ export default {
     }
   }
   .pk_content {
-    background-image: url(/static/images/pk_bg.png);
+    background-image: url(~img/pk_bg.png);
     position: absolute;
     text-align: center;
     width: 100vw;
@@ -394,7 +412,7 @@ export default {
 }
 .ad {
   position: absolute;
-  background-image: url(/static/images/foot.png);
+  background-image: url(~img/foot.png);
   height: 8vw;
   width: 80vw;
   top: 150vw;

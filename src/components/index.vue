@@ -1,24 +1,26 @@
 <template>
   <div class="main">
-    <div class="music_btn" @click="isPlay" :class="{play: isplay, pause: !isplay}"></div>
+    <audio src="/static/music/index_bg.mp3" loop id="myAudio" :autoplay="autoplay"></audio>
+    <audio src="/static/music/button.mp3" id="buttonPlay"></audio>
+    <div class="music_btn" @click="audioControl" :class="{play: autoplay, pause: !autoplay}"></div>
     <div class="route">
       <div>
-        <router-link to="/train"></router-link>
-        <router-link to="/gamePK"></router-link>
-        <router-link to="/"></router-link>
+        <button @click="totrain"></button>
+        <button @click="togamePK"></button>
+        <button @click="tolink1"></button>
       </div>
       <div>
-        <router-link to="/"></router-link>
-        <router-link to="/"></router-link>
-        <router-link to="/rankingList"></router-link>
+        <button @click="tolink2"></button>
+        <button @click="tolink3"></button>
+        <button @click="torankingList"></button>
       </div>
     </div>
     <div class="footer">
-      <img src="/static/images/index_07.png" alt class="game_rule" @click="showRule">
-      <router-link to="/user"></router-link>
+      <img src="~img/index_07.png" alt class="game_rule" @click="showRule">
+      <button @click="toUser"></button>
       <div class="role_guize" v-show="show_role">
-        <img src="/static/images/role_guize.png">
-        <div class="shut" @click="showRule"></div>
+        <img src="~img/role_guize.png">
+        <div class="shut" @click="show_role = 0"></div>
       </div>
     </div>
     <div class="examine">PP-LD-CN-1002</div>
@@ -29,19 +31,45 @@
 export default {
   data() {
     return {
+      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
       show_role: 0,  // 游戏规则
-      isplay: 0      // 背景音乐
     }
   },
-  mounted() {
-    
-  },
   methods: {
-    showRule() {
-      this.show_role = !this.show_role
+    audioControl() {
+      this.autoplay = !this.autoplay
+      this.$handler.isPlay('myAudio')
+      window.sessionStorage.setItem('autoplay', this.autoplay)
     },
-    isPlay() {
-      this.isplay = !this.isplay
+    beforeJump(cb) {
+      if (this.autoplay) {
+        this.$handler.btnPlay('buttonPlay')
+      }
+      setTimeout(() => cb(), 500)
+    },
+    totrain() {
+      this.beforeJump(() => this.$router.push('train'))
+    },
+    togamePK() {
+      this.beforeJump(() => this.$router.push('gamePK'))
+    },
+    tolink1() {
+      this.beforeJump(() => window.location.href = 'https://wechat-qa.lillyadmin.cn/iDoctorWeChat/ContentArea/Article?wechatid=27&contentAreaModuleId=103&moduleType=ArticleList&contentAreaMPId=1')
+    },
+    tolink2() {
+      this.beforeJump(() => window.location.href = 'https://wechat-qa.lillyadmin.cn/idoctorwechat/medinfosearch/Main?event=MenuClick&wechatid=27&_Callback=1')
+    },
+    tolink3() {
+      this.beforeJump(() => window.location.href = 'https://wechat-qa.lillyadmin.cn/iDoctorWeChat/ContentArea/Main?event=MenuClick&wechatid=27')
+    },
+    torankingList() {
+      this.beforeJump(() => this.$router.push('rankingList'))
+    },
+    showRule() {
+      this.beforeJump(() => this.show_role = 1)
+    },
+    toUser() {
+      this.beforeJump(() => this.$router.push('user'))
     }
   }
 }
@@ -51,23 +79,11 @@ export default {
 .main {
   width: 100vw;
   height: 100vh;
-  background-image: url("/static/images/index_bg.jpg");
+  background-image: url("~img/index_bg.jpg");
 }
 
 .music_btn {
-  position: absolute;
-  width: 9vw;
-  height: 9vw;
-  top: 5vw;
-  left: 3vw;
-}
-
-.play {
-  background-image: url("/static/images/play.png");
-}
-
-.pause {
-  background-image: url("/static/images/suspend.png");
+  top: 5vw
 }
 
 .route {
@@ -76,34 +92,34 @@ export default {
   width: 100%;
   top: 122vw;
   div {
-    a {
+    button {
       display: inline-block;
       width: 28vw;
       height: 12vw;
     }
     &:first-child {
-      a {
+      button {
         &:first-child {
-          background-image: url("/static/images/index_01.png");
+          background-image: url("~img/index_01.png");
         }
         &:nth-child(2) {
-          background-image: url("/static/images/index_02.png");
+          background-image: url("~img/index_02.png");
         }
         &:nth-child(3) {
-          background-image: url("/static/images/index_03.png");
+          background-image: url("~img/index_03.png");
         }
       }
     }
     &:nth-child(2) {
-      a {
+      button {
         &:first-child {
-          background-image: url("/static/images/index_04.png");
+          background-image: url("~img/index_04.png");
         }
         &:nth-child(2) {
-          background-image: url("/static/images/index_05.png");
+          background-image: url("~img/index_05.png");
         }
         &:nth-child(3) {
-          background-image: url("/static/images/index_06.png");
+          background-image: url("~img/index_06.png");
         }
       }
     }
@@ -119,8 +135,8 @@ export default {
   img {
     width: 26vw;
   }
-  a {
-    background-image: url('/static/images/index_08.png');
+  button {
+    background-image: url("~img/index_08.png");
     float: right;
     width: 21vw;
     height: 5vw;

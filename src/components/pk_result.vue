@@ -1,8 +1,11 @@
 <template>
   <div>
+    <audio src="/static/music/pk_cg.mp3" id="pk_cg"></audio>
+    <audio src="/static/music/pk_sb.mp3" id="pk_sb"></audio>
+    <audio src="/static/music/button.mp3" id="buttonPlay"></audio>
     <div class="pk_info">
       <div class="user">
-        <img class="crown" v-if="isWin == 1" src="/static/images/crown.png" alt>
+        <img class="crown" v-if="isWin == 1" src="~img/crown.png" alt>
         <img :src="user_img">
         <div class="name">{{ user_name }}</div>
         <div class="text">
@@ -26,13 +29,16 @@
         <span>{{ score }}</span>
       </p>
       <div class="btn_div">
-        <router-link to="/pk" class="continue"></router-link>
-        <button @click="flaunt = 1" class="flaunt"></button>
-        <router-link to="/" class="backHome"></router-link>
+        <button @click="continuePk"></button>
+        <button @click="toFlaunt"></button>
+        <button @click="backHome"></button>
       </div>
     </div>
+    <div class="modal" v-show="isShow" @click="isShow = 0">
+      <img src="~img/tankuang_10.png" ref="img">
+    </div>
     <div class="share" v-show="flaunt" @click="flaunt = 0">
-      <img src="/static/images/share.png" alt>
+      <img src="~img/share.png" alt>
     </div>
   </div>
 </template>
@@ -40,6 +46,7 @@
 export default {
   data() {
     return {
+      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
       user_id: this.$handler.getStorage('user_id'),
       user_name: this.$handler.getStorage('user_name'),  // 自己名字
       user_img: this.$handler.getStorage('user_img'),  // 自己头像
@@ -52,16 +59,53 @@ export default {
       isWin: this.$route.query.isWin,
       score: this.$route.query.score,
       result_img: '',
+      isShow: 0,
       flaunt: 0,
     }
   },
   mounted() {
     if (this.isWin == 1) {
-      this.result_img = '/static/images/success.png'
+      this.result_img = require('img/success.png')
+      if (this.autoplay) {
+        this.$handler.btnPlay('pk_cg')
+      }
     } else if (this.isWin == 2) {
-      this.result_img = '/static/images/fail.png'
+      this.result_img = require('img/fail.png')
+      if (this.autoplay) {
+        this.$handler.btnPlay('pk_sb')
+      }
     } else {
-      this.result_img = '/static/images/void.png'
+      this.result_img = require('img/void.png')
+      if (this.autoplay) {
+        this.$handler.btnPlay('pk_sb')
+      }
+    }
+  },
+  methods: {
+    beforeJump(cb) {
+      if (this.autoplay) {
+        this.$handler.btnPlay('buttonPlay')
+      }
+      setTimeout(() => cb(), 500)
+    },
+    continuePk() {
+      this.$Axios.post(this.$baseUrl.base + this.$baseUrl.isPK, {
+        userId: this.user_id,
+        pkType: 1
+      }).then(res => {
+        if (res.data.code == 0) {
+          this.beforeJump(() => this.$router.push('pk'))
+        } else if (res.data.code == 2) {
+          // 训练超过10次
+          this.isShow = 1
+        }
+      })
+    },
+    toFlaunt() {
+      this.beforeJump(() => this.flaunt = 1)
+    },
+    backHome() {
+      this.beforeJump(() => this.$router.push('/'))
     }
   }
 }
@@ -81,14 +125,14 @@ export default {
     }
     &:nth-child(1) {
       float: left;
-      background-image: url(/static/images/pk_info01.png);
+      background-image: url(~img/pk_info01.png);
       img {
         right: 1vw;
       }
     }
     &:nth-child(2) {
       float: right;
-      background-image: url(/static/images/pk_info02.png);
+      background-image: url(~img/pk_info02.png);
       img {
         left: 1vw;
       }
@@ -152,20 +196,19 @@ export default {
     text-align: center;
     width: 100%;
     top: 100vw;
-    a,
     button {
       display: inline-block;
       width: 60vw;
       height: 15vw;
-    }
-    .continue {
-      background-image: url(/static/images/result_one.png);
-    }
-    .flaunt {
-      background-image: url(/static/images/flaunt.png);
-    }
-    .backHome {
-      background-image: url(/static/images/backhome.png);
+      &:nth-child(1) {
+        background-image: url(~img/result_one.png);
+      }
+      &:nth-child(2) {
+        background-image: url(~img/flaunt.png);
+      }
+      &:nth-child(3) {
+        background-image: url(~img/backhome.png);
+      }
     }
   }
 }

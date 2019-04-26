@@ -1,48 +1,51 @@
 <template>
   <div class="main">
+    <audio src="/static/music/index_bg.mp3" loop id="myAudio" :autoplay="autoplay"></audio>
+    <audio src="/static/music/button.mp3" id="buttonPlay"></audio>
+    <div class="music_btn" @click="audioControl" :class="{play: autoplay, pause: !autoplay}"></div>
     <img class="head" :src="list.user_img" @click="set">
     <router-link class="tip" to="/setAvatar">点击设置头像</router-link>
     <div class="user_detail">
       <span id="name">{{ list.user_name }}</span>
       <ul>
         <li>
-          <img src="/static/images/me_02.png">
+          <img src="~img/me_02.png">
           <br>
           <span>{{ list.week_rank }}</span>
         </li>
         <li>
-          <img src="/static/images/me_01.png">
+          <img src="~img/me_01.png">
           <br>
           <span>{{ list.rank }}</span>
         </li>
         <li>
-          <img src="/static/images/myAchievements_01.png">
+          <img src="~img/myAchievements_01.png">
           <br>
           <span>{{ list.pk_count }}</span>
         </li>
         <li>
-          <img src="/static/images/myAchievements_02.png">
+          <img src="~img/myAchievements_02.png">
           <br>
           <span>{{ list.pk_win_count }}</span>
         </li>
         <li>
-          <img src="/static/images/myAchievements_04.png">
+          <img src="~img/myAchievements_04.png">
           <br>
           <span>{{ list.user_score }}</span>
         </li>
         <li>
-          <img src="/static/images/myAchievements_03.png">
+          <img src="~img/myAchievements_03.png">
           <br>
           <span>{{ list.user_rate + '%' }}</span>
         </li>
       </ul>
     </div>
     <div class="route">
-      <button @click="flaunt = 1"></button>
+      <button @click="toFlaunt"></button>
       <button @click="backHome"></button>
     </div>
     <div class="share" v-show="flaunt" @click="flaunt = 0">
-      <img src="/static/images/share.png" alt>
+      <img src="~img/share.png" alt>
     </div>
   </div>
 </template>
@@ -51,6 +54,7 @@
 export default {
   data() {
     return {
+      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
       list: {},
       flaunt: 0
     }
@@ -59,16 +63,29 @@ export default {
     this.$Axios.post(this.$baseUrl.base + this.$baseUrl.meinfo, {
       userId: this.$handler.getStorage('user_id'),
     }).then((res) => {
-      console.log(res)
       this.list = res.data.body
     })
   },
   methods: {
+    audioControl() {
+      this.autoplay = !this.autoplay
+      this.$handler.isPlay('myAudio')
+      window.sessionStorage.setItem('autoplay', this.autoplay)
+    },
+    beforeJump(cb) {
+      if (this.autoplay) {
+        this.$handler.btnPlay('buttonPlay')
+      }
+      setTimeout(() => cb(), 500)
+    },
     set() {
-      this.$router.push('setAvatar')
+      this.beforeJump(() => this.$router.push('setAvatar'))
+    },
+    toFlaunt() {
+      this.beforeJump(() => this.flaunt = 1)
     },
     backHome() {
-      this.$router.push('/')
+      this.beforeJump(() => this.$router.push('/'))
     }
   }
 }
@@ -76,12 +93,17 @@ export default {
 
 <style lang="scss" scoped>
 .main {
-  background-image: url("/static/images/myAchievements.png");
+  background-image: url("~img/myAchievements.png");
   position: absolute;
   top: 13vw;
   left: 8vw;
   width: 86vw;
   height: 112vw;
+}
+
+.music_btn {
+  left: -5vw;
+  top: -8vw;
 }
 
 .head {
@@ -142,10 +164,10 @@ export default {
     width: 58vw;
     height: 15vw;
     &:first-child {
-      background-image: url("/static/images/flaunt.png");
+      background-image: url("~img/flaunt.png");
     }
     &:nth-child(2) {
-      background-image: url("/static/images/backhome01.png");
+      background-image: url("~img/backhome01.png");
     }
   }
 }

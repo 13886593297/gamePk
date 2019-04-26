@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+    <audio src="/static/music/button.mp3" id="buttonPlay"></audio>
     <div class="setpk">
       <p>1.请设定题目数量</p>
       <select id="select_subject_num" v-model="subject_num">
@@ -21,11 +22,11 @@
         <option v-for="(v, i) in typeArr" :key="i" v-bind:value="i">{{ v }}</option>
       </select>
       <div class="submit" @click="save">
-        <img src="/static/images/determine.png" alt>
+        <img src="~img/determine.png" alt>
       </div>
     </div>
     <div class="modal" v-show="isShow" @click="isShow = 0">
-      <img src="/static/images/tankuang_10.png" ref="img">
+      <img src="~img/tankuang_10.png" ref="img">
     </div>
   </div>
 </template>
@@ -33,6 +34,7 @@
 export default {
   data() {
     return {
+      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
       user_id: this.$handler.getStorage('user_id'),
       subject_num: '10',
       time: '',
@@ -69,14 +71,17 @@ export default {
       return s < 10 ? '0' + s : s
     },
     save() {
+      if (this.autoplay) {
+        this.$handler.btnPlay('buttonPlay')
+      }
       this.$Axios.post(this.$baseUrl.base + this.$baseUrl.createPk, {
         userId: this.user_id,
         questionCount: this.subject_num,
         date: this.time.substring(0, 16).replace('T', ' ').trim(),
         users: this.person_num,
         selectedQuestionTag: this.type,
+        pkType: 2
       }).then(res => {
-        console.log(res)
         if (res.data.code == 0) {
           this.$router.push({
             name: 'invitation', 
@@ -98,7 +103,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .main {
-  background-image: url(/static/images/setPK.png);
+  background-image: url(~img/setPK.png);
   position: absolute;
   top: 12vw;
   left: 8vw;
@@ -136,7 +141,7 @@ export default {
   }
   select {
     text-indent: 5vw;
-    background-image: url(/static/images/downArrow.png);
+    background-image: url(~img/downArrow.png);
     background-position: 48vw;
     background-size: 16px;
     appearance: none;
