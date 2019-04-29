@@ -9,9 +9,9 @@
       <button class="animated" @click="pkRecord"></button>
       <button class="animated" @click="myAchievements"></button>
     </div>
-    <div class="modal" v-show="isShow" @click="isShow = 0">
+    <div class="modal" v-show="tip_isShow" @click="tip_isShow = 0">
       <img src="~img/tankuang_10.png" ref="img">
-      <div class="one_dialog" v-if="dialogShow">
+      <div class="one_dialog" v-if="dialog_isShow">
         <router-link to="/train"></router-link>
         <router-link to="/"></router-link>
       </div>
@@ -19,28 +19,15 @@
   </div>
 </template>
 <script>
-
+import common from './mixins/common.js'
 export default {
+  mixins: [common],
   data() {
     return {
-      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
-      user_id: this.$handler.getStorage('user_id'),
-      isShow: 0,
-      dialogShow: 0
+      dialog_isShow: 0
     }
   },
   methods: {
-    audioControl() {
-      this.autoplay = !this.autoplay
-      this.$handler.isPlay('myAudio')
-      window.sessionStorage.setItem('autoplay', this.autoplay)
-    },
-    beforeJump(cb) {
-      if (this.autoplay) {
-        this.$handler.btnPlay('buttonPlay')
-      }
-      setTimeout(() => cb(), 500)
-    },
     pkMethod(pkType) {
       this.$Axios.post(this.$baseUrl.base + this.$baseUrl.isPK, {
         userId: this.user_id,
@@ -54,11 +41,11 @@ export default {
           }
         } else if (res.data.code == 2) {
           // 训练超过10次
-          this.isShow = 1
+          this.tip_isShow = 1
         } else if (res.data.code == 7) {
           // 没有认证
-          this.isShow = 1
-          this.dialogShow = 1
+          this.tip_isShow = 1
+          this.dialog_isShow = 1
           this.$refs.img.src = require('img/tankuang.png')
         }
       })

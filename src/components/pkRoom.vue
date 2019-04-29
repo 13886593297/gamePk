@@ -44,11 +44,11 @@
   </div>
 </template>
 <script>
-
+import common from './mixins/common.js'
 export default {
+  mixins: [common],
   data() {
     return {
-      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
       pkId: this.$route.query.pkId,
       list: [],
       master: {}
@@ -68,17 +68,8 @@ export default {
         }
       })
     },
-    beforeJump(cb) {
-      if (this.autoplay) {
-        this.$handler.btnPlay('buttonPlay')
-      }
-      setTimeout(() => cb(), 500)
-    },
     clickMore() {
       this.$refs.ul.scrollTop += 60
-    },
-    backHome() {
-      this.beforeJump(() => this.$router.push('/'))
     }
   }
 }

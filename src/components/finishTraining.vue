@@ -22,10 +22,10 @@
       <img
         src="~img/finishTraining_02.png"
         class="arrow"
-        :class="{active: isShow}"
+        :class="{active: detail_isShow}"
         @click="showDetail"
       >
-      <div class="detail" v-show="isShow">
+      <div class="detail" v-show="detail_isShow">
         <img src="~img/finishTraining_03.png">
         <div class="subject_answer">
           <ul>
@@ -64,29 +64,22 @@
 </template>
 
 <script>
+import common from './mixins/common.js'
+import shareJs from './mixins/share.js'
 export default {
+  mixins: [common, shareJs],
   data() {
     return {
-      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
-      correct: this.$route.query.correct + '/' + (5 - this.$route.query.correct),
-      score: this.$route.query.score,
-      user_id: this.$route.query.user_id,
-      flaunt: 0,
-      isShow: 0,
-      isFlaunt: 0,
+      correct: this.$route.query.correct + '/' + (5 - this.$route.query.correct),  // 正确题数
+      score: this.$route.query.score,  // 获得积分
+      detail_isShow: 0,  // 显示答题详情
       list: [],
       imgs: [require('img/finishTraining_04.png'), require('img/finishTraining_05.png'), require('img/finishTraining_06.png'), require('img/finishTraining_07.png'), require('img/finishTraining_08.png')],
-      content_rightArr: [],
-      content_wrongArr: []
+      content_rightArr: [],  // 答题详情中答对的答案
+      content_wrongArr: []   // 答题详情中答错的答案
     }
   },
   mounted() {
-    this.$share(() => {
-      this.flaunt = 1
-    })
-    if (window.history.length == 1) {
-      this.isFlaunt = 1
-    }
     this.$Axios.post(this.$baseUrl.base + 'api/pk/getlastestresult', {
       userId: this.user_id
     }).then(res => {
@@ -117,23 +110,11 @@ export default {
     })
   },
   methods: {
-    beforeJump(cb) {
-      if (this.autoplay) {
-        this.$handler.btnPlay('buttonPlay')
-      }
-      setTimeout(() => cb(), 500)
-    },
     continueTrain() {
       this.beforeJump(() => this.$router.push('train'))
     },
-    doFlaunt() {
-      this.beforeJump(() => this.flaunt = 1)
-    },
-    backHome() {
-      this.beforeJump(() => this.$router.push('/'))
-    },
     showDetail(e) {
-      this.isShow = !this.isShow
+      this.detail_isShow = !this.detail_isShow
     }
   }
 }

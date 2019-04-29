@@ -53,11 +53,11 @@
   </div>
 </template>
 <script>
+import common from './mixins/common.js'
 export default {
+  mixins: [common],
   data() {
     return {
-      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
-      user_id: this.$handler.getStorage('user_id'),
       pkId: this.$route.query.pkId,
       list: [],
       time: 20,  // 倒计时
@@ -86,7 +86,6 @@ export default {
         userId: this.user_id,
         pkId: this.pkId
       }).then(res => {
-        console.log(res)
         if (res.data.code == 0) {
           this.list = res.data.body.questions
           this.remaining_time = res.data.body.time
@@ -150,23 +149,24 @@ export default {
       }, 3000)
     },
     sumbit(answerOption) {
-      console.log(answerOption, this.question_index + 1)
       this.$Axios.post(this.$baseUrl.base + this.$baseUrl.toanswerpk, {
         userId: this.user_id,  // 玩家id
         answerOption: answerOption,  // 玩家回答的选项
         questionId: this.list[this.question_index].question_id,  // 题目id
-        pkId: this.pkid
-      }).then((res) => {
-        // 全部题目答完后
-        if (this.question_index + 1 == this.list.length) {
-          clearInterval(this.timer)
-          clearInterval(this.match_timer)
-          alert('您已完成PK邀请答题，请稍后进入PK中心查看结果')
-          this.$router.push('pkRecord')
-        } else {
-          this.time = 20
-          this.question_index++
-          this.showAdInfo()
+        pkId: this.pkId
+      }).then(res => {
+        if (res.data.code == 0) {
+          // 全部题目答完后
+          if (this.question_index + 1 == this.list.length) {
+            clearInterval(this.timer)
+            clearInterval(this.match_timer)
+            alert('您已完成PK邀请答题，请稍后进入PK中心查看结果')
+            this.$router.push('pkRecord')
+          } else {
+            this.time = 20
+            this.question_index++
+            this.showAdInfo()
+          }
         }
       })
     },
@@ -228,37 +228,42 @@ $color: #275fb2;
 }
 .container {
   position: absolute;
-  width: 70vw;
+  width: 75vw;
   height: 80vw;
   overflow: auto;
   left: 15vw;
-  top: 36vw;
+  top: 39vw;
   font-weight: bold;
-  li > div {
-    opacity: 0;
-    animation: fadeIn 1s 0.2s forwards;
-  }
-  .current {
-    font-size: 5vw;
-    color: $color;
-  }
-  .title {
-    font-size: 15px;
-    color: $color;
-  }
-  div[class^="option"] {
-    margin-top: 2.5vw;
-  }
-  img {
-    width: 8vw;
-    height: 8vw;
-    vertical-align: top;
-    transform: translateY(-2px);
-  }
-  span {
-    display: inline-block;
-    width: 59vw;
-    font-size: 14px;
+  ul {
+    width: 70vw;
+    li {
+      > div {
+        opacity: 0;
+        animation: fadeIn 1s 0.2s forwards;
+      }
+      .current {
+        font-size: 5vw;
+        color: $color;
+      }
+      .title {
+        font-size: 15px;
+        color: $color;
+      }
+      div[class^="option"] {
+        margin-top: 2.5vw;
+      }
+      img {
+        width: 8vw;
+        height: 8vw;
+        vertical-align: top;
+        transform: translateY(-2px);
+      }
+      span {
+        display: inline-block;
+        width: 59vw;
+        font-size: 14px;
+      }
+    }
   }
 }
 .ad {

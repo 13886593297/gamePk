@@ -46,10 +46,11 @@
 </template>
 
 <script>
+import common from './mixins/common.js'
 export default {
+  mixins: [common],
   data() {
     return {
-      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
       wx_user_name: this.$handler.getStorage('wx_user_name'),  // 微信昵称
       cs_user_name: this.$handler.getStorage('cs_user_name'),  // 游戏中昵称
       wx_user_img: this.$handler.getStorage('wx_user_img') || require('img/default-wx.png'),  // 微信头像

@@ -8,22 +8,20 @@
       <button class="animated" @click="chooseLevel(2)"></button>
       <button class="animated" @click="chooseLevel(3)"></button>
     </div>
-    <div class="modal" v-show="isShow" @click="isShow = 0">
+    <div class="modal" v-show="tip_isShow" @click="tip_isShow = 0">
       <img src="~img/projectile_frame_over_two.png" alt ref="img">
     </div>
   </div>
 </template>
 <script>
-
+import common from './mixins/common.js'
 export default {
+  mixins: [common],
   data() {
     return {
-      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
-      user_id: this.$handler.getStorage('user_id'),
       level1: 0,
       level2: 0,
       level3: 0,
-      isShow: 0
     }
   },
   mounted() {
@@ -38,31 +36,20 @@ export default {
   methods: {
     chooseLevel(levelId) {
       if (this.level1 >= 5 && this.level3 >= 5 && this.level3 >= 5) {
-        this.isShow = 1
+        this.tip_isShow = 1
         this.$refs.img.src = require('img/projectile_frame_over.png')
       } else {
         if (levelId == 1 && this.level1 >= 5) {
-          this.isShow = 1
+          this.tip_isShow = 1
         } else if (levelId == 2 && this.level2 >= 5) {
-          this.isShow = 1
+          this.tip_isShow = 1
         } else if (levelId == 3 && this.level3 >= 5) {
-          this.isShow = 1
+          this.tip_isShow = 1
         } else {
           this.beforeJump(() => this.$router.push({ name: 'subject', params: { levelId } }))
         }
       }
-    },
-    audioControl() {
-      this.autoplay = !this.autoplay
-      this.$handler.isPlay('myAudio')
-      window.sessionStorage.setItem('autoplay', this.autoplay)
-    },
-    beforeJump(cb) {
-      if (this.autoplay) {
-        this.$handler.btnPlay('buttonPlay')
-      }
-      setTimeout(() => cb(), 500)
-    },
+    }
   }
 }
 </script>

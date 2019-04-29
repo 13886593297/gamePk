@@ -16,9 +16,9 @@
     <div class="share" v-show="flaunt" @click="flaunt = 0">
       <img src="~img/share.png" alt>
     </div>
-    <div class="modal" v-show="isShow" @click="isShow = 0">
+    <div class="modal" v-show="tip_isShow" @click="tip_isShow = 0">
       <img src="~img/tankuang_10.png" ref="img">
-      <div class="one_dialog" v-if="dialogShow">
+      <div class="one_dialog" v-if="dialog_isShow">
         <router-link to="/train"></router-link>
         <router-link to="/"></router-link>
       </div>
@@ -27,21 +27,18 @@
 </template>
 <script>
 import QrCodeWithLogo from 'qr-code-with-logo'
+import common from './mixins/common.js'
+import shareJs from './mixins/share.js'
 export default {
+  mixins: [common, shareJs],
   data() {
     return {
-      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
-      user_id: this.$handler.getStorage('user_id'),
       pkId: this.$route.query.pkId,
       flaunt: 1,
-      isShow: 0,
-      dialogShow: 0
+      dialog_isShow: 0
     }
   },
   mounted() {
-    this.$share(() => {
-      this.flaunt = 1
-    })
     if (window.history.length == 1) {
       this.flaunt = 0
     }
@@ -52,7 +49,6 @@ export default {
       QrCodeWithLogo.toCanvas({
         canvas: this.$refs.canvas,
         content: 'window.location.href',
-        // content: 'https://pkgame-q.lillyadmin.cn/client/pkgame/html/invitation.html?pkId=' + this.pkId,
         width: 80,
         nodeQrCodeOptions: {
           margin: 0,
@@ -77,11 +73,11 @@ export default {
           })
         } else if (res.data.code == 2) {
           // 训练超过10次
-          this.isShow = 1
+          this.tip_isShow = 1
         } else if (res.data.code == 7) {
           // 没有认证
-          this.isShow = 1
-          this.dialogShow = 1
+          this.tip_isShow = 1
+          this.dialog_isShow = 1
           this.$refs.img.src = require('img/tankuang.png')
         } else if (res.data.code == 11) {
           alert('您已经答过该题了，请等待结果')

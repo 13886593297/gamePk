@@ -25,29 +25,28 @@
         <img src="~img/determine.png" alt>
       </div>
     </div>
-    <div class="modal" v-show="isShow" @click="isShow = 0">
+    <div class="modal" v-show="tip_isShow" @click="tip_isShow = 0">
       <img src="~img/tankuang_10.png" ref="img">
     </div>
   </div>
 </template>
 <script>
+import common from './mixins/common.js'
 export default {
+  mixins: [common],
   data() {
     return {
-      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
-      user_id: this.$handler.getStorage('user_id'),
-      subject_num: '10',
-      time: '',
-      person_num: '2',
-      type: '0',
+      subject_num: '10',  // 题目数量
+      time: '',  // PK结束时间
+      person_num: '2', // PK人数上限
+      type: '0',  // 题目主题
       typeArr: {
         '0': '全部',
         '1': '疾病管理',
         '7': '指南共识',
         '8': '复泰奥',
         '9': '度易达'
-      },
-      isShow: 0
+      }
     }
   },
   mounted() {
@@ -90,7 +89,7 @@ export default {
             }
           })
         } else if (res.data.code == 2) {
-          this.isShow = 1
+          this.tip_isShow = 1
         } else if (res.data.code == 13) {
           alert('当前分类下面的题目数量不足')
         } else {

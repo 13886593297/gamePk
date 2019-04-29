@@ -16,7 +16,7 @@
       <div class="rank">
         <div class="rank_month">
           月排名
-          <span>第{{rank}}名</span>
+          <span>第{{month_rank}}名</span>
         </div>
         <div class="rank_week">
           周排名
@@ -30,16 +30,15 @@
   </div>
 </template>
 <script>
-
+import common from './mixins/common.js'
 export default {
+  mixins: [common],
   data() {
     return {
-      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
-      user_id: this.$route.query.user_id,
       info: {},
       user_img: '',
       user_name: '',
-      rank: '',
+      month_rank: '',
       week_rank: '',
     }
   },
@@ -51,17 +50,12 @@ export default {
         this.info = res.data.body
         this.user_img = this.info.userInfo.user_img
         this.user_name = this.info.userInfo.user_name
-        this.rank = this.info.userInfo.rank
+        this.month_rank = this.info.userInfo.rank
         this.week_rank = this.info.userInfo.week_rank
       }
     })
   },
   methods: {
-    audioControl() {
-      this.autoplay = !this.autoplay
-      this.$handler.isPlay('myAudio')
-      window.sessionStorage.setItem('autoplay', this.autoplay)
-    },
     clickMore() {
       this.$refs.ul.scrollTop += 60
     }

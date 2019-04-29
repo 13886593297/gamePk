@@ -30,11 +30,11 @@
       </p>
       <div class="btn_div">
         <button @click="continuePk" v-show="!isFlaunt"></button>
-        <button @click="toFlaunt" v-show="!isFlaunt"></button>
+        <button @click="doFlaunt" v-show="!isFlaunt"></button>
         <button @click="backHome"></button>
       </div>
     </div>
-    <div class="modal" v-show="isShow" @click="isShow = 0">
+    <div class="modal" v-show="tip_isShow" @click="tip_isShow = 0">
       <img src="~img/tankuang_10.png" ref="img">
     </div>
     <div class="share" v-show="flaunt" @click="flaunt = 0">
@@ -43,11 +43,12 @@
   </div>
 </template>
 <script>
+import common from './mixins/common.js'
+import shareJs from './mixins/share.js'
 export default {
+  mixins: [common, shareJs],
   data() {
     return {
-      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
-      user_id: this.$route.query.user_id,
       user_name: this.$handler.getStorage('user_name'),  // 自己名字
       user_img: this.$handler.getStorage('user_img'),  // 自己头像
       opponent_name: this.$route.query.opponent_name,  // 对手名字
@@ -56,21 +57,12 @@ export default {
       question_amount: this.$route.query.question_amount,  // 题目总数
       user_time: this.$route.query.user_time,  // 自己答题时间
       opponent_time: this.$route.query.opponent_time,  // 对手答题时间
-      isWin: this.$route.query.isWin,
-      score: this.$route.query.score,
-      result_img: '',
-      isShow: 0,
-      flaunt: 0,
-      isFlaunt: 0
+      isWin: this.$route.query.isWin,  // 赢或输
+      score: this.$route.query.score,  // 获得积分
+      result_img: '',  // 根据结果显示不同背景图片
     }
   },
   mounted() {
-    this.$share(() => {
-      this.flaunt = 1
-    })
-    if (window.history.length == 1) {
-      this.isFlaunt = 1
-    }
     if (this.isWin == 1) {
       this.result_img = require('img/success.png')
       if (this.autoplay) {
@@ -89,12 +81,6 @@ export default {
     }
   },
   methods: {
-    beforeJump(cb) {
-      if (this.autoplay) {
-        this.$handler.btnPlay('buttonPlay')
-      }
-      setTimeout(() => cb(), 500)
-    },
     continuePk() {
       this.$Axios.post(this.$baseUrl.base + this.$baseUrl.isPK, {
         userId: this.user_id,
@@ -104,15 +90,9 @@ export default {
           this.beforeJump(() => this.$router.push('pk'))
         } else if (res.data.code == 2) {
           // 训练超过10次
-          this.isShow = 1
+          this.tip_isShow = 1
         }
       })
-    },
-    toFlaunt() {
-      this.beforeJump(() => this.flaunt = 1)
-    },
-    backHome() {
-      this.beforeJump(() => this.$router.push('/'))
     }
   }
 }

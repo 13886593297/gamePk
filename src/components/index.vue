@@ -18,36 +18,24 @@
     <div class="footer">
       <img src="~img/index_07.png" alt class="game_rule" @click="showRule">
       <button @click="toUser"></button>
-      <div class="role_guize" v-show="show_role">
+      <div class="role_guize" v-show="rule_isShow">
         <img src="~img/role_guize.png">
-        <div class="shut" @click="show_role = 0"></div>
+        <div class="shut" @click="rule_isShow = 0"></div>
       </div>
     </div>
     <div class="examine">PP-LD-CN-1002</div>
   </div>
 </template>
-
 <script>
+import common from './mixins/common.js'
 export default {
+  mixins: [common],
   data() {
     return {
-      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
-      user_id: this.$handler.getStorage('user_id'),
-      show_role: 0,  // 游戏规则
+      rule_isShow: 0,  // 游戏规则
     }
   },
   methods: {
-    audioControl() {
-      this.autoplay = !this.autoplay
-      this.$handler.isPlay('myAudio')
-      window.sessionStorage.setItem('autoplay', this.autoplay)
-    },
-    beforeJump(cb) {
-      if (this.autoplay) {
-        this.$handler.btnPlay('buttonPlay')
-      }
-      setTimeout(() => cb(), 500)
-    },
     totrain() {
       this.beforeJump(() => this.$router.push('train'))
     },
@@ -72,7 +60,7 @@ export default {
       }))
     },
     showRule() {
-      this.beforeJump(() => this.show_role = 1)
+      this.beforeJump(() => this.rule_isShow = 1)
     },
     toUser() {
       this.beforeJump(() => this.$router.push({

@@ -2,7 +2,7 @@
   <div>
     <audio src="~music/time_out.mp3" id="timeOut" loop="loop" :autoplay="autoplay"></audio>
     <audio src="~music/select_click.mp3" id="selectClick"></audio>
-    <div class="load" v-if="loadShow">
+    <div class="load" v-if="loading_isShow">
       <div class="user">
         <span>{{ user_name }}</span>
         <div>
@@ -22,7 +22,7 @@
       </div>
       <img src="~img/pk_03.png" alt>
     </div>
-    <div class="pk" v-if="!loadShow">
+    <div class="pk" v-if="!loading_isShow">
       <div class="pk_info">
         <div class="user">
           <img :src="user_img">
@@ -58,26 +58,24 @@
       <img :src="adInfo_img">
       <span v-text="adInfo_value"></span>
     </div>
-    <div class="modal" v-show="isShow">
+    <div class="modal" v-show="tip_isShow">
       <img src="~img/wait.png" ref="img">
     </div>
   </div>
 </template>
 <script>
-
+import common from './mixins/common.js'
 export default {
+  mixins: [common],
   data() {
     return {
-      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
-      user_id: this.$handler.getStorage('user_id'),
-      loadShow: 1,  // 默认显示loading区域，匹配到对手后隐藏
+      loading_isShow: 1,  // 默认显示loading区域，匹配到对手后隐藏
       user_name: this.$handler.getStorage('user_name'),  // 自己名字
       user_img: this.$handler.getStorage('user_img'),  // 自己头像
       opponent_name: '',  // 对手名字
       opponent_img: require('img/wait_person.png'), // 对手头像
       match_countdown: 10,  // 匹配倒计时 
       socket: '',  // websocket
-      isShow: 0,  // 显示正在答题弹窗
       data: '',  // socket返回的数据
       question_index: 1,  // 当前答第几题
       question_amount: 5,  // 题目总数
@@ -136,8 +134,8 @@ export default {
       } else if (this.data.c == 2) {
         // 没有对手
       } else if (this.data.c == 4) {
-        this.loadShow = 0
-        this.isShow = 0
+        this.loading_isShow = 0
+        this.tip_isShow = 0
         if (this.data.q.ad_info != null) {
           this.ad_isShow = 1
           this.adInfo_img = this.data.q.ad_info.ad_img
@@ -162,7 +160,7 @@ export default {
           this.send('{"c":5,"questionId":' + this.question_id + ',"answerOption":' + 0 + ',"cc":' + this.question_index + '}')
         }
       } else if (this.data.c == 6 || this.data.c == 7 || this.data.c == 8) {
-        this.isShow = 0
+        this.tip_isShow = 0
         this.user_time = this.data.t1
         this.opponent_time = this.data.t2
         this.score = this.data.s
@@ -199,7 +197,7 @@ export default {
       this.socket.close()
     },
     doAnswer(id) {
-      this.isShow = 1
+      this.tip_isShow = 1
       if (this.autoplay) {
         this.$handler.btnPlay('selectClick')
       }

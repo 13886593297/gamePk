@@ -28,7 +28,7 @@
       </ul>
     </div>
     <div class="route">
-      <button @click="toFlaunt" v-show="!isFlaunt"></button>
+      <button @click="doFlaunt" v-show="!isFlaunt"></button>
       <button @click="backHome"></button>
     </div>
     <div class="share" v-show="flaunt" @click="flaunt = 0">
@@ -38,42 +38,21 @@
 </template>
 
 <script>
+import common from './mixins/common.js'
+import shareJs from './mixins/share.js'
 export default {
+  mixins: [common, shareJs],
   data() {
     return {
-      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
-      user_id: this.$route.query.user_id,
-      list: {},
-      flaunt: 0,
-      isFlaunt: 0
+      list: {}
     }
   },
   mounted() {
-    this.$share(() => {
-      this.flaunt = 1
-    })
-    if (window.history.length == 1) {
-      this.isFlaunt = 1
-    }
     this.$Axios.post(this.$baseUrl.base + this.$baseUrl.pkInfo, {
       userId: this.user_id,
     }).then((res) => {
       this.list = res.data.body
     })
-  },
-  methods: {
-    beforeJump(cb) {
-      if (this.autoplay) {
-        this.$handler.btnPlay('buttonPlay')
-      }
-      setTimeout(() => cb(), 500)
-    },
-    toFlaunt() {
-      this.beforeJump(() => this.flaunt = 1)
-    },
-    backHome() {
-      this.beforeJump(() => this.$router.push('/'))
-    }
   }
 }
 </script>

@@ -31,12 +31,11 @@
   </div>
 </template>
 <script>
-
+import common from './mixins/common.js'
 export default {
+  mixins: [common],
   data() {
     return {
-      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
-      user_id: this.$handler.getStorage('user_id'),
       list: []
     }
   },
@@ -50,17 +49,6 @@ export default {
     })
   },
   methods: {
-    audioControl() {
-      this.autoplay = !this.autoplay
-      this.$handler.isPlay('myAudio')
-      window.sessionStorage.setItem('autoplay', this.autoplay)
-    },
-    beforeJump(cb) {
-      if (this.autoplay) {
-        this.$handler.btnPlay('buttonPlay')
-      }
-      setTimeout(() => cb(), 500)
-    },
     topkroom(type, end, pkId) {
       if (type == 2 && end == 1) {
         this.$router.push({
@@ -73,9 +61,6 @@ export default {
     },
     clickMore() {
       this.$refs.ul.scrollTop += 60
-    },
-    backHome() {
-      this.beforeJump(() => this.$router.push('/'))
     }
   }
 }

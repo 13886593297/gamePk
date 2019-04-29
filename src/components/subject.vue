@@ -34,19 +34,19 @@
   </div>
 </template>
 <script>
+import common from './mixins/common.js'
 export default {
+  mixins: [common],
   data() {
     return {
-      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
       list: [],
       time: 20,  // 倒计时
       timer: '',  // 计时器id
       question_index: 0,   // 当前第几题
       isClick: false,  // 禁止重复点击
       ad_isShow: 0,  // 是否显示广告
-      adInfo_img: '~img/ad_logo01.png',   // 广告图标
+      adInfo_img: require('img/ad_logo01.png'),   // 广告图标
       adInfo_value: '强效促成骨 提高骨质量 预防再骨折',  // 广告标语
-      user_id: this.$handler.getStorage('user_id'),
       score: 0,  // 得分
       correct: 0  // 正确题目数量
     }

@@ -4,44 +4,44 @@
     <audio src="~music/button.mp3" id="buttonPlay"></audio>
     <div class="music_btn" @click="audioControl" :class="{play: autoplay, pause: !autoplay}"></div>
     <img class="head" :src="list.user_img" @click="set">
-    <router-link class="tip" to="/setAvatar">点击设置头像</router-link>
+    <router-link class="tip" to="/setAvatar" v-show="!isFlaunt">点击设置头像</router-link>
     <div class="user_detail">
       <span id="name">{{ list.user_name }}</span>
       <ul>
         <li>
           <img src="~img/me_02.png">
           <br>
-          <span>{{ list.week_rank }}</span>
+          <span>{{ list.week_rank || 0 }}</span>
         </li>
         <li>
           <img src="~img/me_01.png">
           <br>
-          <span>{{ list.rank }}</span>
+          <span>{{ list.rank || 0}}</span>
         </li>
         <li>
           <img src="~img/myAchievements_01.png">
           <br>
-          <span>{{ list.pk_count }}</span>
+          <span>{{ list.pk_count || 0}}</span>
         </li>
         <li>
           <img src="~img/myAchievements_02.png">
           <br>
-          <span>{{ list.pk_win_count }}</span>
+          <span>{{ list.pk_win_count || 0}}</span>
         </li>
         <li>
           <img src="~img/myAchievements_04.png">
           <br>
-          <span>{{ list.user_score }}</span>
+          <span>{{ list.user_score || 0}}</span>
         </li>
         <li>
           <img src="~img/myAchievements_03.png">
           <br>
-          <span>{{ list.user_rate + '%' }}</span>
+          <span>{{ list.user_rate || 0 + '%' }}</span>
         </li>
       </ul>
     </div>
     <div class="route">
-      <button @click="toFlaunt" v-show="!isFlaunt"></button>
+      <button @click="doFlaunt" v-show="!isFlaunt"></button>
       <button @click="backHome"></button>
     </div>
     <div class="share" v-show="flaunt" @click="flaunt = 0">
@@ -51,23 +51,16 @@
 </template>
 
 <script>
+import common from './mixins/common.js'
+import shareJs from './mixins/share.js'
 export default {
+  mixins: [common, shareJs],
   data() {
     return {
-      autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
-      user_id: this.$route.query.user_id,
       list: {},
-      flaunt: 0,
-      isFlaunt: 0
     }
   },
   mounted() {
-    this.$share(() => {
-      this.flaunt = 1
-    })
-    if (window.history.length == 1) {
-      this.isFlaunt = 1
-    }
     this.$Axios.post(this.$baseUrl.base + this.$baseUrl.meinfo, {
       userId: this.user_id,
     }).then((res) => {
@@ -75,25 +68,10 @@ export default {
     })
   },
   methods: {
-    audioControl() {
-      this.autoplay = !this.autoplay
-      this.$handler.isPlay('myAudio')
-      window.sessionStorage.setItem('autoplay', this.autoplay)
-    },
-    beforeJump(cb) {
-      if (this.autoplay) {
-        this.$handler.btnPlay('buttonPlay')
-      }
-      setTimeout(() => cb(), 500)
-    },
     set() {
-      this.beforeJump(() => this.$router.push('setAvatar'))
-    },
-    toFlaunt() {
-      this.beforeJump(() => this.flaunt = 1)
-    },
-    backHome() {
-      this.beforeJump(() => this.$router.push('/'))
+      if (this.isFlaunt != 1) {
+        this.beforeJump(() => this.$router.push('setAvatar'))
+      }
     }
   }
 }
