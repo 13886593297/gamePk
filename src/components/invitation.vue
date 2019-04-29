@@ -39,7 +39,9 @@ export default {
     }
   },
   mounted() {
-    this.$share(this.flaunt)
+    this.$share(() => {
+      this.flaunt = 1
+    })
     if (window.history.length == 1) {
       this.flaunt = 0
     }
@@ -81,7 +83,7 @@ export default {
           this.isShow = 1
           this.dialogShow = 1
           this.$refs.img.src = require('img/tankuang.png')
-        } else if (res.data.code == 11){
+        } else if (res.data.code == 11) {
           alert('您已经答过该题了，请等待结果')
         } else if (res.data.code == 9) {
           alert('该活动已结束')

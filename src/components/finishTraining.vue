@@ -81,7 +81,9 @@ export default {
     }
   },
   mounted() {
-    this.$share(this.flaunt)
+    this.$share(() => {
+      this.flaunt = 1
+    })
     if (window.history.length == 1) {
       this.isFlaunt = 1
     }

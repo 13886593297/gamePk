@@ -1,6 +1,6 @@
 import wx from 'weixin-js-sdk'
 
-export default function (flaunt) {
+export default function (cb) {
   this.$Axios.post(this.$baseUrl.base + this.$baseUrl.wxConfig, {
     url: window.location.href.split('#')[0]
   }).then(res => {
@@ -38,10 +38,10 @@ export default function (flaunt) {
         imgUrl: this.$baseUrl.shapeImg, // 分享图标
         success: function () {
           // 用户确认分享后执行的回调函数
-          flaunt = 0
+          cb()
         },
         cancel: function () {
-          flaunt = 0
+          cb()
           // 用户取消分享后执行的回调函数
         }
       })
@@ -52,10 +52,10 @@ export default function (flaunt) {
         link: window.location.href, // 分享链接
         imgUrl: this.$baseUrl.shapeImg, // 分享图标
         success: function () {
-          flaunt = 0
+          cb()
         },
         cancel: function () {
-          flaunt = 0
+          cb()
         }
       })
     })
