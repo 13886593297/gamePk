@@ -1,7 +1,7 @@
 <template>
   <div>
-    <audio src="/static/music/time_out.mp3" id="timeOut" loop="loop" :autoplay="autoplay"></audio>
-    <audio src="/static/music/select_click.mp3" id="selectClick"></audio>
+    <audio src="~music/time_out.mp3" id="timeOut" loop="loop" :autoplay="autoplay"></audio>
+    <audio src="~music/select_click.mp3" id="selectClick"></audio>
     <div class="load" v-if="loadShow">
       <div class="user">
         <span>{{ user_name }}</span>
@@ -178,6 +178,7 @@ export default {
           this.$router.push({
             name: 'pk_result',
             query: {
+              user_id: this.user_id,
               opponent_name: this.opponent_name,
               opponent_img: this.opponent_img,
               question_index: this.question_index,

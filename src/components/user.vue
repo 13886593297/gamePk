@@ -1,7 +1,7 @@
 <template>
   <div class="main">
-    <audio src="/static/music/index_bg.mp3" loop id="myAudio" :autoplay="autoplay"></audio>
-    <audio src="/static/music/button.mp3" id="buttonPlay"></audio>
+    <audio src="~music/index_bg.mp3" loop id="myAudio" :autoplay="autoplay"></audio>
+    <audio src="~music/button.mp3" id="buttonPlay"></audio>
     <div class="music_btn" @click="audioControl" :class="{play: autoplay, pause: !autoplay}"></div>
     <img class="head" :src="list.user_img" @click="set">
     <router-link class="tip" to="/setAvatar">点击设置头像</router-link>
@@ -41,7 +41,7 @@
       </ul>
     </div>
     <div class="route">
-      <button @click="toFlaunt"></button>
+      <button @click="toFlaunt" v-show="!isFlaunt"></button>
       <button @click="backHome"></button>
     </div>
     <div class="share" v-show="flaunt" @click="flaunt = 0">
@@ -55,13 +55,19 @@ export default {
   data() {
     return {
       autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
+      user_id: this.$route.query.user_id,
       list: {},
-      flaunt: 0
+      flaunt: 0,
+      isFlaunt: 0
     }
   },
   mounted() {
+    this.$share(this.flaunt)
+    if (window.history.length == 1) {
+      this.isFlaunt = 1
+    }
     this.$Axios.post(this.$baseUrl.base + this.$baseUrl.meinfo, {
-      userId: this.$handler.getStorage('user_id'),
+      userId: this.user_id,
     }).then((res) => {
       this.list = res.data.body
     })

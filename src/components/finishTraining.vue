@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <audio src="/static/music/button.mp3" id="buttonPlay"></audio>
+    <audio src="~music/button.mp3" id="buttonPlay"></audio>
     <div class="result">
       <div>
         <div class="num" v-text="score"></div>
@@ -12,11 +12,11 @@
       </div>
     </div>
     <div class="route">
-      <button @click="continueTrain"></button>
-      <button @click="doFlaunt"></button>
+      <button @click="continueTrain" v-show="!isFlaunt"></button>
+      <button @click="doFlaunt" v-show="!isFlaunt"></button>
       <button @click="backHome"></button>
     </div>
-    <div class="answerDetail">
+    <div class="answerDetail" v-show="!isFlaunt">
       <img class="icon" src="~img/finishTraining_01.png">
       <br>
       <img
@@ -70,9 +70,10 @@ export default {
       autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
       correct: this.$route.query.correct + '/' + (5 - this.$route.query.correct),
       score: this.$route.query.score,
-      user_id: this.$handler.getStorage('user_id'),
+      user_id: this.$route.query.user_id,
       flaunt: 0,
       isShow: 0,
+      isFlaunt: 0,
       list: [],
       imgs: [require('img/finishTraining_04.png'), require('img/finishTraining_05.png'), require('img/finishTraining_06.png'), require('img/finishTraining_07.png'), require('img/finishTraining_08.png')],
       content_rightArr: [],
@@ -80,6 +81,10 @@ export default {
     }
   },
   mounted() {
+    this.$share(this.flaunt)
+    if (window.history.length == 1) {
+      this.isFlaunt = 1
+    }
     this.$Axios.post(this.$baseUrl.base + 'api/pk/getlastestresult', {
       userId: this.user_id
     }).then(res => {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <audio src="/static/music/button.mp3" id="buttonPlay"></audio>
+    <audio src="~music/button.mp3" id="buttonPlay"></audio>
     <div class="master">
       <span>{{ master.user_name }}</span>
       <img :src="master.user_img">

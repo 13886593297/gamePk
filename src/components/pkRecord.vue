@@ -1,7 +1,7 @@
 <template>
   <div class="main">
-    <audio src="/static/music/index_bg.mp3" loop id="myAudio" :autoplay="autoplay"></audio>
-    <audio src="/static/music/button.mp3" id="buttonPlay"></audio>
+    <audio src="~music/index_bg.mp3" loop id="myAudio" :autoplay="autoplay"></audio>
+    <audio src="~music/button.mp3" id="buttonPlay"></audio>
     <div class="music_btn" @click="audioControl" :class="{play: autoplay, pause: !autoplay}"></div>
     <ul class="scrollbar" ref="ul">
       <li v-for="(v, i) in list" :key="i" @click="topkroom(v.type, v.end, v.pkId)">

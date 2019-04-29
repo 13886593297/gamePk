@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <audio src="/static/music/index_bg.mp3" loop id="myAudio" :autoplay="autoplay"></audio>
+    <audio src="~music/index_bg.mp3" loop id="myAudio" :autoplay="autoplay"></audio>
     <div class="music_btn" @click="audioControl" :class="{play: autoplay, pause: !autoplay}"></div>
     <ul class="scrollbar" ref="ul">
       <li v-for="(v, i) in info.rankList" :key="i">
@@ -35,7 +35,7 @@ export default {
   data() {
     return {
       autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
-      user_id: this.$handler.getStorage('user_id'),
+      user_id: this.$route.query.user_id,
       info: {},
       user_img: '',
       user_name: '',

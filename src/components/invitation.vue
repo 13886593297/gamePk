@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <audio src="/static/music/button.mp3" id="buttonPlay"></audio>
+    <audio src="~music/button.mp3" id="buttonPlay"></audio>
     <p class="text">
       邀请您参加
       <br>《乐拼王者》
@@ -39,6 +39,7 @@ export default {
     }
   },
   mounted() {
+    this.$share(this.flaunt)
     if (window.history.length == 1) {
       this.flaunt = 0
     }

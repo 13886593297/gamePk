@@ -1,7 +1,7 @@
 <template>
   <div class="main">
-    <audio src="/static/music/index_bg.mp3" loop id="myAudio" :autoplay="autoplay"></audio>
-    <audio src="/static/music/button.mp3" id="buttonPlay"></audio>
+    <audio src="~music/index_bg.mp3" loop id="myAudio" :autoplay="autoplay"></audio>
+    <audio src="~music/button.mp3" id="buttonPlay"></audio>
     <div class="music_btn" @click="audioControl" :class="{play: autoplay, pause: !autoplay}"></div>
     <div class="route">
       <div>
@@ -32,6 +32,7 @@ export default {
   data() {
     return {
       autoplay: JSON.parse(window.sessionStorage.getItem('autoplay')),
+      user_id: this.$handler.getStorage('user_id'),
       show_role: 0,  // 游戏规则
     }
   },
@@ -63,13 +64,23 @@ export default {
       this.beforeJump(() => window.location.href = 'https://wechat-qa.lillyadmin.cn/iDoctorWeChat/ContentArea/Main?event=MenuClick&wechatid=27')
     },
     torankingList() {
-      this.beforeJump(() => this.$router.push('rankingList'))
+      this.beforeJump(() => this.$router.push({
+        name: 'rankingList',
+        query: {
+          user_id: this.user_id
+        }
+      }))
     },
     showRule() {
       this.beforeJump(() => this.show_role = 1)
     },
     toUser() {
-      this.beforeJump(() => this.$router.push('user'))
+      this.beforeJump(() => this.$router.push({
+        name: 'user',
+        query: {
+          user_id: this.user_id
+        }
+      }))
     }
   }
 }

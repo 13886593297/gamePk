@@ -13,13 +13,6 @@ export default {
     if (r != null) return decodeURI(r[2])
     return null
   },
-  getCookie(name) {
-    var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)")
-    if (arr = document.cookie.match(reg))
-      return unescape(arr[2])
-    else
-      return null
-  },
   isPlay(ele) {
     if (document.getElementById(ele).paused) {
       document.getElementById(ele).play();

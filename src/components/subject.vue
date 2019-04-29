@@ -1,7 +1,7 @@
 <template>
   <div class="main">
-    <audio src="/static/music/time_out.mp3" id="timeOut" loop="loop" :autoplay="autoplay"></audio>
-    <audio src="/static/music/select_click.mp3" id="selectClick"></audio>
+    <audio src="~music/time_out.mp3" id="timeOut" loop="loop" :autoplay="autoplay"></audio>
+    <audio src="~music/select_click.mp3" id="selectClick"></audio>
     <div class="time">{{ time }}</div>
     <ul class="scrollbar">
       <li v-for="(value, key) in list" :key="key">
@@ -121,7 +121,14 @@ export default {
         // 全部题目答完后
         if (this.question_index + 1 == this.list.length) {
           clearInterval(this.timer)
-          this.$router.push({ name: 'finishTraining', query: { score: this.score, correct: this.correct } })
+          this.$router.push({
+            name: 'finishTraining',
+            query: {
+              user_id: this.user_id,
+              score: this.score,
+              correct: this.correct
+            }
+          })
         } else {
           this.time = 20
           this.question_index++

@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <audio src="/static/music/button.mp3" id="buttonPlay"></audio>
+    <audio src="~music/button.mp3" id="buttonPlay"></audio>
     <div class="setpk">
       <p>1.请设定题目数量</p>
       <select id="select_subject_num" v-model="subject_num">

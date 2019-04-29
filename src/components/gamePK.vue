@@ -1,7 +1,7 @@
 <template>
   <div class="main">
-    <audio src="/static/music/index_bg.mp3" loop id="myAudio" :autoplay="autoplay"></audio>
-    <audio src="/static/music/button.mp3" id="buttonPlay"></audio>
+    <audio src="~music/index_bg.mp3" loop id="myAudio" :autoplay="autoplay"></audio>
+    <audio src="~music/button.mp3" id="buttonPlay"></audio>
     <div class="music_btn" @click="audioControl" :class="{play: autoplay, pause: !autoplay}"></div>
     <div class="route">
       <button class="animated" @click="pkMethod(1)"></button>
@@ -67,7 +67,12 @@ export default {
       this.beforeJump(() => this.$router.push('pkRecord'))
     },
     myAchievements() {
-      this.beforeJump(() => this.$router.push('myAchievements'))
+      this.beforeJump(() => this.$router.push({
+        name: 'myAchievements',
+        query: {
+          user_id: this.user_id
+        }
+      }))
     }
   }
 }

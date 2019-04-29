@@ -14,7 +14,8 @@
     "qr-code-with-logo": "^1.1.0",
     "vconsole": "^3.3.0",
     "vue": "^2.6.10",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "weixin-js-sdk": "^1.4.0-test"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

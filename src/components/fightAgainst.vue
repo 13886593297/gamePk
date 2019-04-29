@@ -1,7 +1,7 @@
 <template>
   <div>
-    <audio src="/static/music/time_out.mp3" id="timeOut" loop="loop" :autoplay="autoplay"></audio>
-    <audio src="/static/music/select_click.mp3" id="selectClick"></audio>
+    <audio src="~music/time_out.mp3" id="timeOut" loop="loop" :autoplay="autoplay"></audio>
+    <audio src="~music/select_click.mp3" id="selectClick"></audio>
     <div class="match_info">
       <p>
         本场PK剩余时间：

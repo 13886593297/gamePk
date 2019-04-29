@@ -5,17 +5,20 @@ import router from './router'
 import VConsole from '../static/vconsole.min'
 import baseUrl from './assets/js/base'
 import handler from './assets/js/handler'
+import share from './assets/js/share'
 import './assets/css/base.css'
 
 new VConsole()
 
-console.log(window.localStorage.getItem('ticket'))
 Axios.post(baseUrl.base + baseUrl.wxInfo, {
-  userCode: handler.getQueryString('ticket') || window.localStorage.getItem('ticket')
+  userCode: handler.getQueryString('ticket')
 }).then(res => {
-  window.localStorage.setItem('user', JSON.stringify(res.data.body));
-  if (res.data.body.first == 1) {
-    router.push('setAvatar')
+  if (res.data.code == 0) {
+    window.location.search = ''
+    window.localStorage.setItem('user', JSON.stringify(res.data.body))
+    if (res.data.body.first == 1) {
+      router.push('setAvatar')
+    }
   }
 })
 
@@ -33,6 +36,7 @@ if (window.sessionStorage.getItem('autoplay') == null) {
 Vue.prototype.$baseUrl = baseUrl
 Vue.prototype.$handler = handler
 Vue.prototype.$Axios = Axios
+Vue.prototype.$share = share
 
 router.beforeEach((to, from, next) => {
   /* 路由发生变化修改页面title */

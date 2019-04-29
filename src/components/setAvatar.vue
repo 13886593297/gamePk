@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <audio src="/static/music/button.mp3" id="buttonPlay"></audio>
+    <audio src="~music/button.mp3" id="buttonPlay"></audio>
     <div class="set_avatar">
       <div class="default_user" @click="changeActive(0)" :class="img_type == 0 ? 'active' : ''">
         <img class="avatar" :src="wx_user_img">
