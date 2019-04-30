@@ -19,7 +19,7 @@ export default {
       setTimeout(() => cb(), 500)
     },
     backHome() {
-      this.beforeJump(() => this.$router.push('/'))
+      this.beforeJump(() => window.location.href = this.$baseUrl.base)
     },
   }
 }

@@ -84,6 +84,9 @@ export default {
         if (res.data.code == 0) {
           this.$router.push({
             name: 'invitation', 
+            params: {
+              from: 'setpk'
+            },
             query: {
               pkId: res.data.body.pk_id
             }

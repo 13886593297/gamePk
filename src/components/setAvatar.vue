@@ -14,18 +14,8 @@
         </div>
       </div>
       <div class="set_user" @click="changeActive(1)" :class="img_type == 1 ? 'active' : ''">
-        <img
-          @click="changeAvatar"
-          class="avatar"
-          v-if="user_sex == 1"
-          src="~img/default-woman.png"
-        >
-        <img
-          @click="changeAvatar"
-          class="avatar"
-          v-if="user_sex == 0"
-          src="~img/default.png"
-        >
+        <img @click="changeAvatar" class="avatar" v-if="user_sex == 1" src="~img/default-woman.png">
+        <img @click="changeAvatar" class="avatar" v-if="user_sex == 0" src="~img/default.png">
         <div class="avatarIcon">
           <img v-if="user_sex == 1" src="~img/woman.png">
           <img v-if="user_sex == 0" src="~img/man.png">
@@ -95,7 +85,7 @@ export default {
             this.$handler.setStorage('cs_user_name', data.userName)
             this.$handler.setStorage('user_sex', data.userSex)
           }
-          this.$router.push('user')
+          this.$router.go(-1)
         }
       })
     }
@@ -167,6 +157,7 @@ export default {
     }
     input {
       position: absolute;
+      text-indent: 3vw;
       left: 10vw;
       width: 20vw;
       color: #5686c3;

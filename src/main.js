@@ -10,23 +10,6 @@ import './assets/css/base.css'
 
 new VConsole()
 
-Axios.post(baseUrl.base + baseUrl.wxInfo, {
-  userCode: handler.getQueryString('ticket')
-}).then(res => {
-  if (res.data.code == 0) {
-    window.location.search = ''
-    window.localStorage.setItem('user', JSON.stringify(res.data.body))
-    if (res.data.body.first == 1) {
-      router.push('setAvatar')
-    }
-  }
-})
-
-// Axios.get('../static/user.json')
-//   .then(res => {
-//     window.localStorage.setItem('user', JSON.stringify(res.data.body));
-//   })
-
 // 是否自动播放音乐
 if (window.sessionStorage.getItem('autoplay') == null) {
   window.sessionStorage.setItem('autoplay', false)

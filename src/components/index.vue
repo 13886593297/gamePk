@@ -35,6 +35,24 @@ export default {
       rule_isShow: 0,  // 游戏规则
     }
   },
+  mounted() {
+    this.$Axios.post(this.$baseUrl.base + this.$baseUrl.wxInfo, {
+      userCode: this.$handler.getQueryString('ticket')
+    }).then(res => {
+      if (res.data.code == 0) {
+        location.href = location.origin + location.pathname + location.hash
+        window.localStorage.setItem('user', JSON.stringify(res.data.body))
+        if (res.data.body.first == 1) {
+          this.$router.push('setAvatar')
+        }
+      }
+    })
+  
+    // this.$Axios.get('/static/user.json')
+    //   .then(res => {
+    //     window.localStorage.setItem('user', JSON.stringify(res.data.body));
+    //   })
+  },
   methods: {
     totrain() {
       this.beforeJump(() => this.$router.push('train'))
@@ -82,7 +100,7 @@ export default {
 }
 
 .music_btn {
-  top: 5vw
+  top: 5vw;
 }
 
 .route {

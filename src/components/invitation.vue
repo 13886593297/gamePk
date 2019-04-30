@@ -39,8 +39,11 @@ export default {
     }
   },
   mounted() {
-    if (window.history.length == 1) {
+    if (this.$route.params.from != 'setpk') {
       this.flaunt = 0
+    }
+    if (!this.user_id) {
+      this.backHome()
     }
     this.qrcode()
   },
@@ -48,7 +51,7 @@ export default {
     qrcode() {
       QrCodeWithLogo.toCanvas({
         canvas: this.$refs.canvas,
-        content: 'window.location.href',
+        content: window.location.href,
         width: 80,
         nodeQrCodeOptions: {
           margin: 0,

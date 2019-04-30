@@ -8,7 +8,7 @@
     <div class="main">
       <div class="num">已参与人数：{{ list.length }}</div>
       <ul class="scrollbar" ref="ul">
-        <li v-for="(v, i) in list" :key="i">
+        <li v-for="(v, i) in list" :key="i" :class="{active: master.user_name == v.user_name}">
           <img class="head" :src="v.user_img" alt>
           <span class="name">{{ v.user_name }}</span>
           <div class="detail">
@@ -62,6 +62,7 @@ export default {
       this.$Axios.post(this.$baseUrl.base + this.$baseUrl.answerList, {
         pkId: this.pkId
       }).then(res => {
+        console.log(res)
         if (res.data.code == 0) {
           this.list = res.data.body.user
           this.master = res.data.body.master

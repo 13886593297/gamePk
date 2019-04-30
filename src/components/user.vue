@@ -36,7 +36,7 @@
         <li>
           <img src="~img/myAchievements_03.png">
           <br>
-          <span>{{ list.user_rate || 0 + '%' }}</span>
+          <span>{{ (list.user_rate || 0) + '%' }}</span>
         </li>
       </ul>
     </div>
