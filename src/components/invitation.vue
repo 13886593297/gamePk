@@ -28,9 +28,9 @@
 <script>
 import QrCodeWithLogo from 'qr-code-with-logo'
 import common from './mixins/common.js'
-import shareJs from './mixins/share.js'
+import flauntJs from './mixins/flaunt.js'
 export default {
-  mixins: [common, shareJs],
+  mixins: [common, flauntJs],
   data() {
     return {
       pkId: this.$route.query.pkId,

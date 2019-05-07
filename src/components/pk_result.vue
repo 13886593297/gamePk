@@ -44,9 +44,9 @@
 </template>
 <script>
 import common from './mixins/common.js'
-import shareJs from './mixins/share.js'
+import flauntJs from './mixins/flaunt.js'
 export default {
-  mixins: [common, shareJs],
+  mixins: [common, flauntJs],
   data() {
     return {
       user_name: this.$handler.getStorage('user_name'),  // 自己名字
