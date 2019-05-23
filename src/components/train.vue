@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     chooseLevel(levelId) {
-      if (this.level1 >= 5 && this.level3 >= 5 && this.level3 >= 5) {
+      if (this.level1 >= 5 && this.level2 >= 5 && this.level3 >= 5) {
         this.tip_isShow = 1
         this.$refs.img.src = require('img/projectile_frame_over.png')
       } else {
