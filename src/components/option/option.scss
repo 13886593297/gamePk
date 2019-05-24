@@ -1,0 +1,14 @@
+.option {
+  margin-top: 2.5vw;
+  .option_img {
+    width: 8vw;
+    height: 8vw;
+    vertical-align: top;
+    transform: translateY(-2px);
+  }
+  .option_text {
+    display: inline-block;
+    width: 59vw;
+    font-size: 14px;
+  }
+}
