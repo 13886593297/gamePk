@@ -3,6 +3,9 @@
 .main.index {
   @include wh(100%, 100vh);
   @include bgImg("../../assets/img/index_bg.jpg");
+  .music_btn {
+    top: 5vw;
+  }
   .route {
     position: absolute;
     text-align: center;

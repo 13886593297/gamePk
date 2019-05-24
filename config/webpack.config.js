@@ -274,7 +274,8 @@ module.exports = function(webpackEnv) {
         'react-native': 'react-native-web',
         '@': path.resolve('src'),
         '@pages': path.resolve('src/pages'),
-        '@img': path.resolve('src/assets/img')
+        '@img': path.resolve('src/assets/img'),
+        '@music': path.resolve('src/assets/music')
       },
       plugins: [
         // Adds support for installing with Plug'n'Play, leading to faster installs and adding
@@ -333,6 +334,14 @@ module.exports = function(webpackEnv) {
                 limit: 10000,
                 name: 'static/media/[name].[hash:8].[ext]',
               },
+            },
+            {
+              test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+              loader: require.resolve('url-loader'),
+              options: {
+                limit: 10000,
+                name: 'static/media/[name].[hash:7].[ext]'
+              }
             },
             // Process application JS with Babel.
             // The preset includes JSX, Flow, TypeScript, and some ESnext features.

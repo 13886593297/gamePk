@@ -12,7 +12,6 @@ export default class Subject extends React.Component {
       user_id: handler.getStorage('user_id'),
       list: [],
       time: 20,  // 倒计时
-      // timerID: '',  // 计时器id
       question_index: 0,   // 当前第几题
       isClick: false,  // 禁止重复点击
       ad_isShow: 0,  // 是否显示广告
@@ -23,7 +22,6 @@ export default class Subject extends React.Component {
     }
   }
   componentDidMount() {
-    console.log(this.props.match.params)
     Axios.post(baseUrl.base + baseUrl.findAllSubject, {
       userId: this.state.user_id,
       levelId: this.props.match.params.levelId
@@ -81,6 +79,7 @@ export default class Subject extends React.Component {
       // 全部题目答完后
       if (this.state.question_index + 1 == this.state.list.length) {
         clearInterval(this.timerID)
+        // this.props.history.push({ pathname: '/d3' })
         // this.$router.push({
         //   name: 'finishTraining',
         //   query: {
