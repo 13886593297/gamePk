@@ -46,6 +46,7 @@
     "postcss-normalize": "7.0.1",
     "postcss-preset-env": "6.6.0",
     "postcss-safe-parser": "4.0.1",
+    "qr-code-with-logo": "^1.1.0",
     "react": "^16.8.6",
     "react-app-polyfill": "^1.0.1",
     "react-dev-utils": "^9.0.1",
@@ -60,9 +61,11 @@
     "terser-webpack-plugin": "1.2.3",
     "ts-pnp": "1.1.2",
     "url-loader": "1.1.2",
+    "vconsole": "^3.3.0",
     "webpack": "4.29.6",
     "webpack-dev-server": "3.2.1",
     "webpack-manifest-plugin": "2.0.4",
+    "weixin-js-sdk": "^1.4.0-test",
     "workbox-webpack-plugin": "4.2.0"
   },
   "scripts": {
@@ -134,5 +137,6 @@
     "presets": [
       "react-app"
     ]
-  }
+  },
+  "homepage": "."
 }
