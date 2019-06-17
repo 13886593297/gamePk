@@ -1040,7 +1040,7 @@ input {
     height: 20vw;
     line-height: 18vw;
     text-align: right;
-    color: #275fb2;
+    color: $fc;
     font-weight: bold;
     background-image: url('../../assets/img/pkRoom_top.png');
 
@@ -1075,7 +1075,7 @@ input {
       height: 10vw;
       background-color: #fff;
       border-radius: 20px;
-      color: #275fb2;
+      color: $fc;
       font-weight: bold;
       font-size: 4vw;
     }

@@ -13,7 +13,7 @@ export default class Index extends React.Component {
     }
   }
   componentDidMount() {
-    document.title="首页"
+    document.title = "首页"
     // 判断是生产环境还是开发环境
     if (process.env.NODE_ENV === 'development' && !localStorage.getItem('user')) {
       window.localStorage.setItem('user', JSON.stringify(user.body));
@@ -74,9 +74,9 @@ export default class Index extends React.Component {
         <div className="footer">
           <img className='game_rule' src={require('@img/index_07.png')} onClick={this.showRule} alt="" />
           <button onClick={this.toUser}></button>
-          <div className="role_guize" style={{display: this.state.ruleIsShow ? '' : 'none'}}>
-            <img src={require('@img/role_guize.png')} alt=""/>
-            <div className="shut" onClick={() => this.setState({ruleIsShow: 0})}></div>
+          <div className="role_guize" style={{ display: this.state.ruleIsShow ? '' : 'none' }}>
+            <img src={require('@img/role_guize.png')} alt="" />
+            <div className="shut" onClick={() => this.setState({ ruleIsShow: 0 })}></div>
           </div>
         </div>
         <div className="record_number">PP-LD-CN-1002</div>
