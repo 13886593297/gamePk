@@ -18,6 +18,6 @@ export default {
   wxConfig: '/api/wx/wxConfig',
   shapeUrl: 'https://wechat.lillyadmin.cn/',
   shapeImg: '/static/images/shared-sm.png',
-  headImageUrl: '/static/images/default.png',
-  wuManHeadImageUrl: '/static/images/default-woman.png'
+  headImageUrl: '/static/i111mages/default.png',
+  wuManHeadImageUrl: '/static/im111ages/default-woman.png'
 }

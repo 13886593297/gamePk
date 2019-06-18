@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import common from './mixins/common.js'
+import common from '@/mixins/common.js'
 export default {
   mixins: [common],
   data() {
@@ -59,9 +59,9 @@ export default {
     },
     update() {
       if (this.autoplay) {
-        this.$handler.btnPlay('buttonPlay')
+        this.$handler.handleMusic('buttonPlay')
       }
-      var data = {}
+      let data = {}
       if (this.img_type == 1) {
         if (!this.cs_user_name) {
           alert('请输入昵称！')
@@ -69,7 +69,6 @@ export default {
         }
         data.userName = this.cs_user_name
         data.userSex = this.user_sex
-        data.userImg = this.user_sex == 0 ? this.$baseUrl.headImageUrl : this.$baseUrl.wuManHeadImageUrl
       } else {
         data.userName = this.wx_user_name
         data.userImg = this.wx_user_img
@@ -96,95 +95,92 @@ export default {
 <style lang="scss" scoped>
 .main {
   background-image: url("~img/me_info.png");
-  position: absolute;
-  width: 100%;
+  top: 10vw;
   height: 132vw;
-  left: 0;
-  top: 12vw;
-  text-align: center;
-}
-
-.set_avatar {
-  position: absolute;
-  text-align: center;
-  width: 80vw;
-  top: 35vw;
-  left: 10vw;
-  > div {
-    float: left;
-    width: 50%;
-    height: 65vw;
-    h5 {
-      color: #c32677;
-      margin: 3vw 0;
-      height: 4vw;
-    }
-    .avatar {
-      border-radius: 50%;
-      display: inline-block;
-      width: 24vw;
-      height: 24vw;
-      border: 1vw solid #fff;
-      box-shadow: 0 0 20px #1a4290;
-    }
-  }
-  .select {
-    border: 2px solid #c32678;
-    border-radius: 50%;
-    width: 16px;
-    height: 16px;
-    position: relative;
-    display: inline-block;
-    margin-bottom: 1vw;
-  }
-  .active {
-    .select::before {
-      content: "";
-      position: absolute;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background-color: #c32678;
-      left: 2px;
-      top: 2px;
-    }
-  }
-  .avatarIcon {
-    position: relative;
-    margin: 2vw 0;
-    img {
-      width: 28vw;
-    }
-    input {
-      position: absolute;
-      text-indent: 3vw;
-      left: 10vw;
-      width: 20vw;
-      color: #5686c3;
-      font-size: 12px;
-      text-align: center;
-      line-height: 7vw;
-      transform: translateX(-2vw);
-      -webkit-user-select: text !important;
-    }
-  }
-  .tip {
-    font-size: 10px;
-    height: 30vw;
-    padding-left: 3vw;
-    text-align: left;
-    overflow: auto;
-    color: #fff;
-  }
-  button {
-    background-image: url("~img/me_info_01.png");
-    width: 60vw;
-    height: 15vw;
-    margin-top: 8vw;
-  }
-  .set_user .tip {
+  .set_avatar {
+    position: absolute;
     text-align: center;
-    padding-left: 0;
+    width: 80vw;
+    top: 35vw;
+    left: 10vw;
+    > div {
+      float: left;
+      width: 50%;
+      height: 65vw;
+      h5 {
+        color: #c32677;
+        margin: 3vw 0;
+        height: 4vw;
+      }
+      .avatar {
+        border-radius: 50%;
+        display: inline-block;
+        width: 24vw;
+        height: 24vw;
+        border: 1vw solid #fff;
+        box-shadow: 0 0 20px #1a4290;
+      }
+      .select {
+        border: 2px solid #c32678;
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        position: relative;
+        display: inline-block;
+        margin-bottom: 1vw;
+      }
+      .tip {
+        font-size: 10px;
+        height: 30vw;
+        padding-left: 3vw;
+        text-align: left;
+        overflow: auto;
+        color: #fff;
+      }
+    }
+    .active {
+      .select::before {
+        content: "";
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: #c32678;
+        left: 2px;
+        top: 2px;
+      }
+    }
+    .set_user {
+      .avatarIcon {
+        position: relative;
+        margin: 2vw 0;
+        img {
+          width: 28vw;
+        }
+        input {
+          position: absolute;
+          text-indent: 3vw;
+          left: 10vw;
+          width: 20vw;
+          color: #5686c3;
+          font-size: 12px;
+          text-align: center;
+          line-height: 7vw;
+          transform: translateX(-2vw);
+          -webkit-user-select: text !important;
+        }
+      }
+      .tip {
+        text-align: center;
+        padding-left: 0;
+      }
+    }
+    button {
+      background-image: url("~img/me_info_01.png");
+      width: 60vw;
+      height: 15vw;
+      margin-top: 8vw;
+    }
   }
 }
 </style>

@@ -1,9 +1,7 @@
 <template>
   <div class="main">
-    <audio src="~music/index_bg.mp3" loop id="myAudio" :autoplay="autoplay"></audio>
-    <audio src="~music/button.mp3" id="buttonPlay"></audio>
-    <div class="music_btn" @click="audioControl" :class="{play: autoplay, pause: !autoplay}"></div>
-    <ul class="scrollbar" ref="ul">
+    <bg-music></bg-music>
+    <ul ref="ul">
       <li v-for="(v, i) in list" :key="i" @click="topkroom(v.type, v.end, v.pkId)">
         <span class="endTime">{{ v.date }}</span>
         <span class="type" v-if="v.type == 1">在线匹配</span>
@@ -19,19 +17,19 @@
             <span class="rate">正确率：{{ v.rate }}%</span>
           </div>
         </div>
-        <span class="continue" v-if="v.end != 1">进行中... ...</span>
+        <span class="underway" v-if="v.end != 1">进行中... ...</span>
       </li>
     </ul>
-    <div class="arrow" @click="clickMore">
+    <div class="arrow _center" @click="clickMore">
       <img src="~img/arrow.png" alt>
     </div>
-    <div class="back_home" @click="backHome">
+    <div class="back_home _center" @click="backHome">
       <img src="~img/backhome.png" alt>
     </div>
   </div>
 </template>
 <script>
-import common from './mixins/common.js'
+import common from '@/mixins/common.js'
 export default {
   mixins: [common],
   data() {
@@ -69,25 +67,16 @@ export default {
 <style lang="scss" scoped>
 .main {
   background-image: url(~img/pkRecord.png);
-  position: absolute;
   top: 10vw;
-  left: 0;
-  width: 100%;
   height: 140vw;
   .arrow {
-    position: absolute;
-    text-align: center;
-    width: 100%;
     top: 120vw;
     img {
       width: 5vw;
     }
   }
   .back_home {
-    position: absolute;
-    width: 100%;
-    text-align: center;
-    top: 136vw;
+    top: 135vw;
     img {
       width: 60vw;
     }
@@ -108,7 +97,7 @@ export default {
       span {
         display: inline-block;
       }
-      .continue {
+      .underway {
         position: absolute;
         line-height: 16vw;
         text-align: center;

@@ -32,7 +32,7 @@ export default function (cb) {
 
       //  朋友
       wx.onMenuShareAppMessage({
-        title: this.$handler.getItem('user_name') + '等你挑战', // 分享标题
+        title: this.$handler.getStorage('user_name') + '等你挑战', // 分享标题
         desc: '乐拼王者，等你来挑战！',
         link: window.location.href, // 分享链接
         imgUrl: this.$baseUrl.shapeImg, // 分享图标
@@ -47,7 +47,7 @@ export default function (cb) {
       })
       //  朋友圈
       wx.onMenuShareTimeline({
-        title: this.$handler.getItem('user_name') + '等你挑战', // 分享标题
+        title: this.$handler.getStorage('user_name') + '等你挑战', // 分享标题
         desc: '乐拼王者，等你来挑战！',
         link: window.location.href, // 分享链接
         imgUrl: this.$baseUrl.shapeImg, // 分享图标

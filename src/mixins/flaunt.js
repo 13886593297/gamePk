@@ -15,7 +15,10 @@ export default {
   },
   methods: {
     doFlaunt() {
-      this.beforeJump(() => this.flaunt = 1)
+      this.$handler.handleBtnBgm(() => this.flaunt = 1)
     },
+    closeShare() {
+      this.flaunt = 0
+    }
   }
 }

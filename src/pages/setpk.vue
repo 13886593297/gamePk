@@ -21,17 +21,15 @@
       <select id="select_subject_type" v-model="type">
         <option v-for="(v, i) in typeArr" :key="i" v-bind:value="i">{{ v }}</option>
       </select>
-      <div class="submit" @click="save">
+      <div class="determine _center" @click="save">
         <img src="~img/determine.png" alt>
       </div>
     </div>
-    <div class="modal" v-show="tip_isShow" @click="tip_isShow = 0">
-      <img src="~img/tankuang_10.png" ref="img">
-    </div>
+    <tip-show :tip_isShow='tip_isShow' :closeTip='closeTip' :img='tipImg'></tip-show>
   </div>
 </template>
 <script>
-import common from './mixins/common.js'
+import common from '@/mixins/common.js'
 export default {
   mixins: [common],
   data() {
@@ -40,6 +38,7 @@ export default {
       time: '',  // PK结束时间
       person_num: '2', // PK人数上限
       type: '0',  // 题目主题
+      tipImg: require('img/tankuang_10.png'),
       typeArr: {
         '0': '全部',
         '1': '疾病管理',
@@ -71,7 +70,7 @@ export default {
     },
     save() {
       if (this.autoplay) {
-        this.$handler.btnPlay('buttonPlay')
+        this.$handler.handleMusic('buttonPlay')
       }
       this.$Axios.post(this.$baseUrl.base + this.$baseUrl.createPk, {
         userId: this.user_id,
@@ -106,62 +105,59 @@ export default {
 <style lang="scss" scoped>
 .main {
   background-image: url(~img/setPK.png);
-  position: absolute;
-  top: 12vw;
+  top: 10vw;
   left: 8vw;
   width: 88vw;
   height: 140vw;
-}
-
-.setpk {
-  width: 60vw;
-  height: 70vw;
-  position: absolute;
-  top: 40vw;
-  left: 9vw;
-  border: 1vw solid #c2def6;
-  border-radius: 20px;
-  background-color: #fff;
-  padding-left: 5vw;
-  color: #275fb4;
-  p {
-    font-weight: 600;
-    line-height: 9vw;
-    font-size: 14px;
-  }
-  select,
-  input {
-    width: 54vw;
-    height: 8vw;
-    border: 0;
-    text-indent: 2vw;
-    outline: none;
-    border-radius: 20px;
-    background-color: #bdddf6;
-    color: #275fb4;
-    font-weight: 600;
-  }
-  select {
-    text-indent: 5vw;
-    background-image: url(~img/downArrow.png);
-    background-position: 48vw;
-    background-size: 16px;
-    appearance: none;
-  }
-  input {
-    width: 51vw;
-    padding-right: 3vw;
-  }
-  .submit {
+  .setpk {
     position: absolute;
-    text-align: center;
-    width: 100%;
-    left: 0;
-    top: 73vw;
-    img {
-      width: 45vw;
+    width: 60vw;
+    height: 70vw;
+    top: 40vw;
+    left: 9vw;
+    border: 1vw solid #c2def6;
+    border-radius: 20px;
+    background-color: #fff;
+    padding-left: 5vw;
+    color: #275fb4;
+    p {
+      font-weight: 600;
+      line-height: 9vw;
+      font-size: 14px;
+    }
+    select,
+    input {
+      width: 54vw;
+      height: 8vw;
+      border: 0;
+      text-indent: 2vw;
+      outline: none;
+      border-radius: 20px;
+      background-color: #bdddf6;
+      color: #275fb4;
+      font-weight: 600;
+    }
+    select {
+      text-indent: 5vw;
+      background-image: url(~img/downArrow.png);
+      background-position: 48vw;
+      background-size: 16px;
+      appearance: none;
+    }
+    input {
+      width: 51vw;
+      padding-right: 3vw;
+    }
+    .determine {
+      left: 0;
+      top: 73vw;
+      img {
+        width: 45vw;
+      }
     }
   }
 }
+
+
 </style>
 

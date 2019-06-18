@@ -3,11 +3,11 @@
     <audio src="~music/button.mp3" id="buttonPlay"></audio>
     <div class="result">
       <div>
-        <div class="num" v-text="score"></div>
+        <div class="num">{{ this.$route.query.score }}</div>
         <div>获得积分</div>
       </div>
       <div>
-        <div class="num" v-text="correct"></div>
+        <div class="num">{{ this.$route.query.correct + '/' + (5 - this.$route.query.correct) }}</div>
         <div>正确/错误</div>
       </div>
     </div>
@@ -57,29 +57,26 @@
         >
       </div>
     </div>
-    <div class="share" v-show="flaunt" @click="flaunt = 0">
-      <img src="~img/share.png" alt>
-    </div>
+    <v-share :flaunt='flaunt' :closeShare='closeShare'></v-share>
   </div>
 </template>
 
 <script>
-import common from './mixins/common.js'
-import flauntJs from './mixins/flaunt.js'
+import common from '@/mixins/common'
+import flauntJs from '@/mixins/flaunt'
 export default {
   mixins: [common, flauntJs],
   data() {
     return {
-      correct: this.$route.query.correct + '/' + (5 - this.$route.query.correct),  // 正确题数
-      score: this.$route.query.score,  // 获得积分
       detail_isShow: 0,  // 显示答题详情
       list: [],
       imgs: [require('img/finishTraining_04.png'), require('img/finishTraining_05.png'), require('img/finishTraining_06.png'), require('img/finishTraining_07.png'), require('img/finishTraining_08.png')],
       content_rightArr: [],  // 答题详情中答对的答案
-      content_wrongArr: []   // 答题详情中答错的答案
+      content_wrongArr: [],  // 答题详情中答错的答案
     }
   },
   mounted() {
+    document.title = "完成训练"
     this.$Axios.post(this.$baseUrl.base + 'api/pk/getlastestresult', {
       userId: this.user_id
     }).then(res => {
@@ -111,9 +108,9 @@ export default {
   },
   methods: {
     continueTrain() {
-      this.beforeJump(() => this.$router.push('train'))
+      this.$handler.handleBtnBgm(() => this.$router.push('train'))
     },
-    showDetail(e) {
+    showDetail() {
       this.detail_isShow = !this.detail_isShow
     }
   }
@@ -124,109 +121,107 @@ export default {
 .main {
   background-image: url("~img/finishTraining.png");
   height: 138vw;
-}
-
-.result {
-  padding: 60vw 15vw 0;
-  display: flex;
-  justify-content: center;
-  color: #fff;
-  font-weight: bold;
-  > div {
+  .result {
+    padding: 60vw 15vw 0;
+    display: flex;
+    justify-content: center;
+    color: #fff;
+    font-weight: bold;
+    > div {
+      text-align: center;
+      width: 50%;
+      .num {
+        font-size: 8vw;
+      }
+    }
+  }
+  .route {
     text-align: center;
-    width: 50%;
-    .num {
-      font-size: 8vw;
-    }
-  }
-}
-
-.route {
-  text-align: center;
-  button {
-    width: 60vw;
-    height: 15vw;
-    &:first-child {
-      background-image: url("~img/continue.png");
-      margin-top: 2vw;
-    }
-    &:nth-child(2) {
-      background-image: url("~img/flaunt.png");
-    }
-    &:nth-child(3) {
-      background-image: url("~img/backhome01.png");
-    }
-  }
-}
-
-.answerDetail {
-  text-align: center;
-  margin-top: 11vw;
-  .icon {
-    width: 54vw;
-  }
-  .arrow {
-    width: 10vw;
-    &.active {
-      transform: rotateZ(180deg);
-    }
-  }
-  .detail {
-    margin: 30vw 0 5vw 5vw;
-    width: 90vw;
-    border: 1vw solid #2761b5;
-    border-radius: 10px;
-    background-color: #97c6f0;
-    padding-bottom: 5vw;
-    > img {
+    button {
+      width: 60vw;
+      height: 15vw;
       &:first-child {
-        width: 70vw;
-        margin-top: -25vw;
+        background-image: url("~img/continue.png");
+        margin-top: 2vw;
       }
-      &:nth-last-child(-n + 2) {
-        width: 40vw;
+      &:nth-child(2) {
+        background-image: url("~img/flaunt.png");
+      }
+      &:nth-child(3) {
+        background-image: url("~img/backhome01.png");
       }
     }
-    .subject_answer {
-      .rank {
-        width: 10vw;
-        margin-left: 2vw;
+  }
+  .answerDetail {
+    text-align: center;
+    margin-top: 11vw;
+    .icon {
+      width: 54vw;
+    }
+    .arrow {
+      width: 10vw;
+      &.active {
+        transform: rotateZ(180deg);
       }
-      > ul > li {
-        border-radius: 100px 15px 15px 100px;
-        text-align: left;
-        width: 86vw;
-        background-color: #cbe1f7;
-        margin-left: 2vw;
-        display: flex;
-        align-items: center;
-        padding: 4vw 0;
-        margin-bottom: 3vw;
-      }
-      .question {
-        width: 69vw;
-        margin-left: 3vw;
-        display: inline-block;
-        color: #2761b5;
-        font-weight: bold;
-        .question_content {
-          font-size: 13px;
+    }
+    .detail {
+      margin: 30vw 0 5vw 5vw;
+      width: 90vw;
+      border: 1vw solid #2761b5;
+      border-radius: 10px;
+      background-color: #97c6f0;
+      padding-bottom: 5vw;
+      > img {
+        &:first-child {
+          width: 70vw;
+          margin-top: -25vw;
         }
-        li {
-          font-size: 11px;
-          line-height: 6vw;
+        &:nth-last-child(-n + 2) {
+          width: 40vw;
+        }
+      }
+      .subject_answer {
+        .rank {
+          width: 10vw;
+          margin-left: 2vw;
+        }
+        > ul > li {
+          border-radius: 100px 15px 15px 100px;
+          text-align: left;
+          width: 86vw;
+          background-color: #cbe1f7;
+          margin-left: 2vw;
           display: flex;
-          align-items: flex-start;
-          img {
-            width: 6vw;
-            height: 6vw;
+          align-items: center;
+          padding: 4vw 0;
+          margin-bottom: 3vw;
+        }
+        .question {
+          width: 69vw;
+          margin-left: 3vw;
+          display: inline-block;
+          color: #2761b5;
+          font-weight: bold;
+          .question_content {
+            font-size: 13px;
           }
-          .content {
-            width: 60vw;
+          li {
+            font-size: 11px;
+            line-height: 6vw;
+            display: flex;
+            align-items: flex-start;
+            img {
+              width: 6vw;
+              height: 6vw;
+            }
+            .content {
+              width: 60vw;
+            }
           }
         }
       }
     }
   }
 }
+
 </style>

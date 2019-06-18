@@ -1,8 +1,7 @@
 <template>
   <div class="main">
-    <audio src="~music/index_bg.mp3" loop id="myAudio" :autoplay="autoplay"></audio>
-    <div class="music_btn" @click="audioControl" :class="{play: autoplay, pause: !autoplay}"></div>
-    <ul class="scrollbar" ref="ul">
+    <bg-music></bg-music>
+    <ul ref="ul">
       <li v-for="(v, i) in info.rankList" :key="i">
         <span class="rank">{{v.rank}}</span>
         <img class="avatar" :src="v.user_img" alt>
@@ -24,13 +23,13 @@
         </div>
       </div>
     </div>
-    <div class="arrow" @click="clickMore">
+    <div class="arrow _center" @click="clickMore">
       <img src="~img/arrow.png" alt>
     </div>
   </div>
 </template>
 <script>
-import common from './mixins/common.js'
+import common from '@/mixins/common.js'
 export default {
   mixins: [common],
   data() {
@@ -66,10 +65,7 @@ export default {
 <style lang="scss" scoped>
 .main {
   background-image: url(~img/rankingList.png);
-  position: absolute;
   top: 10vw;
-  left: 0;
-  width: 100%;
   height: 140vw;
   ul {
     position: absolute;
@@ -117,7 +113,6 @@ export default {
       }
     }
   }
-
   .myself {
     background-image: url(~img/rankingList_02.png);
     position: absolute;
@@ -154,9 +149,6 @@ export default {
     }
   }
   .arrow {
-    position: absolute;
-    text-align: center;
-    width: 100%;
     top: 127vw;
     img {
       width: 5vw;

@@ -1,9 +1,7 @@
 <template>
   <div class="main">
-    <audio src="~music/index_bg.mp3" loop id="myAudio" :autoplay="autoplay"></audio>
-    <audio src="~music/button.mp3" id="buttonPlay"></audio>
-    <div class="music_btn" @click="audioControl" :class="{play: autoplay, pause: !autoplay}"></div>
-    <div class="route">
+    <bg-music></bg-music>
+    <div class="route _center">
       <button class="animated" @click="pkMethod(1)"></button>
       <button class="animated" @click="pkMethod(2)"></button>
       <button class="animated" @click="pkRecord"></button>
@@ -16,15 +14,17 @@
         <router-link to="/"></router-link>
       </div>
     </div>
+    <tip-show :tip_isShow='tip_isShow' :closeTip='closeTip' :img='tipImg' :dialog_isShow='dialog_isShow'></tip-show>
   </div>
 </template>
 <script>
-import common from './mixins/common.js'
+import common from '@/mixins/common.js'
 export default {
   mixins: [common],
   data() {
     return {
-      dialog_isShow: 0
+      dialog_isShow: 0,
+      tipImg: require('img/tankuang_10.png')
     }
   },
   methods: {
@@ -35,9 +35,9 @@ export default {
       }).then(res => {
         if (res.data.code == 0) {
           if (pkType == 1) {
-            this.beforeJump(() => this.$router.push('pk'))
+            this.$handler.handleBtnBgm(() => this.$router.push('pk'))
           } else if (pkType == 2) {
-            this.beforeJump(() => this.$router.push('setpk'))
+            this.$handler.handleBtnBgm(() => this.$router.push('setpk'))
           }
         } else if (res.data.code == 2) {
           // 训练超过10次
@@ -46,15 +46,15 @@ export default {
           // 没有认证
           this.tip_isShow = 1
           this.dialog_isShow = 1
-          this.$refs.img.src = require('img/tankuang.png')
+          this.tipImg = require('img/tankuang.png')
         }
       })
     },
     pkRecord() {
-      this.beforeJump(() => this.$router.push('pkRecord'))
+      this.$handler.handleBtnBgm(() => this.$router.push('pkRecord'))
     },
     myAchievements() {
-      this.beforeJump(() => this.$router.push({
+      this.$handler.handleBtnBgm(() => this.$router.push({
         name: 'myAchievements',
         query: {
           user_id: this.user_id
@@ -68,50 +68,30 @@ export default {
 <style lang="scss" scoped>
 .main {
   background-image: url(~img/gamePK.png);
-  position: absolute;
   top: 10vw;
-  left: 0;
-  width: 100%;
   height: 140vw;
-}
-
-.route {
-  position: absolute;
-  text-align: center;
-  top: 40vw;
-  button {
-    display: inline-block;
-    width: 70vw;
-    height: 21vw;
-    animation-name: fadeInLeft;
-    &:first-child {
-      background-image: url("~img/gamePK_01.png");
+  .route {
+    top: 40vw;
+    button {
+      width: 70vw;
+      height: 21vw;
+      animation-name: fadeInLeft;
+      &:first-child {
+        background-image: url("~img/gamePK_01.png");
+      }
+      &:nth-child(2) {
+        background-image: url("~img/gamePK_02.png");
+        animation-delay: 0.25s;
+      }
+      &:nth-child(3) {
+        background-image: url("~img/gamePK_03.png");
+        animation-delay: 0.5s;
+      }
+      &:nth-child(4) {
+        background-image: url("~img/gamePK_04.png");
+        animation-delay: 0.75s;
+      }
     }
-    &:nth-child(2) {
-      background-image: url("~img/gamePK_02.png");
-      animation-delay: 0.25s;
-    }
-    &:nth-child(3) {
-      background-image: url("~img/gamePK_03.png");
-      animation-delay: 0.5s;
-    }
-    &:nth-child(4) {
-      background-image: url("~img/gamePK_04.png");
-      animation-delay: 0.75s;
-    }
-  }
-}
-
-.one_dialog {
-  position: absolute;
-  top: 86vw;
-  width: 100%;
-  text-align: center;
-  z-index: 3;
-  a {
-    display: inline-block;
-    width: 30vw;
-    height: 10vw;
   }
 }
 </style>

@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="main">
     <audio src="~music/pk_cg.mp3" id="pk_cg"></audio>
     <audio src="~music/pk_sb.mp3" id="pk_sb"></audio>
     <audio src="~music/button.mp3" id="buttonPlay"></audio>
     <div class="pk_info">
       <div class="user">
         <img class="crown" v-if="isWin == 1" src="~img/crown.png" alt>
-        <img :src="user_img">
+        <img class="avatar" :src="user_img">
         <div class="name">{{ user_name }}</div>
         <div class="text">
           <p class="num">当前答题: &nbsp;{{ question_index + '/' + question_amount }}</p>
@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="opponent">
-        <img :src="opponent_img">
+        <img class="avatar" :src="opponent_img">
         <div class="name">{{ opponent_name }}</div>
         <div class="text">
           <p class="num">当前答题: &nbsp;{{ question_index + '/' + question_amount }}</p>
@@ -28,23 +28,19 @@
         获得达人积分
         <span>{{ score }}</span>
       </p>
-      <div class="btn_div">
+      <div class="route _center">
         <button @click="continuePk" v-show="!isFlaunt"></button>
         <button @click="doFlaunt" v-show="!isFlaunt"></button>
         <button @click="backHome"></button>
       </div>
     </div>
-    <div class="modal" v-show="tip_isShow" @click="tip_isShow = 0">
-      <img src="~img/tankuang_10.png" ref="img">
-    </div>
-    <div class="share" v-show="flaunt" @click="flaunt = 0">
-      <img src="~img/share.png" alt>
-    </div>
+    <tip-show :tip_isShow='tip_isShow' :closeTip='closeTip' :img='tipImg'></tip-show>
+    <v-share :flaunt='flaunt' :closeShare='closeShare'></v-share>
   </div>
 </template>
 <script>
-import common from './mixins/common.js'
-import flauntJs from './mixins/flaunt.js'
+import common from '@/mixins/common.js'
+import flauntJs from '@/mixins/flaunt.js'
 export default {
   mixins: [common, flauntJs],
   data() {
@@ -60,24 +56,19 @@ export default {
       isWin: this.$route.query.isWin,  // 赢或输
       score: this.$route.query.score,  // 获得积分
       result_img: '',  // 根据结果显示不同背景图片
+      tipImg: require('img/tankuang_10.png')
     }
   },
   mounted() {
     if (this.isWin == 1) {
       this.result_img = require('img/success.png')
-      if (this.autoplay) {
-        this.$handler.btnPlay('pk_cg')
-      }
+      this.isAutoPlay && this.$handler.handleMusic('pk_cg')
     } else if (this.isWin == 2) {
       this.result_img = require('img/fail.png')
-      if (this.autoplay) {
-        this.$handler.btnPlay('pk_sb')
-      }
+      this.isAutoPlay && this.$handler.handleMusic('pk_sb')
     } else {
       this.result_img = require('img/void.png')
-      if (this.autoplay) {
-        this.$handler.btnPlay('pk_sb')
-      }
+      this.isAutoPlay && this.$handler.handleMusic('pk_sb')
     }
   },
   methods: {
@@ -87,7 +78,7 @@ export default {
         pkType: 1
       }).then(res => {
         if (res.data.code == 0) {
-          this.beforeJump(() => this.$router.push('pk'))
+          this.$handler.handleBtnBgm(() => this.$router.push('pk'))
         } else if (res.data.code == 2) {
           // 训练超过10次
           this.tip_isShow = 1
@@ -104,38 +95,17 @@ export default {
   color: #2761b5;
   top: 11vw;
   width: 100vw;
-  > div {
-    &:nth-child(-n + 2) {
-      position: relative;
-      width: 46vw;
-      height: 40vw;
-    }
-    &:nth-child(1) {
-      float: left;
-      background-image: url(~img/pk_info01.png);
-      img {
-        right: 1vw;
-      }
-    }
-    &:nth-child(2) {
-      float: right;
-      background-image: url(~img/pk_info02.png);
-      img {
-        left: 1vw;
-      }
-      .name {
-        margin-left: 21vw;
-        text-align: left;
-      }
-      .text {
-        padding: 5vw 0 0 16vw;
-      }
-    }
-    img {
+  .user,
+  .opponent {
+    position: relative;
+    width: 46vw;
+    height: 40vw;
+    .avatar {
       position: absolute;
       width: 16vw;
       height: 16vw;
       top: 1vw;
+      right: 1vw;
       border-radius: 50%;
       border: 2px solid #fff;
     }
@@ -160,6 +130,24 @@ export default {
       border: none;
     }
   }
+  .user {
+    float: left;
+    background-image: url(~img/pk_info01.png);
+  }
+  .opponent {
+    float: right;
+    background-image: url(~img/pk_info02.png);
+    .avatar {
+      left: 1vw;
+    }
+    .name {
+      margin-left: 21vw;
+      text-align: left;
+    }
+    .text {
+      padding: 5vw 0 0 16vw;
+    }
+  }
 }
 
 .result {
@@ -167,7 +155,7 @@ export default {
   .result_img {
     width: 100vw;
   }
-  p {
+  .score {
     color: #fff;
     font-size: 4vw;
     position: absolute;
@@ -178,13 +166,9 @@ export default {
       margin-left: 2vw;
     }
   }
-  .btn_div {
-    position: absolute;
-    text-align: center;
-    width: 100%;
+  .route {
     top: 100vw;
     button {
-      display: inline-block;
       width: 60vw;
       height: 15vw;
       &:nth-child(1) {
