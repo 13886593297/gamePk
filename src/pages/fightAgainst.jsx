@@ -16,7 +16,7 @@ export default class FightAgainst extends React.Component {
       time: 20,  // 倒计时
       question_index: 0,   // 当前第几题
       isClick: false,  // 禁止重复点击
-      ad_isShow: 0,  // 是否显示广告
+      ad_isShow: 1,  // 是否显示广告
       adInfo_img: require('@img/ad_logo01.png'),   // 广告图标
       adInfo_value: '强效促成骨 提高骨质量 预防再骨折',  // 广告标语
       person_num: 0,  // 本场已完成PK人数

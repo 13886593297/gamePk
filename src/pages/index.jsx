@@ -3,7 +3,7 @@ import Axios from 'axios'
 import baseUrl from '@/assets/js/baseUrl'
 import * as handler from '@/assets/js/handler'
 import BgMusic from '@/components/bgMusic'
-import user from './user.json'
+import user from '@/user.json'
 
 export default class Index extends React.Component {
   constructor(props) {
